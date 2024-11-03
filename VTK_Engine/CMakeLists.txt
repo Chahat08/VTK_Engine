@@ -3,7 +3,45 @@
 #
 
 # Add source to this project's executable.
-add_executable (VTK_Engine "VTK_Engine.cpp" "VTK_Engine.h")
+set(APP
+	"include/app/app.h"
+	"src/app/app.cpp"
+	"include/app/window.h"
+	"src/app/window.cpp"
+)
+
+set(CAMERA
+
+)
+
+set(INTERACTION
+
+)
+
+set(READER
+	
+)
+
+set(VOLUME
+	
+)
+
+set(INCLUDE_DIRS
+	"include"
+)
+
+set(SOURCE_DIRS
+	${APP}
+	${CAMERA}
+	${INTERACTION}
+	${READER}
+	${VOLUME}
+	"src/main.cpp"
+)
+
+add_executable (VTK_Engine ${SOURCE_DIRS})
+
+target_include_directories(VTK_Engine PUBLIC ${INCLUDE_DIRS})
 
 target_link_libraries(VTK_Engine PRIVATE ${VTK_LIBRARIES})
 

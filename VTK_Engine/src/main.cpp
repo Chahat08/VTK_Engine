@@ -1,19 +1,17 @@
 ﻿// VTK_Engine.cpp : Defines the entry point for the application.
 //
 
-#include "VTK_Engine.h"
-#include "vtkActor.h"
-#include "vtkNew.h"
-
-using namespace std;
+#include "app/app.h"
+#include <iostream>
 
 int main()
 {
 	cout << "Hello CMake." << endl;
 	cout << "Hello VTK." << endl;
 
-	vtkNew<vtkActor> actor;
-	actor->Print(cout);
+	App::getInstance(
+		800, 600, 100, 100, false, "VTK Engine"
+	).run();
 
 	return 0;
 }
