@@ -39,6 +39,7 @@ set(SOURCE_DIRS
 	${READER}
 	${VOLUME}
 	"src/main.cpp"
+	"include/config.h"
 )
 
 add_executable (VTK_Engine ${SOURCE_DIRS})
