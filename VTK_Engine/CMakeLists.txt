@@ -20,7 +20,8 @@ set(INTERACTION
 )
 
 set(READER
-	
+	"include/reader/reader.h"
+	"src/reader/reader.cpp"
 )
 
 set(VOLUME
