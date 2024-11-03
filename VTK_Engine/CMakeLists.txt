@@ -11,7 +11,8 @@ set(APP
 )
 
 set(CAMERA
-
+	"include/camera/camera.h"
+	"src/camera/camera.cpp"
 )
 
 set(INTERACTION

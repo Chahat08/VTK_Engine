@@ -1,15 +1,24 @@
 #include "app/app.h"
 
-App::App(int width, int height, int xpos, int ypos, bool borders, std::string name) :Window(width, height, xpos, ypos, borders, name) {
+App::App(int sceneWidth, int sceneHeight,
+	int instanceWidth, int instanceHeight,
+	int xpos, int ypos,
+	float physicalHeight, float physicalDistance) :Window(instanceWidth, instanceHeight, xpos, ypos) {
 	m_renderer = vtkRenderer::New();
+	m_camera = new Camera(sceneWidth, sceneHeight, instanceWidth, instanceHeight, xpos, ypos, physicalHeight, physicalDistance);
+	m_renderer->SetActiveCamera(m_camera->getCamera());
 }
 
 void App::run() {
 	render();
 }
 
-App& App::getInstance(int height, int width, int xpos, int ypos, bool borders, std::string name) {
-	static App instance(height, width, xpos, ypos, borders, name);
+App& App::getInstance(
+	int sceneWidth, int sceneHeight,
+	int instanceWidth, int instanceHeight,
+	int xpos, int ypos,
+	float physicalHeight, float physicalDistance) {
+	static App instance(sceneWidth, sceneHeight, instanceWidth, instanceHeight, xpos, ypos,	physicalHeight, physicalDistance);
 	return instance;
 }
 
