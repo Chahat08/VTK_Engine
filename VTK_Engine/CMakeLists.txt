@@ -16,7 +16,8 @@ set(CAMERA
 )
 
 set(INTERACTION
-
+	"include/interaction/interactor.h"
+	"src/interaction/interactor.cpp"
 )
 
 set(READER
@@ -25,7 +26,12 @@ set(READER
 )
 
 set(VOLUME
-	
+	"include/volume/mapper.h"
+	"src/volume/mapper.cpp"
+	"include/volume/volume.h"
+	"src/volume/volume.cpp"
+	"include/volume/property.h"
+	"src/volume/property.cpp"
 )
 
 set(INCLUDE_DIRS

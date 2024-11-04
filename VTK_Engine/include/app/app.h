@@ -3,6 +3,10 @@
 
 #include "app/window.h"
 #include "camera/camera.h"
+#include "reader/reader.h"
+#include "volume/mapper.h"
+#include "volume/property.h"
+#include "volume/volume.h"
 
 class App :private Window {
 public:
@@ -24,6 +28,10 @@ private:
 	App& operator=(const App&) = delete;
 
 	Camera* m_camera;
+	VolumeReader* m_reader;
+	VolumeMapper* m_mapper;
+	VolumeProperty* m_property;
+	Volume* m_volume;
 };
 
 #endif

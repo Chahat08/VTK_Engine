@@ -8,7 +8,6 @@ void VolumeReader::readVolume(const char* filename, FileType type) {
 	case FileType::MetaImage:
 		m_reader = vtkMetaImageReader::New();
 		m_reader->SetFileName(filename);
-		m_reader->Update();
 		break;
 	}
 }
