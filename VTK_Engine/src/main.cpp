@@ -22,5 +22,7 @@ int main(int argc, char* argv[])
 		sceneWidth, sceneHeight, instanceWidth, instanceHeight, xpos, ypos, physicalHeight, physicalDistance
 	).run();
 
+	std::cout << "Closing app" << std::endl;
+
 	return 0;
 }
