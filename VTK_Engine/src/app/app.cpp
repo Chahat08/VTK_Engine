@@ -20,89 +20,73 @@ App::App(int sceneWidth, int sceneHeight,
 	int xpos, int ypos,
 	float physicalHeight, float physicalDistance) :Window(instanceWidth, instanceHeight, xpos, ypos) {
 	m_renderer = vtkRenderer::New();
-	//m_interactor = new Interactor(m_window);
+	double iso1 = 500.0;
+	double iso2 = 1150.0;
+	vtkNew<vtkMetaImageReader> reader;
+	reader->SetFileName("FullHead.mhd");
 
-	/*m_camera = new Camera(
-		sceneWidth, sceneHeight, 
-		instanceWidth, instanceHeight, 
-		xpos, ypos, 
-		physicalHeight, physicalDistance);*/
-
-	
-
-	
-
-	m_renderer->SetActiveCamera(m_camera);
-
-	// volume reader
-	m_reader = new VolumeReader();
-	if (Config::readerConfig["fileType"] == "MetaImage")
-		m_reader->readVolume(Config::readerConfig["fileName"].c_str(), VolumeReader::FileType::MetaImage);
-
-	// volume mapper
-	m_mapper = new VolumeMapper();
-
-	if(Config::mapperConfig["AutoAdjustSampleDistances"]=="off")
-		m_mapper->SetAutoAdjustSampleDistances(false);
-	m_mapper->SetSampleDistance(std::stof(Config::mapperConfig["SampleDistance"]));
-	m_mapper->SetInputConnection(m_reader->getOutputPort());
-	m_mapper->setBlendMode(Config::mapperConfig["BlendMode"]);
-
-	// volume property
-	m_property = new VolumeProperty();
-	if (Config::volumeProperties["Shade"] == "On")
-		m_property->SetShade(true);
-	m_property->setInterpolationType(Config::volumeProperties["InterpolationType"]);
-
-	vtkNew<vtkColorTransferFunction> transferFunction;
-	vtkNew<vtkPiecewiseFunction> opacityFunction;
-	transferFunction->RemoveAllPoints();
 	vtkNew<vtkNamedColors> colors;
-	/*transferFunction->AddRGBPoint(Config::isoValues[0].value, 0, 0, 0);
-	opacityFunction->AddPoint(Config::isoValues[0].value, 0.);
 
-	transferFunction->AddRGBPoint(Config::isoValues[1].value, 0, 0, 0);
-	opacityFunction->AddPoint(Config::isoValues[1].value, 0);*/
-	for (auto isoValue : Config::isoValues) {
-		transferFunction->AddRGBPoint(isoValue.value, isoValue.color[0], isoValue.color[1], isoValue.color[2]);
-		transferFunction->AddRGBPoint(isoValue.value, isoValue.color[0], isoValue.color[1], isoValue.color[2]);
-		opacityFunction->AddPoint(isoValue.value, isoValue.opacity);
-	}
-	transferFunction->AddRGBPoint(500.0, colors->GetColor3d("flesh").GetData()[0],
-		colors->GetColor3d("flesh").GetData()[1],
-		colors->GetColor3d("flesh").GetData()[2]);
-	transferFunction->AddRGBPoint(1150.0, colors->GetColor3d("ivory").GetData()[0],
+	vtkNew<vtkOpenGLGPUVolumeRayCastMapper> mapper;
+	mapper->SetInputConnection(reader->GetOutputPort());
+	mapper->AutoAdjustSampleDistancesOff();
+	mapper->SetSampleDistance(0.5);
+	mapper->SetBlendModeToIsoSurface();
+
+	vtkNew<vtkColorTransferFunction> colorTransferFunction;
+	colorTransferFunction->RemoveAllPoints();
+	colorTransferFunction->AddRGBPoint(iso2,
+		colors->GetColor3d("ivory").GetData()[0],
 		colors->GetColor3d("ivory").GetData()[1],
 		colors->GetColor3d("ivory").GetData()[2]);
-	opacityFunction->AddPoint(500.0, 0.3);
-	opacityFunction->AddPoint(1150.0, 0.6);
+	colorTransferFunction->AddRGBPoint(iso1,
+		colors->GetColor3d("flesh").GetData()[0],
+		colors->GetColor3d("flesh").GetData()[1],
+		colors->GetColor3d("flesh").GetData()[2]);
 
-	m_property->SetColor(transferFunction);
-	m_property->SetScalarOpacity(opacityFunction);
+	vtkNew<vtkPiecewiseFunction> scalarOpacity;
+	scalarOpacity->AddPoint(iso1, .3);
+	scalarOpacity->AddPoint(iso2, 0.6);
 
-	// volume
-	m_volume = new Volume();
-	m_volume->SetMapper(m_mapper);
-	m_volume->SetProperty(m_property);
-	m_property->GetIsoSurfaceValues()->SetValue(0, 500.0);
-	m_property->GetIsoSurfaceValues()->SetValue(1, 1150.0);
+	vtkNew<vtkVolumeProperty> volumeProperty;
+	volumeProperty->ShadeOn();
+	volumeProperty->SetInterpolationTypeToLinear();
+	volumeProperty->SetColor(colorTransferFunction);
+	volumeProperty->SetScalarOpacity(scalarOpacity);
 
-	m_renderer->AddVolume(m_volume);
+	vtkNew<vtkVolume> volume;
+	volume->SetMapper(mapper);
+	volume->SetProperty(volumeProperty);
+	std::cout << volume->GetMinXBound() << " " << volume->GetMaxXBound() << " " << volume->GetMinYBound() << " " << volume->GetMaxYBound() << " " << volume->GetMinZBound() << " " << volume->GetMaxZBound() << "\n";
+	//volume->SetPosition(0, 0, 5);
 
-	m_renderer->SetRenderWindow(m_window);
+	//vtkNew<vtkRenderer> renderer;
+	m_renderer->AddVolume(volume);
 	m_renderer->SetBackground(colors->GetColor3d("cornflower").GetData());
+	m_renderer->ResetCamera();
+
+	float instancePositionX = xpos, instancePositionY = ypos;
+
+	//vtkNew<vtkRenderWindow> renderWindow;
+	m_window->SetSize(instanceWidth, instanceHeight);
+	m_window->SetPosition(instancePositionX, instancePositionY);
+	m_window->BordersOff();
 	m_window->AddRenderer(m_renderer);
-	vtkNew<vtkRenderWindowInteractor> interactor;
+	m_window->SetWindowName("RayCastIsosurface");
+
 	vtkNew<vtkInteractorStyleTrackballCamera> style;
-	m_interactor = interactor;
+
+	vtkNew<vtkRenderWindowInteractor> interactor;
+	interactor->SetRenderWindow(m_window);
 	interactor->SetInteractorStyle(style);
-	m_window->SetInteractor(interactor);
 
-	double* volumePosition = m_volume->GetBounds();
-	
+	// Add some contour values to draw iso surfaces
+	volumeProperty->GetIsoSurfaceValues()->SetValue(0, iso1);
+	volumeProperty->GetIsoSurfaceValues()->SetValue(1, iso2);
 
+	vtkNew<vtkExternalOpenGLCamera> camera;
+	m_renderer->SetActiveCamera(camera);
 
-	m_camera = vtkExternalOpenGLCamera::New();
 	float aspectRatio = (float)sceneWidth / (float)sceneHeight;
 	float fov = 2 * atan(physicalHeight / (2 * -physicalDistance));
 
@@ -112,10 +96,10 @@ App::App(int sceneWidth, int sceneHeight,
 	float halfHeight = tan(fov / 2) * near;
 	float halfWidth = halfHeight * aspectRatio;
 
-	float left = convertScale(xpos, 0, sceneWidth, -halfWidth, halfWidth);
-	float right = convertScale(xpos + instanceWidth, 0, sceneWidth, -halfWidth, halfWidth);
-	float top = convertScale(sceneHeight - ypos, 0, sceneHeight, -halfHeight, halfHeight);
-	float bottom = convertScale(sceneHeight - (ypos + instanceHeight), 0, sceneHeight, -halfHeight, halfHeight);
+	float left = convertScale(instancePositionX, 0, sceneWidth, -halfWidth, halfWidth);
+	float right = convertScale(instancePositionX + instanceWidth, 0, sceneWidth, -halfWidth, halfWidth);
+	float top = convertScale(sceneHeight - instancePositionY, 0, sceneHeight, -halfHeight, halfHeight);
+	float bottom = convertScale(sceneHeight - (instancePositionY + instanceHeight), 0, sceneHeight, -halfHeight, halfHeight);
 
 	vtkNew<vtkMatrix4x4> projectionMatrix;
 	projectionMatrix->Zero();
@@ -127,9 +111,10 @@ App::App(int sceneWidth, int sceneHeight,
 	projectionMatrix->SetElement(2, 3, -2 * far * near / (far - near));
 	projectionMatrix->SetElement(3, 2, -1.0);
 
-	m_camera->SetUseExplicitProjectionTransformMatrix(true);
-	m_camera->SetExplicitProjectionTransformMatrix(projectionMatrix);
-	m_camera->SetPosition((volumePosition[0] + volumePosition[1]) / 2.0,
+	camera->SetUseExplicitProjectionTransformMatrix(true);
+	camera->SetExplicitProjectionTransformMatrix(projectionMatrix);
+	double* volumePosition = volume->GetBounds();
+	camera->SetPosition((volumePosition[0] + volumePosition[1]) / 2.0,
 		(volumePosition[2] + volumePosition[3]) / 2.0,
 		(volumePosition[4] + volumePosition[5]) / 2.0);
 }
