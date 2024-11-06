@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Message Broadcast</title>
+</head>
+<body>
+    <h1>Send a Message to WebSocket Clients</h1>
+    <form action="{{ url_for('main.submit') }}" method="post">
+        <label for="message">Message:</label>
+        <input type="text" id="message" name="message" required>
+        <button type="submit">Send</button>
+    </form>
+</body>
+</html>
