@@ -18,7 +18,11 @@ float convertScale(float originalValue, float originalMin, float originalMax, fl
 App::App(int sceneWidth, int sceneHeight,
 	int instanceWidth, int instanceHeight,
 	int xpos, int ypos,
-	float physicalHeight, float physicalDistance) :Window(instanceWidth, instanceHeight, xpos, ypos) {
+	float physicalHeight, float physicalDistance,
+	int clientID, std::string& url) :Window(instanceWidth, instanceHeight, xpos, ypos) {
+	m_clientID = clientID;
+	m_interactor = new Interactor(url, m_clientID);
+
 	double iso1 = 500.0;
 	double iso2 = 1150.0;
 
@@ -90,15 +94,21 @@ App::App(int sceneWidth, int sceneHeight,
 
 void App::run() {
 	render();
-	while (true);
+	m_interactor->startPolling();
 }
 
 App& App::getInstance(
 	int sceneWidth, int sceneHeight,
 	int instanceWidth, int instanceHeight,
 	int xpos, int ypos,
-	float physicalHeight, float physicalDistance) {
-	static App instance(sceneWidth, sceneHeight, instanceWidth, instanceHeight, xpos, ypos,	physicalHeight, physicalDistance);
+	float physicalHeight, float physicalDistance, 
+	int clientID, std::string& url) {
+	static App instance(
+		sceneWidth, sceneHeight, 
+		instanceWidth, instanceHeight, 
+		xpos, ypos,	
+		physicalHeight, physicalDistance,
+		clientID, url);
 	return instance;
 }
 

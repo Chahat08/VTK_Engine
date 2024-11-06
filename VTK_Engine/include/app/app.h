@@ -15,7 +15,8 @@ public:
 		int sceneWidth, int sceneHeight, 
 		int instanceWidth, int instanceHeight,
 		int xpos, int ypos, 
-		float physicalHeight, float physicalDistance
+		float physicalHeight, float physicalDistance,
+		int clientID, std::string& url
 	);
 	void run();
 
@@ -23,16 +24,20 @@ private:
 	App(int sceneWidth, int sceneHeight,
 		int instanceWidth, int instanceHeight,
 		int xpos, int ypos,
-		float physicalHeight, float physicalDistance);
+		float physicalHeight, float physicalDistance,
+		int clientID, std::string& url);
 	~App();
 	App(const App&) = delete;
 	App& operator=(const App&) = delete;
+
+	int m_clientID;
 
 	Camera* m_camera;
 	VolumeReader* m_reader;
 	VolumeMapper* m_mapper;
 	VolumeProperty* m_property;
 	Volume* m_volume;
+	Interactor* m_interactor;
 };
 
 #endif

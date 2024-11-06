@@ -3,7 +3,6 @@
 
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
-#include "interaction/interactor.h"
 
 #include <string>
 
@@ -21,7 +20,6 @@ protected:
 
 	vtkRenderWindow* m_window{ nullptr };
 	vtkRenderer* m_renderer{ nullptr };
-	Interactor* m_interactor{ nullptr };
 
 	void render();
 };

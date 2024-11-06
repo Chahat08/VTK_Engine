@@ -9,8 +9,6 @@ Window::Window(int width, int height, int xpos, int ypos, bool borders, std::str
 
 	m_renderer = vtkRenderer::New();
 	m_window->AddRenderer(m_renderer);
-
-	m_interactor = new Interactor(m_window);
 }
 
 Window::~Window() {
