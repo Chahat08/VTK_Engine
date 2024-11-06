@@ -23,7 +23,7 @@ vtkMatrix4x4* Camera::getInstanceProjectionMatrix() {
 	float top = convertScale(m_sceneHeight - m_ypos, 0, m_sceneHeight, -halfHeight, halfHeight);
 	float bottom = convertScale(m_sceneHeight - (m_ypos + m_instanceHeight), 0, m_sceneHeight, -halfHeight, halfHeight);
 
-	vtkNew<vtkMatrix4x4> projectionMatrix;
+	vtkMatrix4x4* projectionMatrix = vtkMatrix4x4::New();
 	projectionMatrix->Zero();
 	projectionMatrix->SetElement(0, 0, (2 * near) / (right - left));
 	projectionMatrix->SetElement(0, 2, (right + left) / (right - left));

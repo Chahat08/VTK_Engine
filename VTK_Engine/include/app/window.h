@@ -3,7 +3,7 @@
 
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
-#include <vtkRenderWindowInteractor.h>
+#include "interaction/interactor.h"
 
 #include <string>
 
@@ -19,9 +19,9 @@ protected:
 	Window(int width, int height, int xpos, int ypos, bool borders = false, std::string name = "Title");
 	~Window();
 
-	vtkRenderWindow* m_window;
-	vtkRenderer* m_renderer{nullptr};
-	vtkRenderWindowInteractor* m_interactor{nullptr};
+	vtkRenderWindow* m_window{ nullptr };
+	vtkRenderer* m_renderer{ nullptr };
+	Interactor* m_interactor{ nullptr };
 
 	void render();
 };

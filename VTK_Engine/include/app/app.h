@@ -28,14 +28,11 @@ private:
 	App(const App&) = delete;
 	App& operator=(const App&) = delete;
 
-	//Camera* m_camera;
+	Camera* m_camera;
 	VolumeReader* m_reader;
 	VolumeMapper* m_mapper;
 	VolumeProperty* m_property;
 	Volume* m_volume;
-	//Interactor* m_interactor;
-	vtkRenderWindowInteractor* m_interactor;
-	vtkExternalOpenGLCamera* m_camera;
 };
 
 #endif

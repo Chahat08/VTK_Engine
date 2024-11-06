@@ -4,7 +4,7 @@
 #include <vtkExternalOpenGLCamera.h>
 #include <vtkMatrix4x4.h>
 
-class Camera : public vtkExternalOpenGLCamera {
+class Camera {
 public:
 	Camera(int sceneWidth, int sceneHeight,
 		int instanceWidth, int instanceHeight,
