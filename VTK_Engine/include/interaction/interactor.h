@@ -13,10 +13,10 @@
 
 using easywsclient::WebSocket;
 
-class Interactor {
+class SocketClient {
 public:
-	Interactor(std::string& url, int clientID);
-	~Interactor();
+	SocketClient(std::string& url, int clientID);
+	~SocketClient();
 
 	void startPolling();
 	void closeConnection();

@@ -1,8 +1,8 @@
 #include "interaction/interactor.h"
 
-WebSocket::pointer Interactor::m_ws = nullptr;
+WebSocket::pointer SocketClient::m_ws = nullptr;
 
-Interactor::Interactor(std::string& m_url, int clientID) {
+SocketClient::SocketClient(std::string& m_url, int clientID) {
 	INT rc;
 	WSADATA wsaData;
 
@@ -18,15 +18,15 @@ Interactor::Interactor(std::string& m_url, int clientID) {
 	send("CONNECT " + std::to_string(clientID));
 }
 
-void Interactor::send(const std::string& message) {
+void SocketClient::send(const std::string& message) {
 	m_ws->send(message);
 }
 
-void Interactor::receive(const std::string& message) {
+void SocketClient::receive(const std::string& message) {
 	std::cout << "Server: " << message << std::endl;
 }
 
-void Interactor::startPolling() {
+void SocketClient::startPolling() {
 	while (m_ws->getReadyState() != WebSocket::CLOSED) {
 		m_ws->poll();
 		//m_ws->dispatch(receive);
@@ -37,12 +37,12 @@ void Interactor::startPolling() {
 	delete m_ws;
 }
 
-void Interactor::closeConnection() {
+void SocketClient::closeConnection() {
 	m_ws->close();
 	delete m_ws;
 }
 
-Interactor::~Interactor() {
+SocketClient::~SocketClient() {
 	m_ws->close();
 	delete m_ws;
 }

@@ -6,8 +6,6 @@
 #include <vtkRendererCollection.h>
 #include <vtkContourValues.h>
 #include <vtkNamedColors.h >
-#include <vtkRenderWindowInteractor.h>
-#include <vtkInteractorStyleTrackballCamera.h>
 
 float convertScale(float originalValue, float originalMin, float originalMax, float newMin, float newMax) {
 	double originalRange = originalMax - originalMin;
@@ -21,7 +19,7 @@ App::App(int sceneWidth, int sceneHeight,
 	float physicalHeight, float physicalDistance,
 	int clientID, std::string& url) :Window(instanceWidth, instanceHeight, xpos, ypos) {
 	m_clientID = clientID;
-	m_interactor = new Interactor(url, m_clientID);
+	m_client = new SocketClient(url, m_clientID);
 
 	double iso1 = 500.0;
 	double iso2 = 1150.0;
@@ -74,8 +72,6 @@ App::App(int sceneWidth, int sceneHeight,
 	m_window->AddRenderer(m_renderer);
 	m_window->SetWindowName("RayCastIsosurface");
 
-	vtkNew<vtkInteractorStyleTrackballCamera> style;
-
 	m_property->GetIsoSurfaceValues()->SetValue(0, iso1);
 	m_property->GetIsoSurfaceValues()->SetValue(1, iso2);
 
@@ -94,7 +90,7 @@ App::App(int sceneWidth, int sceneHeight,
 
 void App::run() {
 	render();
-	m_interactor->startPolling();
+	m_client->startPolling();
 }
 
 App& App::getInstance(

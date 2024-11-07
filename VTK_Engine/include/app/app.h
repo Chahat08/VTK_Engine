@@ -37,7 +37,7 @@ private:
 	VolumeMapper* m_mapper;
 	VolumeProperty* m_property;
 	Volume* m_volume;
-	Interactor* m_interactor;
+	SocketClient* m_client;
 };
 
 #endif
