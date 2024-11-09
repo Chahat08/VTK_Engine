@@ -7,7 +7,7 @@
 #include "volume/mapper.h"
 #include "volume/property.h"
 #include "volume/volume.h"
-#include "interaction/interactor.h"
+#include "interaction/client.h"
 
 class App :private Window {
 public:

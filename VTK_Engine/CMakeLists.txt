@@ -16,8 +16,8 @@ set(CAMERA
 )
 
 set(INTERACTION
-	"include/interaction/interactor.h"
-	"src/interaction/interactor.cpp"
+	"include/interaction/client.h"
+	"src/interaction/client.cpp"
 	"include/interaction/easywsclient.hpp"
 	"src/interaction/easywsclient.cpp"
 )
