@@ -14,7 +14,15 @@
         <input type="text" id="message" name="message" required>
         <button type="submit">Send</button>
     </form>
-    <svg id="opacityEditor" width="500" height="200" style="border: 1px solid black;"></svg>
+
+    <svg id="opacityEditor" width="500" height="200"></svg>
+    <div id="colorEditorContainer" style="display: flex; align-items: center;">
+        <div id="colorEditor" style="width: 500px; height: 30px; margin-right: 10px;"></div>
+        <button id="addDividerButton">+</button>
+        <button id="deleteDividerButton" style="display: none;">-</button>
+    </div>
+
     <script src="{{ url_for('static', filename='js/opacityEditor.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/colorEditor.js')}}"></script>
 </body>
 </html>
