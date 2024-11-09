@@ -1,7 +1,10 @@
 const width = 500;
 const height = 200;
+
 const intensityRange = [0, 255];
 const svg = d3.select("#opacityEditor")
+    .attr("width", width)
+    .attr("height", height)
     .style("border", "1px solid black");
 
 const xScale = d3.scaleLinear().domain(intensityRange).range([0, width]);

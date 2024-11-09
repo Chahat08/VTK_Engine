@@ -3,7 +3,8 @@ const sliderHeight = 30;
 const colorSlider = d3.select("#colorEditor")
     .style("width", `${sliderWidth}px`)
     .style("height", `${sliderHeight}px`)
-    .style("position", "relative");
+    .style("position", "relative")
+    .style("border", "1px solid black");
 
 let selectedLine = null;
 let lineColors = []; // Array to store line and color pairs

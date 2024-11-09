@@ -20,17 +20,18 @@
             <div class="panel left-panel"></div>
             <div class="panel center-panel">
                 <div class="editor-container">
-                    <svg id="opacityEditor" width="500" height="200"></svg>
-                </div>
-                <div class="editor-container">
-                    <div id="colorEditor"></div>
-                </div>
-                <div class="controls">
-                    <div class="control-group">
-                        <button id="opacityMinusButton">-</button>
-                        <button id="opacityRemoveAllButton">Remove All</button>
+                    <div class="opacity-container">
+                        <div class="opacity-header">
+                            <h5>Transfer Function Editor</h5>
+                            <div class="opacity-controls">
+                                <button id="opacityMinusButton">-</button>
+                                <button id="opacityRemoveAllButton">Remove All</button>
+                            </div>
+                        </div>
+                        <svg id="opacityEditor" width="500" height="200"></svg>
                     </div>
-                    <div class="control-group">
+                    <div id="colorEditor"></div>
+                    <div class="color-controls">
                         <input type="color" id="colorPicker">
                         <button id="addDividerButton">+</button>
                         <button id="deleteDividerButton">-</button>
