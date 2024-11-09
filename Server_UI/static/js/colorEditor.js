@@ -86,13 +86,15 @@ function showColorPicker() {
 addDividingLine(0, "#FF0000");
 addDividingLine(sliderWidth, "#0000FF");
 
-// Add a dividing line at the center when the button is clicked
-d3.select("#addDividerButton").on("click", () => {
-    const initialX = sliderWidth / 2;
-    const leftColor = lineColors.reduce((prev, curr) =>
-        parseFloat(curr.line.style("left")) < initialX && parseFloat(curr.line.style("left")) > parseFloat(prev.line.style("left")) ? curr : prev
-    ).color;
-    addDividingLine(initialX, leftColor);
+// Add a new dividing line when clicking on the color editor
+colorSlider.on("click", function (event) {
+    if (event.target === this) {  // Only add new line if clicking on the slider, not existing lines
+        const [x] = d3.pointer(event);
+        const leftColor = lineColors.reduce((prev, curr) =>
+            parseFloat(curr.line.style("left")) < x && parseFloat(curr.line.style("left")) > parseFloat(prev.line.style("left")) ? curr : prev
+        ).color;
+        addDividingLine(x, leftColor);
+    }
 });
 
 // Delete the selected line when the delete button is clicked
@@ -107,6 +109,15 @@ d3.select("#deleteDividerButton").on("click", () => {
             updateGradient();
         }
     }
+});
+
+// Remove all sliders except the two at the ends
+d3.select("#removeAllButton").on("click", () => {
+    lineColors.slice(1, -1).forEach(({ line }) => line.remove());
+    lineColors = [lineColors[0], lineColors[lineColors.length - 1]];
+    selectedLine = null;
+    d3.select("#colorPicker").style("display", "none");
+    updateGradient();
 });
 
 // Deselect line on clicking outside

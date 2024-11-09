@@ -28,12 +28,22 @@ const path = svg.append("path")
     .attr("stroke-width", 2)
     .attr("d", line);
 
-const label = svg.append("text")
-    .attr("class", "label")
-    .attr("x", 10)
-    .attr("y", 20)
-    .attr("fill", "black")
+const label = svg.append("g")
+    .attr("class", "label-group")
     .style("display", "none");
+
+label.append("rect")
+    .attr("class", "label-background")
+    .attr("rx", 3)
+    .attr("ry", 3)
+    .attr("fill", "white")
+    .attr("fill-opacity", 0.7);
+
+label.append("text")
+    .attr("class", "label-text")
+    .attr("fill", "black")
+    .attr("font-size", "10px")
+    .attr("dy", ".35em");
 
 const updateControlPoints = () => {
     svg.selectAll(".control-point")
@@ -71,10 +81,22 @@ const selectControlPoint = (id) => {
 const updateLabel = () => {
     const selectedPoint = controlPoints.find(d => d.id === selectedPointId);
     if (selectedPoint) {
+        const labelText = `${selectedPoint.x.toFixed(1)}, ${selectedPoint.y.toFixed(2)}`;
+        const labelPadding = 4;
+
         label.style("display", "block")
-            .attr("x", xScale(selectedPoint.x) + 10)
-            .attr("y", yScale(selectedPoint.y) - 10)
-            .text(`${selectedPoint.x.toFixed(1)}, ${selectedPoint.y.toFixed(2)}`);
+            .attr("transform", `translate(${xScale(selectedPoint.x) + 10}, ${yScale(selectedPoint.y) - 10})`);
+
+        label.select("text")
+            .text(labelText);
+
+        const textBBox = label.select("text").node().getBBox();
+
+        label.select("rect")
+            .attr("x", -labelPadding)
+            .attr("y", -textBBox.height / 2 - labelPadding)
+            .attr("width", textBBox.width + 2 * labelPadding)
+            .attr("height", textBBox.height + 2 * labelPadding);
     } else {
         label.style("display", "none");
     }
@@ -100,12 +122,17 @@ function dragStarted(event, d) {
         .raise()
         .attr("stroke", "black")
         .attr("fill", "green");
-} 
+}
 
 function dragged(event, d) {
     const [mouseX, mouseY] = d3.pointer(event, svg.node());
-    d.x = Math.max(intensityRange[0], Math.min(intensityRange[1], xScale.invert(mouseX)));
-    d.y = Math.max(0, Math.min(1, yScale.invert(mouseY)));
+    if (d.x === intensityRange[0] || d.x === intensityRange[1]) {
+        // For end points, only allow vertical movement
+        d.y = Math.max(0, Math.min(1, yScale.invert(mouseY)));
+    } else {
+        d.x = Math.max(intensityRange[0], Math.min(intensityRange[1], xScale.invert(mouseX)));
+        d.y = Math.max(0, Math.min(1, yScale.invert(mouseY)));
+    }
 
     d3.select(this)
         .attr("cx", xScale(d.x))
@@ -128,6 +155,29 @@ document.addEventListener("click", () => {
     selectedPointId = null;
     updateLabel();
     updateControlPoints();
+});
+
+// Remove selected control point
+d3.select("#opacityMinusButton").on("click", () => {
+    if (selectedPointId && controlPoints.length > 2) {
+        const selectedPoint = controlPoints.find(d => d.id === selectedPointId);
+        if (selectedPoint.x !== intensityRange[0] && selectedPoint.x !== intensityRange[1]) {
+            controlPoints = controlPoints.filter(d => d.id !== selectedPointId);
+            selectedPointId = null;
+            updateControlPoints();
+            updateLine();
+            updateLabel();
+        }
+    }
+});
+
+// Remove all control points except the end points
+d3.select("#opacityRemoveAllButton").on("click", () => {
+    controlPoints = controlPoints.filter(d => d.x === intensityRange[0] || d.x === intensityRange[1]);
+    selectedPointId = null;
+    updateControlPoints();
+    updateLine();
+    updateLabel();
 });
 
 updateControlPoints();
