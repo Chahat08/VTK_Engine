@@ -1,37 +1,110 @@
-body{
+body {
     font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
 }
 
-.control-point{
-    fill:red;
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.message-form {
+    display: flex;
+    align-items: center;
+}
+
+    .message-form input {
+        padding: 0.5rem;
+        margin-right: 0.5rem;
+        border: none;
+        border-radius: 4px;
+    }
+
+    .message-form button {
+        padding: 0.5rem 1rem;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+.main-content {
+    display: flex;
+    flex-grow: 1;
+}
+
+.panel {
+    padding: 1rem;
+}
+
+.left-panel, .right-panel {
+    flex: 1;
+    background-color: #e0e0e0;
+}
+
+.center-panel {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.editor-container {
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 1rem;
+}
+
+#opacityEditor, #colorEditor {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 500px;
+}
+
+.control-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+button {
+    padding: 0.5rem 1rem;
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
 }
-.line {
-    stroke: black;
-    stroke-width: 2px;
-    cursor: ew-resize;
-}
 
-.curve {
-    fill: none;
-    stroke: blue;
-    stroke-width: 2px;
-}
-
-.segment {
-    stroke: black;
-    stroke-width: 1px;
-    cursor: pointer;
-}
-
-.reset-button {
-    fill: #f0f0f0;
-    cursor: pointer;
-}
+    button:hover {
+        background-color: #007B9A;
+    }
 
 #colorPicker {
-    height: 200px;
-    width: 50px;
-    cursor: crosshair;
-    margin-right: 10px;
+    margin-right: 0.5rem;
 }
