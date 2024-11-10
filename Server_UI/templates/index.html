@@ -46,7 +46,7 @@
         // Initialize WebSocket connection
         const socket = new WebSocket("ws://localhost:5000/connect");
 
-        const intensityRange = [0, 255];
+        const intensityRange = [0, 4095];
 
         window.controlPoints = [
             { id: 1, x: intensityRange[0], y: 0 },
@@ -54,12 +54,18 @@
         ];
         window.lineColors = [];
 
+        function scalePositionToIntensity(position) {
+            const intensityMin = intensityRange[0];
+            const intensityMax = intensityRange[1];
+            return (position / sliderWidth) * (intensityMax - intensityMin) + intensityMin;
+        }
+
         // Function to get the current state of the editors
         function getEditorState() {
             return {
                 controlPoints: window.controlPoints.map(p => ({ x: p.x, y: p.y })),
                 colorStops: window.lineColors.map(({ line, color }) => ({
-                    position: parseFloat(line.style("left")),
+                    position: scalePositionToIntensity(parseFloat(line.style("left"))),
                     color: color
                 }))
             };

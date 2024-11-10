@@ -33,9 +33,9 @@ App::App(int sceneWidth, int sceneHeight,
 	m_mapper->SetInputConnection(m_reader->getOutputPort());
 	m_mapper->AutoAdjustSampleDistancesOff();
 	m_mapper->SetSampleDistance(0.5);
-	m_mapper->SetBlendModeToIsoSurface();
+	m_mapper->SetBlendModeToComposite();
 
-	vtkNew<vtkColorTransferFunction> colorTransferFunction;
+	/*vtkNew<vtkColorTransferFunction> colorTransferFunction;
 	colorTransferFunction->RemoveAllPoints();
 	colorTransferFunction->AddRGBPoint(iso2,
 		colors->GetColor3d("ivory").GetData()[0],
@@ -48,13 +48,13 @@ App::App(int sceneWidth, int sceneHeight,
 
 	vtkNew<vtkPiecewiseFunction> scalarOpacity;
 	scalarOpacity->AddPoint(iso1, .3);
-	scalarOpacity->AddPoint(iso2, 0.6);
+	scalarOpacity->AddPoint(iso2, 0.6);*/
 
 	m_property = new VolumeProperty();
 	m_property->ShadeOn();
 	m_property->SetInterpolationTypeToLinear();
-	m_property->SetColor(colorTransferFunction);
-	m_property->SetScalarOpacity(scalarOpacity);
+	//m_property->SetColor(colorTransferFunction);
+	//m_property->SetScalarOpacity(scalarOpacity);
 
 	vtkNew<vtkVolume> volume;
 	volume->SetMapper(m_mapper);
@@ -72,8 +72,8 @@ App::App(int sceneWidth, int sceneHeight,
 	m_window->AddRenderer(m_renderer);
 	m_window->SetWindowName("RayCastIsosurface");
 
-	m_property->GetIsoSurfaceValues()->SetValue(0, iso1);
-	m_property->GetIsoSurfaceValues()->SetValue(1, iso2);
+	//m_property->GetIsoSurfaceValues()->SetValue(0, iso1);
+	//m_property->GetIsoSurfaceValues()->SetValue(1, iso2);
 
 	m_camera = new Camera(sceneWidth, sceneHeight,
 		instanceWidth, instanceHeight, 

@@ -9,8 +9,8 @@ def websocket_handler(ws):
         while True:
             message = ws.receive()
             if message:
-                print("Received editor state:", message)  # Optional logging
-                relay_message_to_clients(message)  # Send to other clients if needed
+                print(message) 
+                relay_message_to_clients(message)
             else:
                 break
     finally:

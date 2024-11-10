@@ -7,9 +7,12 @@
 #endif
 
 #include "easywsclient.hpp"
+#include "frontendData.h"
+
 #include <cassert>
 #include <iostream>
 #include <string>
+
 
 using easywsclient::WebSocket;
 

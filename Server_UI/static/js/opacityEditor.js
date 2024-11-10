@@ -186,7 +186,6 @@ updateLine();
 
 ///*
 //TODO: 
-//1. Add a button to remove the selected control point.
 //2. Add range sliders to adjust the intensity range + button to reset to original values.
 //3. Pass data from the volume.
 // - intensity range, histogram.

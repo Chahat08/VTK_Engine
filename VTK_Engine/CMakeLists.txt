@@ -20,6 +20,8 @@ set(INTERACTION
 	"src/interaction/client.cpp"
 	"include/interaction/easywsclient.hpp"
 	"src/interaction/easywsclient.cpp"
+	"include/interaction/frontendData.h"
+	"src/interaction/frontendData.cpp"
 )
 
 set(READER
@@ -36,6 +38,10 @@ set(VOLUME
 	"src/volume/property.cpp"
 )
 
+set(UTILS
+	"include/utils/json.hpp"
+)
+
 set(INCLUDE_DIRS
 	"include"
 )
@@ -46,6 +52,7 @@ set(SOURCE_DIRS
 	${INTERACTION}
 	${READER}
 	${VOLUME}
+	${UTILS}
 	"src/main.cpp"
 	"include/config.h"
 )

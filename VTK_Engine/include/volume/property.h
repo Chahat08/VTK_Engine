@@ -9,6 +9,13 @@ public:
 	~VolumeProperty();
 
 	void setInterpolationType(std::string type);
+
+	void setColorPoints();
+	void setOpacityPoints();
+
+private:
+	vtkColorTransferFunction* m_colorTransferFunction;
+	vtkPiecewiseFunction* m_scalarOpacity;
 };
 
 #endif
