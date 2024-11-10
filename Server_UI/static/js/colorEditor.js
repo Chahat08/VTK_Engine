@@ -58,7 +58,6 @@ function selectLine(line) {
     showColorPicker();
 }
 
-// Function to show color picker
 function showColorPicker() {
     const lineColor = lineColors.find(lc => lc.line === selectedLine);
     if (!lineColor) return;
@@ -67,20 +66,18 @@ function showColorPicker() {
         .style("display", "block")
         .property("value", lineColor.color);
 
-    // Remove any existing event listeners
     colorPicker.on("input", null).on("change", null);
 
-    // Add new event listeners
     colorPicker
         .on("input", function () {
-            // Update color immediately when picking
             lineColor.color = this.value;
             updateGradient();
+            window.sendEditorState();
         })
         .on("change", function () {
-            // Ensure color is updated when the picker is closed
             lineColor.color = this.value;
             updateGradient();
+            window.sendEditorState();
         });
 }
 
