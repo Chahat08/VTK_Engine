@@ -75,7 +75,6 @@ App::App(int sceneWidth, int sceneHeight,
 	m_property->GetIsoSurfaceValues()->SetValue(0, iso1);
 	m_property->GetIsoSurfaceValues()->SetValue(1, iso2);
 
-
 	m_camera = new Camera(sceneWidth, sceneHeight,
 		instanceWidth, instanceHeight, 
 		xpos, ypos, 

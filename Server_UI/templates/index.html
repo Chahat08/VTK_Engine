@@ -41,8 +41,53 @@
             <div class="panel right-panel"></div>
         </div>
     </div>
+    <!-- Ensure this script is loaded before other editor scripts -->
+    <script type="text/javascript">
+        // Initialize WebSocket connection
+        const socket = new WebSocket("ws://localhost:5000/connect");
 
+        const intensityRange = [0, 255];
+
+        window.controlPoints = [
+            { id: 1, x: intensityRange[0], y: 0 },
+            { id: 2, x: intensityRange[1], y: 1 }
+        ];
+        window.lineColors = [];
+
+        // Function to get the current state of the editors
+        function getEditorState() {
+            return {
+                controlPoints: window.controlPoints.map(p => ({ x: p.x, y: p.y })),
+                colorStops: window.lineColors.map(({ line, color }) => ({
+                    position: parseFloat(line.style("left")),
+                    color: color
+                }))
+            };
+        }
+
+        // Function to send editor state over WebSocket
+        function sendEditorState() {
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify(getEditorState()));
+            }
+        }
+
+        // Attach sendEditorState to the window object for global access
+        window.sendEditorState = sendEditorState;
+
+        // Handle WebSocket events
+        socket.onopen = function () {
+            console.log("WebSocket connection established");
+        };
+        socket.onclose = function () {
+            console.log("WebSocket connection closed");
+        };
+        socket.onerror = function (error) {
+            console.error("WebSocket Error:", error);
+        };
+    </script>
     <script src="{{ url_for('static', filename='js/opacityEditor.js')}}"></script>
     <script src="{{ url_for('static', filename='js/colorEditor.js')}}"></script>
+    
 </body>
 </html>

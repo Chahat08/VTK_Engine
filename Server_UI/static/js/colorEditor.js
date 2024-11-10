@@ -7,7 +7,7 @@ const colorSlider = d3.select("#colorEditor")
     .style("border", "1px solid black");
 
 let selectedLine = null;
-let lineColors = []; // Array to store line and color pairs
+let lineColors = window.lineColors; // Array to store line and color pairs
 
 // Function to update the gradient
 function updateGradient() {
@@ -38,12 +38,14 @@ function addDividingLine(xPosition, color) {
                 const newX = Math.max(0, Math.min(sliderWidth, d3.pointer(event, colorSlider.node())[0]));
                 line.style("left", `${newX}px`);
                 updateGradient();
+                window.sendEditorState();
             })
         );
 
     lineColors.push({ line, color });
     selectLine(line);
     updateGradient();
+    window.sendEditorState();
 }
 
 // Function to handle selecting a line
@@ -107,6 +109,7 @@ d3.select("#deleteDividerButton").on("click", () => {
             selectedLine = null;
             d3.select("#colorPicker").style("display", "none");
             updateGradient();
+            window.sendEditorState();
         }
     }
 });
@@ -118,6 +121,7 @@ d3.select("#removeAllButton").on("click", () => {
     selectedLine = null;
     d3.select("#colorPicker").style("display", "none");
     updateGradient();
+    window.sendEditorState();
 });
 
 // Deselect line on clicking outside

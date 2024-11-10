@@ -1,7 +1,6 @@
 const width = 500;
 const height = 200;
 
-const intensityRange = [0, 255];
 const svg = d3.select("#opacityEditor")
     .attr("width", width)
     .attr("height", height)
@@ -10,10 +9,7 @@ const svg = d3.select("#opacityEditor")
 const xScale = d3.scaleLinear().domain(intensityRange).range([0, width]);
 const yScale = d3.scaleLinear().domain([0, 1]).range([height, 0]);
 
-let controlPoints = [
-    { id: 1, x: intensityRange[0], y: 0 },
-    { id: 2, x: intensityRange[1], y: 1 }
-];
+let controlPoints = window.controlPoints;
 
 let selectedPointId = null;
 
@@ -114,6 +110,7 @@ svg.on("click", (event) => {
     selectControlPoint(newPoint.id);
     updateControlPoints();
     updateLine();
+    window.sendEditorState();
 });
 
 function dragStarted(event, d) {
@@ -149,6 +146,7 @@ function dragEnded(event, d) {
         .attr("stroke", "none")
         .attr("fill", "green");
     updateLabel();
+    window.sendEditorState();
 }
 
 document.addEventListener("click", () => {
@@ -167,6 +165,7 @@ d3.select("#opacityMinusButton").on("click", () => {
             updateControlPoints();
             updateLine();
             updateLabel();
+            window.sendEditorState();
         }
     }
 });
@@ -178,6 +177,7 @@ d3.select("#opacityRemoveAllButton").on("click", () => {
     updateControlPoints();
     updateLine();
     updateLabel();
+    window.sendEditorState();
 });
 
 updateControlPoints();
