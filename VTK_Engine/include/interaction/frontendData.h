@@ -1,3 +1,6 @@
+#ifndef FRONTENDDATA_H
+#define FRONTENDDATA_H
+
 #include <string>
 #include <vector>
 
@@ -26,3 +29,5 @@ namespace FrontendData {
 
 	std::vector<int> getColor(const std::string& color);
 }
+
+#endif

@@ -1,5 +1,4 @@
 #include "volume/property.h"
-#include "interaction/frontendData.h"
 #include <vtkColorTransferFunction.h>
 #include <vtkPiecewiseFunction.h>
 #include <vtkNamedColors.h>
@@ -9,8 +8,8 @@ VolumeProperty::VolumeProperty() {
 	m_scalarOpacity = vtkPiecewiseFunction::New();
 	this->SetColor(m_colorTransferFunction);
 	this->SetScalarOpacity(m_scalarOpacity);
-	setColorPoints();
-	setOpacityPoints();
+	setColorPoints(FrontendData::colorStops);
+	setOpacityPoints(FrontendData::opacityPoints);
 }
 
 VolumeProperty::~VolumeProperty() {
@@ -27,11 +26,11 @@ void VolumeProperty::setInterpolationType(std::string type) {
 	
 }
 
-void VolumeProperty::setColorPoints() {
+void VolumeProperty::setColorPoints(std::vector<FrontendData::ColorGradientStopPoint>& colorPoints) {
 	m_colorTransferFunction->RemoveAllPoints();
-	vtkNew<vtkNamedColors> colors;
-	for (auto& colorPoint : FrontendData::colorStops) {
+	for (auto& colorPoint : colorPoints) {
 		std::vector<int> colorData = FrontendData::getColor(colorPoint.color);
+		std::cout << colorData[0] << " " << colorData[1] << " " << colorData[2] << std::endl;
 		m_colorTransferFunction->AddRGBPoint(colorPoint.position, 
 			colorData[0],
 			colorData[1],
@@ -39,9 +38,10 @@ void VolumeProperty::setColorPoints() {
 	}
 }
 
-void VolumeProperty::setOpacityPoints() {
+void VolumeProperty::setOpacityPoints(std::vector<FrontendData::OpacityControlPoint>& opacityPoints) {
 	m_scalarOpacity->RemoveAllPoints();
-	for (auto& opacityPoint : FrontendData::opacityPoints) {
+	for (auto& opacityPoint : opacityPoints) {
+		std::cout << opacityPoint.value << " " << opacityPoint.opacity << std::endl;
 		m_scalarOpacity->AddPoint(opacityPoint.value, opacityPoint.opacity);
 	}
 }

@@ -16,5 +16,6 @@ Window::~Window() {
 }
 
 void Window::render() {
+	std::cout << "Re rendering\n";
 	m_window->Render();
 }

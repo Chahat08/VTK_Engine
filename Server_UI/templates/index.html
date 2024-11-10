@@ -63,7 +63,7 @@
         // Function to get the current state of the editors
         function getEditorState() {
             return {
-                controlPoints: window.controlPoints.map(p => ({ x: p.x, y: p.y })),
+                controlPoints: window.controlPoints.map(p => ({ value: p.x, opacity: p.y })),
                 colorStops: window.lineColors.map(({ line, color }) => ({
                     position: scalePositionToIntensity(parseFloat(line.style("left"))),
                     color: color

@@ -22,6 +22,8 @@ set(INTERACTION
 	"src/interaction/easywsclient.cpp"
 	"include/interaction/frontendData.h"
 	"src/interaction/frontendData.cpp"
+	"include/interaction/interactor.h"
+	"src/interaction/interactor.cpp"
 )
 
 set(READER

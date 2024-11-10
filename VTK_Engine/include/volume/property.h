@@ -2,6 +2,7 @@
 #define PROPERTY_H
 
 #include <vtkVolumeProperty.h>
+#include "interaction/frontendData.h"
 
 class VolumeProperty :public vtkVolumeProperty {
 public:
@@ -10,8 +11,8 @@ public:
 
 	void setInterpolationType(std::string type);
 
-	void setColorPoints();
-	void setOpacityPoints();
+	void setColorPoints(std::vector<FrontendData::ColorGradientStopPoint>& colorPoints);
+	void setOpacityPoints(std::vector<FrontendData::OpacityControlPoint>& opacityPoints);
 
 private:
 	vtkColorTransferFunction* m_colorTransferFunction;

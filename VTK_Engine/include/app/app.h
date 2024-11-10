@@ -8,6 +8,7 @@
 #include "volume/property.h"
 #include "volume/volume.h"
 #include "interaction/client.h"
+#include "interaction/interactor.h"
 
 class App :private Window {
 public:
@@ -38,6 +39,7 @@ private:
 	VolumeProperty* m_property;
 	Volume* m_volume;
 	SocketClient* m_client;
+	Interactor* m_interactor;
 };
 
 #endif

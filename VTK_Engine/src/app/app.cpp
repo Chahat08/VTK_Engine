@@ -18,8 +18,7 @@ App::App(int sceneWidth, int sceneHeight,
 	int xpos, int ypos,
 	float physicalHeight, float physicalDistance,
 	int clientID, std::string& url) :Window(instanceWidth, instanceHeight, xpos, ypos) {
-	m_clientID = clientID;
-	m_client = new SocketClient(url, m_clientID);
+	
 
 	double iso1 = 500.0;
 	double iso2 = 1150.0;
@@ -85,6 +84,11 @@ App::App(int sceneWidth, int sceneHeight,
 	m_camera->setPosition((volumePosition[0] + volumePosition[1]) / 2.0,
 		(volumePosition[2] + volumePosition[3]) / 2.0,
 		((volumePosition[4] + volumePosition[5]) / 2.0) - 300.0);
+
+	m_interactor = new Interactor(m_property);
+	m_interactor->setRenderCallback([this]() {this->render(); });
+	m_clientID = clientID;
+	m_client = new SocketClient(url, m_clientID, m_interactor);
 }
 
 void App::run() {
