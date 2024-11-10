@@ -10,10 +10,10 @@ bool ColorGradientStopPoint::operator==(const ColorGradientStopPoint& other) con
 	return this->position == other.position && this->color == other.color;
 }
 
-std::vector<int> FrontendData::getColor(const std::string& color){
-	int r = std::stoi(color.substr(1, 2), nullptr, 16) / 255;
-	int g = std::stoi(color.substr(3, 2), nullptr, 16) / 255;
-	int b = std::stoi(color.substr(5, 2), nullptr, 16) / 255;
+std::vector<float> FrontendData::getColor(const std::string& color){
+	int r = std::stoi(color.substr(1, 2), nullptr, 16);
+	int g = std::stoi(color.substr(3, 2), nullptr, 16);
+	int b = std::stoi(color.substr(5, 2), nullptr, 16);
 	
-    return { r, g, b };
+    return { r/255.0f, g/255.0f, b/255.0f };
 }

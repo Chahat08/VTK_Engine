@@ -29,8 +29,8 @@ void VolumeProperty::setInterpolationType(std::string type) {
 void VolumeProperty::setColorPoints(std::vector<FrontendData::ColorGradientStopPoint>& colorPoints) {
 	m_colorTransferFunction->RemoveAllPoints();
 	for (auto& colorPoint : colorPoints) {
-		std::vector<int> colorData = FrontendData::getColor(colorPoint.color);
-		std::cout << colorData[0] << " " << colorData[1] << " " << colorData[2] << std::endl;
+		std::vector<float> colorData = FrontendData::getColor(colorPoint.color);
+		std::cout << "Color data: " << colorPoint.position << ",r: "<< colorData[0] << " ,g: " << colorData[1] << " ,b: " << colorData[2] << std::endl;
 		m_colorTransferFunction->AddRGBPoint(colorPoint.position, 
 			colorData[0],
 			colorData[1],
@@ -41,7 +41,7 @@ void VolumeProperty::setColorPoints(std::vector<FrontendData::ColorGradientStopP
 void VolumeProperty::setOpacityPoints(std::vector<FrontendData::OpacityControlPoint>& opacityPoints) {
 	m_scalarOpacity->RemoveAllPoints();
 	for (auto& opacityPoint : opacityPoints) {
-		std::cout << opacityPoint.value << " " << opacityPoint.opacity << std::endl;
+		std::cout << "opacity: intensity: " << opacityPoint.value << "opacity: " << opacityPoint.opacity << std::endl;
 		m_scalarOpacity->AddPoint(opacityPoint.value, opacityPoint.opacity);
 	}
 }

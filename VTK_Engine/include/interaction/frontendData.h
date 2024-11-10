@@ -27,7 +27,7 @@ namespace FrontendData {
 		{4095.0, "#0000FF"}
 	};
 
-	std::vector<int> getColor(const std::string& color);
+	std::vector<float> getColor(const std::string& color);
 }
 
 #endif

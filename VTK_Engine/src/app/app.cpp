@@ -69,7 +69,6 @@ App::App(int sceneWidth, int sceneHeight,
 	m_window->SetPosition(instancePositionX, instancePositionY);
 	m_window->BordersOff();
 	m_window->AddRenderer(m_renderer);
-	m_window->SetWindowName("RayCastIsosurface");
 
 	//m_property->GetIsoSurfaceValues()->SetValue(0, iso1);
 	//m_property->GetIsoSurfaceValues()->SetValue(1, iso2);
@@ -92,7 +91,7 @@ App::App(int sceneWidth, int sceneHeight,
 }
 
 void App::run() {
-	render();
+	//render();
 	m_client->startPolling();
 }
 
