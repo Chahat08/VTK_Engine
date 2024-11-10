@@ -84,7 +84,7 @@ App::App(int sceneWidth, int sceneHeight,
 	double* volumePosition = volume->GetBounds();
 	m_camera->setPosition((volumePosition[0] + volumePosition[1]) / 2.0,
 		(volumePosition[2] + volumePosition[3]) / 2.0,
-		(volumePosition[4] + volumePosition[5]) / 2.0);
+		((volumePosition[4] + volumePosition[5]) / 2.0) - 300.0);
 }
 
 void App::run() {

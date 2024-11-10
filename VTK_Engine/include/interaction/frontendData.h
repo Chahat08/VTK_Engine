@@ -1,8 +1,6 @@
 #include <string>
 #include <vector>
 
-#include <vtkNamedColors.h>
-
 namespace FrontendData {
 	struct OpacityControlPoint {
 		double value;
@@ -26,6 +24,5 @@ namespace FrontendData {
 		{4095.0, "#0000FF"}
 	};
 
-	std::vector<float> getColor(const std::string& color);
-	static vtkNamedColors* colors = vtkNamedColors::New();
+	std::vector<int> getColor(const std::string& color);
 }
