@@ -4,6 +4,8 @@
 #include <vtkNamedColors.h>
 
 VolumeProperty::VolumeProperty() {
+	this->ShadeOn();
+	this->SetInterpolationTypeToLinear();
 	m_colorTransferFunction = vtkColorTransferFunction::New();
 	m_scalarOpacity = vtkPiecewiseFunction::New();
 	this->SetColor(m_colorTransferFunction);
@@ -36,6 +38,7 @@ void VolumeProperty::setColorPoints(std::vector<FrontendData::ColorGradientStopP
 			colorData[1],
 			colorData[2]);
 	}
+	this->Modified();
 }
 
 void VolumeProperty::setOpacityPoints(std::vector<FrontendData::OpacityControlPoint>& opacityPoints) {
@@ -44,4 +47,5 @@ void VolumeProperty::setOpacityPoints(std::vector<FrontendData::OpacityControlPo
 		std::cout << "opacity: intensity: " << opacityPoint.value << "opacity: " << opacityPoint.opacity << std::endl;
 		m_scalarOpacity->AddPoint(opacityPoint.value, opacityPoint.opacity);
 	}
+	this->Modified();
 }

@@ -34,26 +34,11 @@ App::App(int sceneWidth, int sceneHeight,
 	m_mapper->SetSampleDistance(0.5);
 	m_mapper->SetBlendModeToComposite();
 
-	/*vtkNew<vtkColorTransferFunction> colorTransferFunction;
-	colorTransferFunction->RemoveAllPoints();
-	colorTransferFunction->AddRGBPoint(iso2,
-		colors->GetColor3d("ivory").GetData()[0],
-		colors->GetColor3d("ivory").GetData()[1],
-		colors->GetColor3d("ivory").GetData()[2]);
-	colorTransferFunction->AddRGBPoint(iso1,
-		colors->GetColor3d("flesh").GetData()[0],
-		colors->GetColor3d("flesh").GetData()[1],
-		colors->GetColor3d("flesh").GetData()[2]);
-
 	vtkNew<vtkPiecewiseFunction> scalarOpacity;
 	scalarOpacity->AddPoint(iso1, .3);
-	scalarOpacity->AddPoint(iso2, 0.6);*/
+	scalarOpacity->AddPoint(iso2, 0.6);
 
 	m_property = new VolumeProperty();
-	m_property->ShadeOn();
-	m_property->SetInterpolationTypeToLinear();
-	//m_property->SetColor(colorTransferFunction);
-	//m_property->SetScalarOpacity(scalarOpacity);
 
 	vtkNew<vtkVolume> volume;
 	volume->SetMapper(m_mapper);
@@ -80,8 +65,8 @@ App::App(int sceneWidth, int sceneHeight,
 
 	m_renderer->SetActiveCamera(m_camera->getCamera());
 	double* volumePosition = volume->GetBounds();
-	m_camera->setPosition((volumePosition[0] + volumePosition[1]) / 2.0,
-		(volumePosition[2] + volumePosition[3]) / 2.0,
+	m_camera->setPosition(((volumePosition[0] + volumePosition[1]) / 2.0) - 500.0,
+		((volumePosition[2] + volumePosition[3]) / 2.0) - 80.0,
 		((volumePosition[4] + volumePosition[5]) / 2.0) - 300.0);
 
 	m_interactor = new Interactor(m_property);
@@ -91,7 +76,7 @@ App::App(int sceneWidth, int sceneHeight,
 }
 
 void App::run() {
-	//render();
+	render();
 	m_client->startPolling();
 }
 
