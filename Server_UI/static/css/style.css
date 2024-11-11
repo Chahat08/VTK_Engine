@@ -132,6 +132,31 @@ h5 {
     background-color: black;
 }
 
+.background-color-container {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .background-color-container label {
+        font-weight: bold;
+        margin: 0;
+    }
+
+#bgColorPicker {
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+
 /* Responsive design */
 @media (max-width: 768px) {
     .main-content {

@@ -18,8 +18,6 @@ set(CAMERA
 set(INTERACTION
 	"include/interaction/client.h"
 	"src/interaction/client.cpp"
-	"include/interaction/easywsclient.hpp"
-	"src/interaction/easywsclient.cpp"
 	"include/interaction/frontendData.h"
 	"src/interaction/frontendData.cpp"
 	"include/interaction/interactor.h"
@@ -43,6 +41,8 @@ set(VOLUME
 set(UTILS
 	"include/utils/json/simdjson.h"
 	"src/utils/json/simdjson.cpp"
+	"include/utils/websocket/easywsclient.hpp"
+	"src/utils/websocket/easywsclient.cpp"
 )
 
 set(INCLUDE_DIRS

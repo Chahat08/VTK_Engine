@@ -6,7 +6,7 @@
 #include <WinSock2.h>
 #endif
 
-#include "easywsclient.hpp"
+#include "utils/websocket/easywsclient.hpp"
 #include "frontendData.h"
 
 #include <cassert>

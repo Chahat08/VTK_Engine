@@ -73,7 +73,7 @@
 #include <vector>
 #include <string>
 
-#include "interaction/easywsclient.hpp"
+#include "utils/websocket/easywsclient.hpp"
 
 using easywsclient::Callback_Imp;
 using easywsclient::BytesCallback_Imp;
