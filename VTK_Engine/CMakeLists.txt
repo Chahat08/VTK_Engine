@@ -41,7 +41,8 @@ set(VOLUME
 )
 
 set(UTILS
-	"include/utils/json.hpp"
+	"include/utils/json/simdjson.h"
+	"src/utils/json/simdjson.cpp"
 )
 
 set(INCLUDE_DIRS

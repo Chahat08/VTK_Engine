@@ -110,7 +110,7 @@ svg.on("click", (event) => {
     selectControlPoint(newPoint.id);
     updateControlPoints();
     updateLine();
-    window.sendEditorState();
+    window.sendControlPoints();
 });
 
 function dragStarted(event, d) {
@@ -146,7 +146,7 @@ function dragEnded(event, d) {
         .attr("stroke", "none")
         .attr("fill", "green");
     updateLabel();
-    window.sendEditorState();
+    window.sendControlPoints();
 }
 
 document.addEventListener("click", () => {
@@ -165,7 +165,7 @@ d3.select("#opacityMinusButton").on("click", () => {
             updateControlPoints();
             updateLine();
             updateLabel();
-            window.sendEditorState();
+            window.sendControlPoints();
         }
     }
 });
@@ -177,7 +177,7 @@ d3.select("#opacityRemoveAllButton").on("click", () => {
     updateControlPoints();
     updateLine();
     updateLabel();
-    window.sendEditorState();
+    window.sendControlPoints();
 });
 
 updateControlPoints();

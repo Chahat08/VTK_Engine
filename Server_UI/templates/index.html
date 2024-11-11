@@ -63,30 +63,38 @@
             return (position / sliderWidth) * (intensityMax - intensityMin) + intensityMin;
         }
 
-        function getEditorState() {
-            return {
-                controlPoints: window.controlPoints.map(p => ({ value: p.x, opacity: p.y })),
-                colorStops: window.lineColors.map(({ line, color }) => ({
-                    position: scalePositionToIntensity(parseFloat(line.style("left"))),
-                    color: color
-                }))
-            };
-        }
-
-        function sendEditorState() {
+        function sendControlPoints() {
             if (socket.readyState === WebSocket.OPEN) {
-                socket.send(JSON.stringify(getEditorState()));
+                socket.send(JSON.stringify(
+                    {
+                        controlPoints: window.controlPoints.map(p => ({ value: p.x, opacity: p.y }))
+                    }
+                ));
             }
         }
 
-        window.sendEditorState = sendEditorState;
+        function sendColorStops() {
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify(
+                    {
+                        colorStops: window.lineColors.map(({ line, color }) => ({
+                            position: scalePositionToIntensity(parseFloat(line.style("left"))),
+                            color: color
+                        }))
+                    }
+                ));
+            }
+        }
+
+        window.sendColorStops = sendColorStops;
+        window.sendControlPoints = sendControlPoints;
 
         // backgrund color
         const bgColorPicker = document.getElementById("bgColorPicker");
         bgColorPicker.addEventListener("input", (event) => {
             const color = event.target.value;
             if (socket.readyState === WebSocket.OPEN) {
-                socket.send(JSON.stringify({ type: "bgColor", color }));
+                socket.send(JSON.stringify({ bgColor: color }));
             }
         });
 

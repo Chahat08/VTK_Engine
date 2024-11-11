@@ -38,14 +38,14 @@ function addDividingLine(xPosition, color) {
                 const newX = Math.max(0, Math.min(sliderWidth, d3.pointer(event, colorSlider.node())[0]));
                 line.style("left", `${newX}px`);
                 updateGradient();
-                window.sendEditorState();
+                window.sendColorStops();
             })
         );
 
     lineColors.push({ line, color });
     selectLine(line);
     updateGradient();
-    window.sendEditorState();
+    window.sendColorStops();
 }
 
 // Function to handle selecting a line
@@ -72,12 +72,12 @@ function showColorPicker() {
         .on("input", function () {
             lineColor.color = this.value;
             updateGradient();
-            window.sendEditorState();
+            window.sendColorStops();
         })
         .on("change", function () {
             lineColor.color = this.value;
             updateGradient();
-            window.sendEditorState();
+            window.sendColorStops();
         });
 }
 
@@ -106,7 +106,7 @@ d3.select("#deleteDividerButton").on("click", () => {
             selectedLine = null;
             d3.select("#colorPicker").style("display", "none");
             updateGradient();
-            window.sendEditorState();
+            window.sendColorStops();
         }
     }
 });
@@ -118,7 +118,7 @@ d3.select("#removeAllButton").on("click", () => {
     selectedLine = null;
     d3.select("#colorPicker").style("display", "none");
     updateGradient();
-    window.sendEditorState();
+    window.sendColorStops();
 });
 
 // Deselect line on clicking outside

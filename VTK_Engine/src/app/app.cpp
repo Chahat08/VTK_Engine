@@ -6,6 +6,7 @@
 #include <vtkRendererCollection.h>
 #include <vtkContourValues.h>
 #include <vtkNamedColors.h >
+#include "interaction/frontendData.h"
 
 float convertScale(float originalValue, float originalMin, float originalMax, float newMin, float newMax) {
 	double originalRange = originalMax - originalMin;
@@ -34,7 +35,8 @@ App::App(int sceneWidth, int sceneHeight,
 	volume->SetProperty(m_property);
 	
 	m_renderer->AddVolume(volume);
-	m_renderer->SetBackground(colors->GetColor3d("black").GetData());
+	std::vector<float> bgColor = FrontendData::getColor(FrontendData::defaultBackgroundColor);
+	m_renderer->SetBackground(bgColor[0], bgColor[1], bgColor[2]);
 	m_renderer->ResetCamera();
 
 	float instancePositionX = xpos, instancePositionY = ypos;
