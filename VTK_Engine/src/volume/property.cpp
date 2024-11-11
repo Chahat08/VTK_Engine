@@ -38,6 +38,7 @@ void VolumeProperty::setColorPoints(std::vector<FrontendData::ColorGradientStopP
 			colorData[1],
 			colorData[2]);
 	}
+	this->m_colorTransferFunction->Modified();
 	this->Modified();
 }
 
@@ -47,5 +48,6 @@ void VolumeProperty::setOpacityPoints(std::vector<FrontendData::OpacityControlPo
 		std::cout << "opacity: intensity: " << opacityPoint.value << "opacity: " << opacityPoint.opacity << std::endl;
 		m_scalarOpacity->AddPoint(opacityPoint.value, opacityPoint.opacity);
 	}
+	this->m_scalarOpacity->Modified();
 	this->Modified();
 }

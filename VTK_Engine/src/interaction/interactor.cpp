@@ -2,8 +2,9 @@
 #include "utils/json.hpp"
 #include "interaction/frontendData.h"
 
-Interactor::Interactor(VolumeProperty* property) {
+Interactor::Interactor(VolumeProperty* property, Volume* volume) {
 	m_property = property;
+	m_volume = volume;
 }
 
 void Interactor::setRenderCallback(const std::function<void()>& callback) {

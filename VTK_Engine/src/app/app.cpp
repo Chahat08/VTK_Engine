@@ -69,7 +69,7 @@ App::App(int sceneWidth, int sceneHeight,
 		((volumePosition[2] + volumePosition[3]) / 2.0) - 80.0,
 		((volumePosition[4] + volumePosition[5]) / 2.0) - 300.0);
 
-	m_interactor = new Interactor(m_property);
+	m_interactor = new Interactor(m_property, m_volume);
 	m_interactor->setRenderCallback([this]() {this->render(); });
 	m_clientID = clientID;
 	m_client = new SocketClient(url, m_clientID, m_interactor);
