@@ -32,6 +32,12 @@ void Interactor::parseJson(const std::string& message) const {
 	
 	else if (obj["colorStops"].error() == simdjson::SUCCESS) 
 		transferFunctionColorUpdate(obj);  
+
+	else if (obj["shading"].error() == simdjson::SUCCESS)
+		shadingUpdate(obj);
+
+	else if (obj["interpolationType"].error() == simdjson::SUCCESS)
+		interpolationTypeUpdate(obj);
 }
 
 void Interactor::handleServerMessage(const std::string& message) const {
@@ -86,4 +92,26 @@ void Interactor::transferFunctionColorUpdate(simdjson::ondemand::object& jsonDat
 
 	m_property->setColorPoints(colorStops);
 	reRender();
+}
+
+void Interactor::shadingUpdate(simdjson::ondemand::object& jsonData) const {
+	bool shading = false;
+	simdjson::error_code shading_error = jsonData["shading"].get(shading);
+
+	if (shading_error == simdjson::SUCCESS) {
+		m_property->SetShade(shading);
+		m_property->Modified();
+		reRender();
+	}
+}
+
+void Interactor::interpolationTypeUpdate(simdjson::ondemand::object& jsonData) const{
+	std::string_view interpolationType;
+	simdjson::error_code interpolation_error = jsonData["interpolationType"].get_string(interpolationType);
+
+	if (interpolation_error == simdjson::SUCCESS) {
+		m_property->setInterpolationType(std::string(interpolationType));
+		m_property->Modified();
+		reRender();
+	}
 }

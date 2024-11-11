@@ -43,9 +43,24 @@
                     <label for="bgColorPicker">Background Color:</label>
                     <input type="color" id="bgColorPicker" value="#000000">
                 </div>
+
+                <!-- New box for Shading and Interpolation Type -->
+                <div class="render-options-container">
+                    <label>
+                        Shading: <input type="checkbox" id="shadingCheckbox" checked> 
+                    </label>
+                    <div>
+                        <label for="interpolationType">Interpolation Type:</label>
+                        <select id="interpolationType">
+                            <option value="Linear">Linear</option>
+                            <option value="Nearest">Nearest Neighbour</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
     <script type="text/javascript">
         const socket = new WebSocket("ws://localhost:5000/connect");
 
@@ -89,7 +104,7 @@
         window.sendColorStops = sendColorStops;
         window.sendControlPoints = sendControlPoints;
 
-        // backgrund color
+        // Background color
         const bgColorPicker = document.getElementById("bgColorPicker");
         bgColorPicker.addEventListener("input", (event) => {
             const color = event.target.value;
@@ -98,7 +113,23 @@
             }
         });
 
-        // logging
+        // Shading checkbox
+        const shadingCheckbox = document.getElementById("shadingCheckbox");
+        shadingCheckbox.addEventListener("change", () => {
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ shading: shadingCheckbox.checked }));
+            }
+        });
+
+        // Interpolation type dropdown
+        const interpolationTypeDropdown = document.getElementById("interpolationType");
+        interpolationTypeDropdown.addEventListener("change", () => {
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ interpolationType: interpolationTypeDropdown.value }));
+            }
+        });
+
+        // Logging
         socket.onopen = function () {
             console.log("WebSocket connection established");
         };
@@ -109,8 +140,8 @@
             console.error("WebSocket Error:", error);
         };
     </script>
+
     <script src="{{ url_for('static', filename='js/opacityEditor.js')}}"></script>
     <script src="{{ url_for('static', filename='js/colorEditor.js')}}"></script>
-    
 </body>
 </html>

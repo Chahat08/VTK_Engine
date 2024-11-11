@@ -4,8 +4,9 @@
 #include <vtkNamedColors.h>
 
 VolumeProperty::VolumeProperty() {
-	this->ShadeOn();
-	this->SetInterpolationTypeToLinear();
+	this->SetShade(FrontendData::defaultShading);
+	setInterpolationType(FrontendData::defaultInterpolationType);
+
 	m_colorTransferFunction = vtkColorTransferFunction::New();
 	m_scalarOpacity = vtkPiecewiseFunction::New();
 	this->SetColor(m_colorTransferFunction);

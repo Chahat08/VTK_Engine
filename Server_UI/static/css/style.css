@@ -156,6 +156,27 @@ h5 {
     cursor: pointer;
 }
 
+.render-options-container {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin-top: 10px;
+}
+
+    .render-options-container label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .render-options-container select {
+        width: 100%;
+        padding: 5px;
+        border-radius: 3px;
+        border: 1px solid #ddd;
+    }
+
 
 /* Responsive design */
 @media (max-width: 768px) {

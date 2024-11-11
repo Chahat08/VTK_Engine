@@ -22,6 +22,8 @@ namespace FrontendData {
 		bool operator==(const BackgroundColor& other) const;
 	};
 
+	// DEFAULTS
+
 	static std::vector<OpacityControlPoint> defaultOpacityPoints = {
 		{0.0, 0.0},
 		{4095.0, 1.0} // TODO: REMOVE HARDCODING
@@ -33,6 +35,8 @@ namespace FrontendData {
 	};
 
 	static std::string defaultBackgroundColor = "#000000";
+	static bool defaultShading = true;
+	static std::string defaultInterpolationType = "Linear";
 
 	std::vector<float> getColor(const std::string& color);
 }

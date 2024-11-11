@@ -33,7 +33,11 @@ private:
 
 	void transferFunctionOpacityUpdate(simdjson::ondemand::object& jsonData) const;
 	void transferFunctionColorUpdate(simdjson::ondemand::object& jsonData) const;
+	void shadingUpdate(simdjson::ondemand::object& jsonData) const;
+	void interpolationTypeUpdate(simdjson::ondemand::object& jsonData) const;
+
 	void rendererBackgroundColorUpdate(simdjson::ondemand::object& jsonData) const;
+	
 };
 
 #endif
