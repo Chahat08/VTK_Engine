@@ -1,14 +1,19 @@
 #include "interaction/interactor.h"
-#include "utils/json.hpp"
 #include "interaction/frontendData.h"
 
-Interactor::Interactor(VolumeProperty* property, Volume* volume) {
+Interactor::Interactor(vtkRenderer* renderer, VolumeProperty* property, Volume* volume) {
 	m_property = property;
 	m_volume = volume;
+	m_renderer = renderer;
 }
 
 void Interactor::setRenderCallback(const std::function<void()>& callback) {
 	m_renderCallback = callback;
+}
+
+void Interactor::reRender() const {
+	if (m_renderCallback)
+		m_renderCallback();
 }
 
 void Interactor::handleServerMessage(const std::string& message) const {
@@ -18,9 +23,22 @@ void Interactor::handleServerMessage(const std::string& message) const {
 		transferFunctionUpdate(message);
 }
 
-void Interactor::transferFunctionUpdate(const std::string& message) const {
+nlohmann::json Interactor::parseJson(const std::string& message) const {
 	nlohmann::json jsonData = nlohmann::json::parse(message);
+	if (jsonData.contains("controlPoints"))
+		transferFunctionUpdate(jsonData);
+	else if (jsonData.contains("bgColor"))
+		rendererBackgroundColorUpdate(jsonData);
+}
 
+void Interactor::rendererBackgroundColorUpdate(const nlohmann::json& jsonData) const {
+	float* bgColor = FrontendData::getColor(jsonData["bgColor"]["color"]).data();
+	m_renderer->SetBackground(bgColor[0], bgColor[1], bgColor[2]);
+
+	reRender();
+}
+
+void Interactor::transferFunctionUpdate(const nlohmann::json& jsonData) const {
 	std::vector<FrontendData::OpacityControlPoint> controlPoints;
 	std::vector<FrontendData::ColorGradientStopPoint> colorPoints;
 
@@ -39,6 +57,5 @@ void Interactor::transferFunctionUpdate(const std::string& message) const {
 	m_property->setColorPoints(colorPoints);
 	m_property->setOpacityPoints(controlPoints);
 
-	if (m_renderCallback)
-		m_renderCallback();
+	reRender();
 }

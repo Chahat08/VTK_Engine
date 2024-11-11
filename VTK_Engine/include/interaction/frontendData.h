@@ -17,15 +17,22 @@ namespace FrontendData {
 		bool operator==(const ColorGradientStopPoint& other) const;
 	};
 
-	static std::vector<OpacityControlPoint> opacityPoints = {
+	struct BackgroundColor {
+		std::string color;
+		bool operator==(const BackgroundColor& other) const;
+	};
+
+	static std::vector<OpacityControlPoint> defaultOpacityPoints = {
 		{0.0, 0.0},
 		{4095.0, 1.0} // TODO: REMOVE HARDCODING
 	};
 
-	static std::vector<ColorGradientStopPoint> colorStops = {
+	static std::vector<ColorGradientStopPoint> defaultColorStops = {
 		{0.0, "#FF0000"},
 		{4095.0, "#0000FF"}
 	};
+
+	static std::string defaultBackgroundColor = "#000000";
 
 	std::vector<float> getColor(const std::string& color);
 }

@@ -38,12 +38,15 @@
                     </div>
                 </div>
             </div>
-            <div class="panel right-panel"></div>
+            <div class="panel right-panel">
+                <div class="background-color-container">
+                    <label for="bgColorPicker">Background Color:</label>
+                    <input type="color" id="bgColorPicker" value="#000000">
+                </div>
+            </div>
         </div>
     </div>
-    <!-- Ensure this script is loaded before other editor scripts -->
     <script type="text/javascript">
-        // Initialize WebSocket connection
         const socket = new WebSocket("ws://localhost:5000/connect");
 
         const intensityRange = [0, 4095];
@@ -60,7 +63,6 @@
             return (position / sliderWidth) * (intensityMax - intensityMin) + intensityMin;
         }
 
-        // Function to get the current state of the editors
         function getEditorState() {
             return {
                 controlPoints: window.controlPoints.map(p => ({ value: p.x, opacity: p.y })),
@@ -71,17 +73,24 @@
             };
         }
 
-        // Function to send editor state over WebSocket
         function sendEditorState() {
             if (socket.readyState === WebSocket.OPEN) {
                 socket.send(JSON.stringify(getEditorState()));
             }
         }
 
-        // Attach sendEditorState to the window object for global access
         window.sendEditorState = sendEditorState;
 
-        // Handle WebSocket events
+        // backgrund color
+        const bgColorPicker = document.getElementById("bgColorPicker");
+        bgColorPicker.addEventListener("input", (event) => {
+            const color = event.target.value;
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ type: "bgColor", color }));
+            }
+        });
+
+        // logging
         socket.onopen = function () {
             console.log("WebSocket connection established");
         };

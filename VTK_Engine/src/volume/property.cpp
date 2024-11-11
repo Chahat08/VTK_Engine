@@ -10,8 +10,8 @@ VolumeProperty::VolumeProperty() {
 	m_scalarOpacity = vtkPiecewiseFunction::New();
 	this->SetColor(m_colorTransferFunction);
 	this->SetScalarOpacity(m_scalarOpacity);
-	setColorPoints(FrontendData::colorStops);
-	setOpacityPoints(FrontendData::opacityPoints);
+	setColorPoints(FrontendData::defaultColorStops);
+	setOpacityPoints(FrontendData::defaultOpacityPoints);
 }
 
 VolumeProperty::~VolumeProperty() {

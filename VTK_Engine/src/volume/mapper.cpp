@@ -1,6 +1,9 @@
 #include "volume/mapper.h"
 
 VolumeMapper::VolumeMapper() {
+	this->AutoAdjustSampleDistancesOn();
+	//m_mapper->SetSampleDistance(0.5);
+	this->SetBlendModeToComposite();
 }
 
 void VolumeMapper::setBlendMode(std::string mode) {

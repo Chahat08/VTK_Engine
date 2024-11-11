@@ -18,10 +18,6 @@ App::App(int sceneWidth, int sceneHeight,
 	int xpos, int ypos,
 	float physicalHeight, float physicalDistance,
 	int clientID, std::string& url) :Window(instanceWidth, instanceHeight, xpos, ypos) {
-	
-
-	double iso1 = 500.0;
-	double iso2 = 1150.0;
 
 	m_reader = new VolumeReader();
 	m_reader->readVolume(Config::readerConfig["fileName"].c_str(), VolumeReader::FileType::MetaImage);
@@ -30,13 +26,6 @@ App::App(int sceneWidth, int sceneHeight,
 
 	m_mapper = new VolumeMapper();
 	m_mapper->SetInputConnection(m_reader->getOutputPort());
-	m_mapper->AutoAdjustSampleDistancesOff();
-	m_mapper->SetSampleDistance(0.5);
-	m_mapper->SetBlendModeToComposite();
-
-	vtkNew<vtkPiecewiseFunction> scalarOpacity;
-	scalarOpacity->AddPoint(iso1, .3);
-	scalarOpacity->AddPoint(iso2, 0.6);
 
 	m_property = new VolumeProperty();
 
@@ -45,7 +34,7 @@ App::App(int sceneWidth, int sceneHeight,
 	volume->SetProperty(m_property);
 	
 	m_renderer->AddVolume(volume);
-	m_renderer->SetBackground(colors->GetColor3d("cornflower").GetData());
+	m_renderer->SetBackground(colors->GetColor3d("black").GetData());
 	m_renderer->ResetCamera();
 
 	float instancePositionX = xpos, instancePositionY = ypos;
@@ -54,9 +43,6 @@ App::App(int sceneWidth, int sceneHeight,
 	m_window->SetPosition(instancePositionX, instancePositionY);
 	m_window->BordersOff();
 	m_window->AddRenderer(m_renderer);
-
-	//m_property->GetIsoSurfaceValues()->SetValue(0, iso1);
-	//m_property->GetIsoSurfaceValues()->SetValue(1, iso2);
 
 	m_camera = new Camera(sceneWidth, sceneHeight,
 		instanceWidth, instanceHeight, 
@@ -69,7 +55,7 @@ App::App(int sceneWidth, int sceneHeight,
 		((volumePosition[2] + volumePosition[3]) / 2.0) - 80.0,
 		((volumePosition[4] + volumePosition[5]) / 2.0) - 300.0);
 
-	m_interactor = new Interactor(m_property, m_volume);
+	m_interactor = new Interactor(m_renderer, m_property, m_volume);
 	m_interactor->setRenderCallback([this]() {this->render(); });
 	m_clientID = clientID;
 	m_client = new SocketClient(url, m_clientID, m_interactor);
