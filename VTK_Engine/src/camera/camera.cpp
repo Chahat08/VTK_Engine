@@ -95,9 +95,6 @@ vtkExternalOpenGLCamera* Camera::getCamera() {
 }
 
 void Camera::setVolumeBounds(std::vector<std::pair<double, double>> bounds) {
-	for (auto bound : bounds) {
-		std::cout << bound.first << " " << bound.second << std::endl;
-	}
 	m_volumeBounds = bounds;
 }
 
@@ -126,8 +123,10 @@ void Camera::rotateCamera(double deltaX, double deltaY) {
 	double width = static_cast<double>(FrontendData::defaultInteractionPanelWidth);
 	double height = static_cast<double>(FrontendData::defaultInteractionPanelHeight);
 
-	double yAngle = -deltaX;// *vtkMath::Pi() / height;
-	double xAngle = deltaY;// *vtkMath::Pi() / width;
+	double yAngle = deltaX;// vtkMath::Pi() / height;
+	double xAngle = -deltaY;// vtkMath::Pi() / width;
+
+
 
 	std::vector<double> currentPosition = {
 		m_camera->GetPosition()[0] - m_camera->GetFocalPoint()[0],

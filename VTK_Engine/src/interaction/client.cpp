@@ -14,6 +14,7 @@ SocketClient::SocketClient(std::string& m_url, int clientID, Interactor* interac
 
 	this->m_url = m_url;
 	m_ws = WebSocket::from_url(m_url);
+	if (!m_ws) return; // render anyway
 	assert(m_ws);
 	m_client_id = clientID;
 	send("CONNECT " + std::to_string(clientID));
