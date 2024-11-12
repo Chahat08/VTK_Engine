@@ -1,10 +1,11 @@
 #include "interaction/interactor.h"
 
 
-Interactor::Interactor(vtkRenderer* renderer, VolumeProperty* property, Volume* volume) {
+Interactor::Interactor(vtkRenderer* renderer, VolumeMapper* mapper, VolumeProperty* property, Volume* volume) {
 	m_property = property;
 	m_volume = volume;
 	m_renderer = renderer;
+	m_mapper = mapper;
 }
 
 void Interactor::setRenderCallback(const std::function<void()>& callback) {
@@ -38,6 +39,18 @@ void Interactor::parseJson(const std::string& message) const {
 
 	else if (obj["interpolationType"].error() == simdjson::SUCCESS)
 		interpolationTypeUpdate(obj);
+
+	else if (obj["autosampleDistances"].error()==simdjson::SUCCESS)
+		autoSampleDistancesUpdate(obj);
+
+	else if (obj["sampleDistance"].error() == simdjson::SUCCESS)
+		sampleDistanceUpdate(obj);
+
+	else if (obj["blendMode"].error() == simdjson::SUCCESS)
+		blendModeUpdate(obj);
+
+	else if (obj["isosurfaceValues"].error() == simdjson::SUCCESS)
+		addIsovalueUpdate(obj);
 }
 
 void Interactor::handleServerMessage(const std::string& message) const {
@@ -114,4 +127,53 @@ void Interactor::interpolationTypeUpdate(simdjson::ondemand::object& jsonData) c
 		m_property->Modified();
 		reRender();
 	}
+}
+
+void Interactor::autoSampleDistancesUpdate(simdjson::ondemand::object& jsonData) const {
+	bool autoSampling = false;
+	simdjson::error_code autoSampling_error = jsonData["autosampleDistances"].get(autoSampling);
+
+	if (autoSampling_error == simdjson::SUCCESS) {
+		m_mapper->SetAutoAdjustSampleDistances(autoSampling);
+		m_mapper->Modified();
+		reRender();
+	}
+}
+
+void Interactor::sampleDistanceUpdate(simdjson::ondemand::object& jsonData) const {
+	float sampleDistance = 0.0;
+	simdjson::error_code sampleDistance_error = jsonData["sampleDistance"].get(sampleDistance);
+
+	if (sampleDistance_error == simdjson::SUCCESS) {
+		m_mapper->SetSampleDistance(sampleDistance);
+		m_mapper->Modified();
+		reRender();
+	}
+}
+
+void Interactor::blendModeUpdate(simdjson::ondemand::object& jsonData) const {
+	std::string_view blendMode;
+	simdjson::error_code blendMode_error = jsonData["blendMode"].get_string(blendMode);
+
+	if (blendMode_error == simdjson::SUCCESS) {
+		m_mapper->setBlendMode(std::string(blendMode));
+		m_mapper->Modified();
+		reRender();
+	}
+}
+
+void Interactor::addIsovalueUpdate(simdjson::ondemand::object& jsonData) const {
+	std::vector<float> isovalues;
+	auto isovaluesArray = jsonData["isosurfaceValues"].get_array();
+
+	for (simdjson::ondemand::value value : isovaluesArray) {
+		float isovalue = 0.0;
+		simdjson::error_code isovalue_error = value.get(isovalue);
+
+		if (isovalue_error == simdjson::SUCCESS)
+			isovalues.push_back(isovalue);
+	}
+
+	m_property->setIsovalues(isovalues);
+	reRender();
 }

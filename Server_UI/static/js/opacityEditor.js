@@ -139,6 +139,7 @@ function dragged(event, d) {
 
     updateLine();
     updateLabel();
+    window.sendControlPoints();
 }
 
 function dragEnded(event, d) {
@@ -183,6 +184,17 @@ d3.select("#opacityRemoveAllButton").on("click", () => {
 updateControlPoints();
 updateLine();
 
+function addOpacityStopFromIntensity(intensity) {
+    const newPoint = {
+        id: Date.now(),
+        x: intensity,
+        y: 0.5 // Default opacity
+    };
+    controlPoints.push(newPoint);
+    updateControlPoints();
+    updateLine();
+    window.sendControlPoints();
+}
 
 ///*
 //TODO: 

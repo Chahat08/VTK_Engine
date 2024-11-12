@@ -44,10 +44,10 @@
                     <input type="color" id="bgColorPicker" value="#000000">
                 </div>
 
-                <!-- New box for Shading and Interpolation Type -->
+                <!-- Render Options -->
                 <div class="render-options-container">
                     <label>
-                        Shading: <input type="checkbox" id="shadingCheckbox" checked> 
+                        Shading: <input type="checkbox" id="shadingCheckbox" checked>
                     </label>
                     <div>
                         <label for="interpolationType">Interpolation Type:</label>
@@ -55,6 +55,37 @@
                             <option value="Linear">Linear</option>
                             <option value="Nearest">Nearest Neighbour</option>
                         </select>
+                    </div>
+                </div>
+
+                <!-- Sampling Options -->
+                <div class="sampling-options-container">
+                    <label>
+                        Autosample Distances: <input type="checkbox" id="autosampleCheckbox" checked>
+                    </label>
+                    <div id="sampleDistanceContainer" style="display: none;">
+                        <label for="sampleDistance">Sample Distance:</label>
+                        <input type="number" id="sampleDistance" value="0.5" step="0.1" min="0">
+                    </div>
+                    <div>
+                        <label for="blendMode">Blend Mode:</label>
+                        <select id="blendMode">
+                            <option value="Composite">Composite</option>
+                            <option value="Min Intensity">Min Intensity</option>
+                            <option value="Max Intensity">Max Intensity</option>
+                            <option value="Average Intensity">Average Intensity</option>
+                            <option value="Additive">Additive</option>
+                            <option value="Isosurface">Isosurface</option>
+                        </select>
+                    </div>
+
+                    <!-- Isosurface Values Container -->
+                    <div id="isosurfaceValuesContainer" style="display: none;">
+                        <label>Isosurface Values:</label>
+                        <div id="isosurfaceInputs">
+                            <!-- Isosurface values will be added here dynamically -->
+                        </div>
+                        <button type="button" id="addIsoValueButton">+</button>
                     </div>
                 </div>
             </div>
@@ -65,6 +96,7 @@
         const socket = new WebSocket("ws://localhost:5000/connect");
 
         const intensityRange = [0, 4095];
+        const defaultIsoValue = (intensityRange[0] + intensityRange[1]) / 2;
 
         window.controlPoints = [
             { id: 1, x: intensityRange[0], y: 0 },
@@ -128,6 +160,72 @@
                 socket.send(JSON.stringify({ interpolationType: interpolationTypeDropdown.value }));
             }
         });
+
+        // Autosample Distances checkbox
+        const autosampleCheckbox = document.getElementById("autosampleCheckbox");
+        const sampleDistanceContainer = document.getElementById("sampleDistanceContainer");
+        autosampleCheckbox.addEventListener("change", () => {
+            sampleDistanceContainer.style.display = autosampleCheckbox.checked ? "none" : "block";
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ autosampleDistances: autosampleCheckbox.checked }));
+            }
+        });
+
+        // Sample Distance input
+        const sampleDistanceInput = document.getElementById("sampleDistance");
+        sampleDistanceInput.addEventListener("input", () => {
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ sampleDistance: parseFloat(sampleDistanceInput.value) }));
+            }
+        });
+
+        // Blend Mode dropdown
+        const blendModeDropdown = document.getElementById("blendMode");
+        const isosurfaceValuesContainer = document.getElementById("isosurfaceValuesContainer");
+        const isosurfaceInputs = document.getElementById("isosurfaceInputs");
+        const addIsoValueButton = document.getElementById("addIsoValueButton");
+
+        blendModeDropdown.addEventListener("change", () => {
+            const blendMode = blendModeDropdown.value;
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ blendMode }));
+            }
+
+            if (blendMode === "Isosurface") {
+                isosurfaceValuesContainer.style.display = "block";
+                if (isosurfaceInputs.children.length === 0) {
+                    addIsosurfaceInput(defaultIsoValue);
+                }
+            } else {
+                isosurfaceValuesContainer.style.display = "none";
+            }
+        });
+
+        // Function to add a new isosurface input
+        function addIsosurfaceInput(value = defaultIsoValue) {
+            const input = document.createElement("input");
+            input.type = "number";
+            input.className = "isoValueInput";
+            input.value = value;
+            input.step = "0.1";
+            input.min = "0";
+            input.addEventListener("input", () => sendIsosurfaceValues());
+            isosurfaceInputs.appendChild(input);
+            sendIsosurfaceValues();
+        }
+
+        // Add a new isosurface input when the "+" button is clicked
+        addIsoValueButton.addEventListener("click", () => {
+            addIsosurfaceInput();
+        });
+
+        // Send all isosurface values to the server
+        function sendIsosurfaceValues() {
+            const isoValues = Array.from(document.getElementsByClassName("isoValueInput")).map(input => parseFloat(input.value));
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ isosurfaceValues: isoValues }));
+            }
+        }
 
         // Logging
         socket.onopen = function () {

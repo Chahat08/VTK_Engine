@@ -131,3 +131,8 @@ document.addEventListener("click", (event) => {
         }
     }
 });
+
+function addColorStopFromIntensity(intensity) {
+    const position = (intensity - intensityRange[0]) / (intensityRange[1] - intensityRange[0]) * sliderWidth;
+    addDividingLine(position, "#CCCCCC"); // Default color
+}

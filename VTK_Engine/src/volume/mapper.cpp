@@ -1,32 +1,32 @@
 #include "volume/mapper.h"
 
 VolumeMapper::VolumeMapper() {
-	this->AutoAdjustSampleDistancesOn();
-	//m_mapper->SetSampleDistance(0.5);
-	this->SetBlendModeToComposite();
+	this->SetAutoAdjustSampleDistances(FrontendData::defaultAutoSampling);
+	this->SetSampleDistance(FrontendData::defaultSampleDistance);
+	this->setBlendMode(FrontendData::defaultBlendMode);
 }
 
 void VolumeMapper::setBlendMode(std::string mode) {
-	if (mode == "IsoSurface") {
+	if (mode == "Isosurface") {
 		this->SetBlendModeToIsoSurface();
 	}
 	else if (mode == "Composite") {
 		this->SetBlendModeToComposite();
 	}
-	else if (mode == "MaximumIntensity") {
+	else if (mode == "Max Intensity") {
 		this->SetBlendModeToMaximumIntensity();
 	}
-	else if (mode == "MinimumIntensity") {
+	else if (mode == "Min Intensity") {
 		this->SetBlendModeToMinimumIntensity();
 	}
-	else if (mode == "AverageIntensity") {
+	else if (mode == "Average Intensity") {
 		this->SetBlendModeToAverageIntensity();
 	}
 	else if (mode == "Additive") {
 		this->SetBlendModeToAdditive();
 	}
 	else {
-		this->SetBlendModeToIsoSurface();
+		this->SetBlendModeToComposite();
 	}
 }
 

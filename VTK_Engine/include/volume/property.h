@@ -3,6 +3,7 @@
 
 #include <vtkVolumeProperty.h>
 #include "interaction/frontendData.h"
+#include "volume/mapper.h"
 
 class VolumeProperty :public vtkVolumeProperty {
 public:
@@ -13,6 +14,7 @@ public:
 
 	void setColorPoints(std::vector<FrontendData::ColorGradientStopPoint>& colorPoints);
 	void setOpacityPoints(std::vector<FrontendData::OpacityControlPoint>& opacityPoints);
+	void setIsovalues(std::vector<float>& isovalues);
 
 private:
 	vtkColorTransferFunction* m_colorTransferFunction;

@@ -2,6 +2,7 @@
 #include <vtkColorTransferFunction.h>
 #include <vtkPiecewiseFunction.h>
 #include <vtkNamedColors.h>
+#include <vtkContourValues.h>
 
 VolumeProperty::VolumeProperty() {
 	this->SetShade(FrontendData::defaultShading);
@@ -50,5 +51,14 @@ void VolumeProperty::setOpacityPoints(std::vector<FrontendData::OpacityControlPo
 		m_scalarOpacity->AddPoint(opacityPoint.value, opacityPoint.opacity);
 	}
 	this->m_scalarOpacity->Modified();
+	this->Modified();
+}
+
+void VolumeProperty::setIsovalues(std::vector<float>& isovalues) {
+	for (int i = 0; i < isovalues.size(); ++i) {
+		std::cout << "Isovalues: " << isovalues[i] << std::endl;
+		this->GetIsoSurfaceValues()->SetValue(i, isovalues[i]);
+	}
+	this->IsoSurfaceValues->Modified();
 	this->Modified();
 }
