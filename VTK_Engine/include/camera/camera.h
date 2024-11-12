@@ -18,6 +18,9 @@ public:
 	void setPitch(double pitch);
 	void setYaw(double yaw);
 	void setRoll(double roll);
+	
+	void setVolumeBounds(std::vector<std::pair<double, double>> bounds);
+	void resetCameraPosition();   
 
 	vtkExternalOpenGLCamera* getCamera();
 
@@ -28,6 +31,8 @@ private:
 	int m_instanceWidth = 0, m_instanceHeight = 0;
 	int m_xpos = 0, m_ypos = 0;
 	float m_physicalHeight = 0.0, m_physicalDistance = 0.0;
+
+	std::vector<std::pair<double, double>> m_volumeBounds;
 
 	float convertScale(float originalValue, float originalMin, float originalMax, float newMin, float newMax);
 	vtkMatrix4x4* getInstanceProjectionMatrix();

@@ -3,8 +3,8 @@
 
 #include "volume/property.h"
 #include "interaction/frontendData.h"
-#include "volume/volume.h"
 #include "volume/mapper.h"
+#include "camera/camera.h"
 #include "utils/json/simdjson.h"
 
 #include <functional>
@@ -15,7 +15,7 @@ class App;
 
 class Interactor {
 public:
-	Interactor(vtkRenderer* renderer, VolumeMapper* mapper, VolumeProperty* property, Volume* volume);
+	Interactor(vtkRenderer* renderer, VolumeMapper* mapper, VolumeProperty* property, Camera* camera);
 	~Interactor();
 
 	void handleServerMessage(const std::string& message) const;
@@ -24,8 +24,8 @@ private:
 
 	VolumeMapper* m_mapper;
 	VolumeProperty* m_property;
-	Volume* m_volume;
 	vtkRenderer* m_renderer;
+	Camera* m_camera;
 
 	std::function<void()> m_renderCallback;
 	void setRenderCallback(const std::function<void()>& callback);
@@ -48,7 +48,10 @@ private:
 	void interpolationTypeUpdate(simdjson::ondemand::object& jsonData) const;
 	void addIsovalueUpdate(simdjson::ondemand::object& jsonData) const;
 
-	
+	// camera updates
+	void cameraPositionUpdate(simdjson::ondemand::object& jsonData) const;
+	void cameraZoomUpdate(simdjson::ondemand::object& jsonData) const;
+
 };
 
 #endif

@@ -54,6 +54,7 @@ Camera::Camera(int sceneWidth, int sceneHeight,
 
 	m_camera->SetUseExplicitProjectionTransformMatrix(true);
 	m_camera->SetExplicitProjectionTransformMatrix(getInstanceProjectionMatrix());
+	resetCameraPosition();
 }
 
 Camera::~Camera() {
@@ -86,4 +87,32 @@ void Camera::setRoll(double roll) {
 
 vtkExternalOpenGLCamera* Camera::getCamera() {
 	return m_camera;
+}
+
+void Camera::setVolumeBounds(std::vector<std::pair<double, double>> bounds) {
+	for (auto bound : bounds) {
+		std::cout << bound.first << " " << bound.second << std::endl;
+	}
+	m_volumeBounds = bounds;
+}
+
+void Camera::resetCameraPosition() {
+	if (m_volumeBounds.empty()) {
+		m_camera->SetPosition(0, 0, 0);
+		setFocalPoint(0, 0, 0);
+		setViewUp(0, 1, 0);
+	}
+	else {
+		m_camera->SetPosition(
+			(m_volumeBounds[0].first + m_volumeBounds[0].second) / 2.0,
+			(m_volumeBounds[1].first + m_volumeBounds[1].second) / 2.0,
+			4*m_volumeBounds[2].second 
+		);
+		setFocalPoint(
+			(m_volumeBounds[0].first + m_volumeBounds[0].second) / 2.0,
+			(m_volumeBounds[1].first + m_volumeBounds[1].second) / 2.0,
+			(m_volumeBounds[2].first + m_volumeBounds[2].second) / 2.0
+		);
+		setViewUp(0, 1, 0);
+	}
 }

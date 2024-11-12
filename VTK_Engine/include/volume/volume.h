@@ -8,6 +8,7 @@ public:
 	Volume();
 	~Volume();
 
+	std::vector<std::pair<double, double>> getVolumeBounds();
 };
 
 #endif

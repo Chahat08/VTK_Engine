@@ -17,7 +17,13 @@
             </form>
         </header>
         <div class="main-content">
-            <div class="panel left-panel"></div>
+            <div class="panel left-panel">
+                <div class="interaction-container">
+                    <h5>Camera Interaction Panel</h5>
+                    <div id="cameraInteraction" class="interaction-box">
+                    </div>
+                </div>
+            </div>
             <div class="panel center-panel">
                 <div class="editor-container">
                     <div class="opacity-container">
@@ -44,7 +50,6 @@
                     <input type="color" id="bgColorPicker" value="#000000">
                 </div>
 
-                <!-- Render Options -->
                 <div class="render-options-container">
                     <label>
                         Shading: <input type="checkbox" id="shadingCheckbox" checked>
@@ -58,7 +63,6 @@
                     </div>
                 </div>
 
-                <!-- Sampling Options -->
                 <div class="sampling-options-container">
                     <label>
                         Autosample Distances: <input type="checkbox" id="autosampleCheckbox" checked>
@@ -79,11 +83,10 @@
                         </select>
                     </div>
 
-                    <!-- Isosurface Values Container -->
                     <div id="isosurfaceValuesContainer" style="display: none;">
                         <label>Isosurface Values:</label>
                         <div id="isosurfaceInputs">
-                            <!-- Isosurface values will be added here dynamically -->
+
                         </div>
                         <button type="button" id="addIsoValueButton">+</button>
                     </div>
@@ -133,10 +136,24 @@
             }
         }
 
+        function sendCameraZoom(zoomAmount) {
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ cameraZoom: zoomAmount }));
+            }
+        }
+
+        function sendCameraDrag(deltaX, deltaY) {
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ cameraDrag: { deltaX, deltaY } }));
+            }
+        }
+
+
         window.sendColorStops = sendColorStops;
         window.sendControlPoints = sendControlPoints;
+        window.sendCameraZoom = sendCameraZoom;
+        window.sendCameraDrag = sendCameraDrag;
 
-        // Background color
         const bgColorPicker = document.getElementById("bgColorPicker");
         bgColorPicker.addEventListener("input", (event) => {
             const color = event.target.value;
@@ -145,7 +162,6 @@
             }
         });
 
-        // Shading checkbox
         const shadingCheckbox = document.getElementById("shadingCheckbox");
         shadingCheckbox.addEventListener("change", () => {
             if (socket.readyState === WebSocket.OPEN) {
@@ -153,7 +169,6 @@
             }
         });
 
-        // Interpolation type dropdown
         const interpolationTypeDropdown = document.getElementById("interpolationType");
         interpolationTypeDropdown.addEventListener("change", () => {
             if (socket.readyState === WebSocket.OPEN) {
@@ -161,7 +176,6 @@
             }
         });
 
-        // Autosample Distances checkbox
         const autosampleCheckbox = document.getElementById("autosampleCheckbox");
         const sampleDistanceContainer = document.getElementById("sampleDistanceContainer");
         autosampleCheckbox.addEventListener("change", () => {
@@ -171,7 +185,6 @@
             }
         });
 
-        // Sample Distance input
         const sampleDistanceInput = document.getElementById("sampleDistance");
         sampleDistanceInput.addEventListener("input", () => {
             if (socket.readyState === WebSocket.OPEN) {
@@ -179,7 +192,6 @@
             }
         });
 
-        // Blend Mode dropdown
         const blendModeDropdown = document.getElementById("blendMode");
         const isosurfaceValuesContainer = document.getElementById("isosurfaceValuesContainer");
         const isosurfaceInputs = document.getElementById("isosurfaceInputs");
@@ -201,7 +213,6 @@
             }
         });
 
-        // Function to add a new isosurface input
         function addIsosurfaceInput(value = defaultIsoValue) {
             const input = document.createElement("input");
             input.type = "number";
@@ -214,12 +225,10 @@
             sendIsosurfaceValues();
         }
 
-        // Add a new isosurface input when the "+" button is clicked
         addIsoValueButton.addEventListener("click", () => {
             addIsosurfaceInput();
         });
 
-        // Send all isosurface values to the server
         function sendIsosurfaceValues() {
             const isoValues = Array.from(document.getElementsByClassName("isoValueInput")).map(input => parseFloat(input.value));
             if (socket.readyState === WebSocket.OPEN) {
@@ -227,7 +236,6 @@
             }
         }
 
-        // Logging
         socket.onopen = function () {
             console.log("WebSocket connection established");
         };
@@ -241,5 +249,7 @@
 
     <script src="{{ url_for('static', filename='js/opacityEditor.js')}}"></script>
     <script src="{{ url_for('static', filename='js/colorEditor.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/cameraInteraction.js')}}"></script>
+
 </body>
 </html>

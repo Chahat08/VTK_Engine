@@ -30,11 +30,11 @@ App::App(int sceneWidth, int sceneHeight,
 
 	m_property = new VolumeProperty();
 
-	vtkNew<vtkVolume> volume;
-	volume->SetMapper(m_mapper);
-	volume->SetProperty(m_property);
+	m_volume = new Volume();
+	m_volume->SetMapper(m_mapper);
+	m_volume->SetProperty(m_property);
 	
-	m_renderer->AddVolume(volume);
+	m_renderer->AddVolume(m_volume);
 	std::vector<float> bgColor = FrontendData::getColor(FrontendData::defaultBackgroundColor);
 	m_renderer->SetBackground(bgColor[0], bgColor[1], bgColor[2]);
 	m_renderer->ResetCamera();
@@ -50,14 +50,11 @@ App::App(int sceneWidth, int sceneHeight,
 		instanceWidth, instanceHeight, 
 		xpos, ypos, 
 		physicalHeight, physicalDistance);
-
+	m_camera->setVolumeBounds(m_volume->getVolumeBounds());
+	m_camera->resetCameraPosition();
 	m_renderer->SetActiveCamera(m_camera->getCamera());
-	double* volumePosition = volume->GetBounds();
-	m_camera->setPosition(((volumePosition[0] + volumePosition[1]) / 2.0) - 500.0,
-		((volumePosition[2] + volumePosition[3]) / 2.0) - 80.0,
-		((volumePosition[4] + volumePosition[5]) / 2.0) - 300.0);
 
-	m_interactor = new Interactor(m_renderer, m_mapper, m_property, m_volume);
+	m_interactor = new Interactor(m_renderer, m_mapper, m_property, m_camera);
 	m_interactor->setRenderCallback([this]() {this->render(); });
 	m_clientID = clientID;
 	m_client = new SocketClient(url, m_clientID, m_interactor);

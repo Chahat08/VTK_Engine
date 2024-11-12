@@ -1,9 +1,9 @@
 #include "interaction/interactor.h"
 
 
-Interactor::Interactor(vtkRenderer* renderer, VolumeMapper* mapper, VolumeProperty* property, Volume* volume) {
+Interactor::Interactor(vtkRenderer* renderer, VolumeMapper* mapper, VolumeProperty* property, Camera* camera) {
 	m_property = property;
-	m_volume = volume;
+	m_camera = camera;
 	m_renderer = renderer;
 	m_mapper = mapper;
 }
@@ -28,11 +28,11 @@ void Interactor::parseJson(const std::string& message) const {
 	if (obj["bgColor"].error() == simdjson::SUCCESS)
 		rendererBackgroundColorUpdate(obj);
 
-	else if (obj["controlPoints"].error() == simdjson::SUCCESS) 
+	else if (obj["controlPoints"].error() == simdjson::SUCCESS)
 		transferFunctionOpacityUpdate(obj);
-	
-	else if (obj["colorStops"].error() == simdjson::SUCCESS) 
-		transferFunctionColorUpdate(obj);  
+
+	else if (obj["colorStops"].error() == simdjson::SUCCESS)
+		transferFunctionColorUpdate(obj);
 
 	else if (obj["shading"].error() == simdjson::SUCCESS)
 		shadingUpdate(obj);
@@ -40,7 +40,7 @@ void Interactor::parseJson(const std::string& message) const {
 	else if (obj["interpolationType"].error() == simdjson::SUCCESS)
 		interpolationTypeUpdate(obj);
 
-	else if (obj["autosampleDistances"].error()==simdjson::SUCCESS)
+	else if (obj["autosampleDistances"].error() == simdjson::SUCCESS)
 		autoSampleDistancesUpdate(obj);
 
 	else if (obj["sampleDistance"].error() == simdjson::SUCCESS)
@@ -51,6 +51,12 @@ void Interactor::parseJson(const std::string& message) const {
 
 	else if (obj["isosurfaceValues"].error() == simdjson::SUCCESS)
 		addIsovalueUpdate(obj);
+
+	else if (obj["cameraDrag"].error() == simdjson::SUCCESS)
+		cameraPositionUpdate(obj);
+
+	else if (obj["cameraZoom"].error() == simdjson::SUCCESS)
+		cameraZoomUpdate(obj);
 }
 
 void Interactor::handleServerMessage(const std::string& message) const {
@@ -176,4 +182,28 @@ void Interactor::addIsovalueUpdate(simdjson::ondemand::object& jsonData) const {
 
 	m_property->setIsovalues(isovalues);
 	reRender();
+}
+
+void Interactor::cameraPositionUpdate(simdjson::ondemand::object& jsonData) const {
+
+	simdjson::ondemand::object cameraDrag = jsonData["cameraDrag"];
+
+	int deltaX = 0, deltaY = 0;
+	simdjson::error_code x_error = cameraDrag["deltaX"].get(deltaX);
+	simdjson::error_code y_error = cameraDrag["deltaY"].get(deltaY);
+
+	if (x_error == simdjson::SUCCESS && y_error == simdjson::SUCCESS) {
+		// DO SOMETHING
+		reRender();
+	}
+}
+
+void Interactor::cameraZoomUpdate(simdjson::ondemand::object& jsonData) const {
+	double zoom = 0.0;
+	simdjson::error_code zoom_error = jsonData["cameraZoom"].get(zoom);
+
+	if (zoom_error == simdjson::SUCCESS) {
+		// DO SOMETHING
+		reRender();
+	}
 }
