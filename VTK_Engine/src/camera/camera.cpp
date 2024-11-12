@@ -1,4 +1,7 @@
 #include "camera/camera.h"
+#include "interaction/frontendData.h"
+#include <vtkTransform.h>
+#include <vtkMath.h>
 
 #include <vtkNew.h>
 
@@ -115,4 +118,33 @@ void Camera::resetCameraPosition() {
 		);
 		setViewUp(0, 1, 0);
 	}
+}
+
+void Camera::rotateCamera(double deltaX, double deltaY) {
+	double width = static_cast<double>(FrontendData::defaultInteractionPanelWidth);
+	double height = static_cast<double>(FrontendData::defaultInteractionPanelHeight);
+
+	double yAngle = -deltaY * vtkMath::Pi() / height;
+	double xAngle = deltaX * vtkMath::Pi() / width;
+
+	/*float cosAngle = vtkMath::Dot(m_camera->GetFocalPoint(), m_camera->GetViewUp());
+	if (cosAngle * vtkMath::(yAngle) > 0.99f)
+		yAngle = 0;*/
+
+	//// Apply the pitch rotation
+	//vtkMatrix4x4* rotationMatrix = vtkMatrix4x4::New();
+	//rotationMatrix->Identity();
+	//vtkNew<vtkTransform> transform;
+	//transform->RotateX(pitchAngle * 180.0 / vtkMath::Pi());
+	//m_camera->Multiply4x4(rotationMatrix, m_camera->GetViewTransformMatrix(), m_camera->GetViewTransformMatrix());
+	//rotationMatrix->Delete();
+
+	//// Apply the yaw rotation
+	//rotationMatrix = vtkMatrix4x4::New();
+	//rotationMatrix->Identity();
+	//rotationMatrix->RotateY(yawAngle * 180.0 / M_PI);
+	//m_camera->Multiply4x4(rotationMatrix, m_camera->GetViewTransformMatrix(), m_camera->GetViewTransformMatrix());
+	//rotationMatrix->Delete();
+
+	//updateCameraView();
 }

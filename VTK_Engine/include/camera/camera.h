@@ -20,7 +20,9 @@ public:
 	void setRoll(double roll);
 	
 	void setVolumeBounds(std::vector<std::pair<double, double>> bounds);
-	void resetCameraPosition();   
+	void resetCameraPosition();  
+
+	void rotateCamera(double deltaX, double deltaY);
 
 	vtkExternalOpenGLCamera* getCamera();
 
