@@ -73,7 +73,9 @@ void Camera::setFocalPoint(double x, double y, double z) {
 }
 
 void Camera::setViewUp(double x, double y, double z) {
-	m_camera->SetViewUp(x, y, z);
+	double* viewUp = new double[3] { x, y, z };
+	vtkMath::Normalize(viewUp);
+	m_camera->SetViewUp(viewUp);
 }
 
 void Camera::setPitch(double pitch) {
@@ -124,27 +126,44 @@ void Camera::rotateCamera(double deltaX, double deltaY) {
 	double width = static_cast<double>(FrontendData::defaultInteractionPanelWidth);
 	double height = static_cast<double>(FrontendData::defaultInteractionPanelHeight);
 
-	double yAngle = -deltaY * vtkMath::Pi() / height;
-	double xAngle = deltaX * vtkMath::Pi() / width;
+	double yAngle = -deltaX;// *vtkMath::Pi() / height;
+	double xAngle = deltaY;// *vtkMath::Pi() / width;
 
-	/*float cosAngle = vtkMath::Dot(m_camera->GetFocalPoint(), m_camera->GetViewUp());
-	if (cosAngle * vtkMath::(yAngle) > 0.99f)
-		yAngle = 0;*/
+	std::vector<double> currentPosition = {
+		m_camera->GetPosition()[0] - m_camera->GetFocalPoint()[0],
+		m_camera->GetPosition()[1] - m_camera->GetFocalPoint()[1],
+		m_camera->GetPosition()[2] - m_camera->GetFocalPoint()[2],
+	};
 
-	//// Apply the pitch rotation
-	//vtkMatrix4x4* rotationMatrix = vtkMatrix4x4::New();
-	//rotationMatrix->Identity();
-	//vtkNew<vtkTransform> transform;
-	//transform->RotateX(pitchAngle * 180.0 / vtkMath::Pi());
-	//m_camera->Multiply4x4(rotationMatrix, m_camera->GetViewTransformMatrix(), m_camera->GetViewTransformMatrix());
-	//rotationMatrix->Delete();
+	vtkNew<vtkTransform> transform;
+	transform->PostMultiply();
+	transform->RotateX(xAngle);
+	transform->RotateY(yAngle);
+	
+	double* newPoint = transform->TransformPoint(currentPosition[0], currentPosition[1], currentPosition[2]);
 
-	//// Apply the yaw rotation
-	//rotationMatrix = vtkMatrix4x4::New();
-	//rotationMatrix->Identity();
-	//rotationMatrix->RotateY(yawAngle * 180.0 / M_PI);
-	//m_camera->Multiply4x4(rotationMatrix, m_camera->GetViewTransformMatrix(), m_camera->GetViewTransformMatrix());
-	//rotationMatrix->Delete();
+	m_camera->SetPosition(
+		newPoint[0] + m_camera->GetFocalPoint()[0],
+		newPoint[1] + m_camera->GetFocalPoint()[1],
+		newPoint[2] + m_camera->GetFocalPoint()[2]
+	);
+}
 
-	//updateCameraView();
+void Camera::zoomCamera(double zoomFactor) {
+	double* position = m_camera->GetPosition();
+	double* focalPoint = m_camera->GetFocalPoint();
+
+	double* cameraDirection = new double[3]{
+		position[0] - focalPoint[0],
+		position[1] - focalPoint[1],
+		position[2] - focalPoint[2]
+	};
+
+	vtkMath::Normalize(cameraDirection);
+
+	m_camera->SetPosition(
+		position[0] + zoomFactor*cameraDirection[0],
+		position[1] + zoomFactor*cameraDirection[1],
+		position[2] + zoomFactor*cameraDirection[2]
+	);
 }

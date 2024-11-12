@@ -193,7 +193,7 @@ void Interactor::cameraPositionUpdate(simdjson::ondemand::object& jsonData) cons
 	simdjson::error_code y_error = cameraDrag["deltaY"].get(deltaY);
 
 	if (x_error == simdjson::SUCCESS && y_error == simdjson::SUCCESS) {
-		// DO SOMETHING
+		m_camera->rotateCamera(deltaX, deltaY);
 		reRender();
 	}
 }
@@ -203,7 +203,7 @@ void Interactor::cameraZoomUpdate(simdjson::ondemand::object& jsonData) const {
 	simdjson::error_code zoom_error = jsonData["cameraZoom"].get(zoom);
 
 	if (zoom_error == simdjson::SUCCESS) {
-		// DO SOMETHING
+		m_camera->zoomCamera(zoom);
 		reRender();
 	}
 }

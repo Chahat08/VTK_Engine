@@ -23,6 +23,7 @@ public:
 	void resetCameraPosition();  
 
 	void rotateCamera(double deltaX, double deltaY);
+	void zoomCamera(double zoomFactor);
 
 	vtkExternalOpenGLCamera* getCamera();
 
