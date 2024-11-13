@@ -15,6 +15,7 @@ public:
 	static App& getInstance(
 		int sceneWidth, int sceneHeight, 
 		int instanceWidth, int instanceHeight,
+		int windowXPos, int windowYPos,
 		int xpos, int ypos, 
 		float physicalHeight, float physicalDistance,
 		int clientID, std::string& url
@@ -25,6 +26,7 @@ private:
 	App(int sceneWidth, int sceneHeight,
 		int instanceWidth, int instanceHeight,
 		int xpos, int ypos,
+		int windowXPos, int windowYPos,
 		float physicalHeight, float physicalDistance,
 		int clientID, std::string& url);
 	~App();

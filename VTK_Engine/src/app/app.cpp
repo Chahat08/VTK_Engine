@@ -16,9 +16,10 @@ float convertScale(float originalValue, float originalMin, float originalMax, fl
 
 App::App(int sceneWidth, int sceneHeight,
 	int instanceWidth, int instanceHeight,
+	int windowXPos, int windowYPos,
 	int xpos, int ypos,
 	float physicalHeight, float physicalDistance,
-	int clientID, std::string& url) :Window(instanceWidth, instanceHeight, xpos, ypos) {
+	int clientID, std::string& url) :Window(instanceWidth, instanceHeight, windowXPos, windowYPos) {
 
 	m_reader = new VolumeReader();
 	m_reader->readVolume(Config::readerConfig["fileName"].c_str(), VolumeReader::FileType::MetaImage);
@@ -41,9 +42,9 @@ App::App(int sceneWidth, int sceneHeight,
 
 	float instancePositionX = xpos, instancePositionY = ypos;
 
-	m_window->SetSize(instanceWidth, instanceHeight);
+	/*m_window->SetSize(instanceWidth, instanceHeight);
 	m_window->SetPosition(instancePositionX, instancePositionY);
-	m_window->BordersOff();
+	m_window->BordersOff();*/
 	m_window->AddRenderer(m_renderer);
 
 	m_camera = new Camera(sceneWidth, sceneHeight,
@@ -69,11 +70,13 @@ App& App::getInstance(
 	int sceneWidth, int sceneHeight,
 	int instanceWidth, int instanceHeight,
 	int xpos, int ypos,
+	int windowXPos, int windowYPos,
 	float physicalHeight, float physicalDistance, 
 	int clientID, std::string& url) {
 	static App instance(
 		sceneWidth, sceneHeight, 
 		instanceWidth, instanceHeight, 
+		windowXPos, windowYPos,
 		xpos, ypos,	
 		physicalHeight, physicalDistance,
 		clientID, url);

@@ -15,13 +15,15 @@ int main(int argc, char* argv[])
 	int instanceHeight = std::stoi(argv[4]);
 	int xpos = std::stoi(argv[5]);
 	int ypos = std::stoi(argv[6]);
-	float physicalHeight = std::stof(argv[7]);
-	float physicalDistance = std::stof(argv[8]);
-	int clientID = std::stoi(argv[9]);
-	std::string url = argv[10];
+	int windowXPos = std::stoi(argv[7]);
+	int windowYPos = std::stoi(argv[8]);
+	float physicalHeight = std::stof(argv[9]);
+	float physicalDistance = std::stof(argv[10]);
+	int clientID = std::stoi(argv[11]);
+	std::string url = argv[12];
 
 	App::getInstance(
-		sceneWidth, sceneHeight, instanceWidth, instanceHeight, xpos, ypos, physicalHeight, physicalDistance,
+		sceneWidth, sceneHeight, instanceWidth, instanceHeight, xpos, ypos, windowXPos, windowYPos, physicalHeight, physicalDistance,
 		clientID, url
 	).run();
 
