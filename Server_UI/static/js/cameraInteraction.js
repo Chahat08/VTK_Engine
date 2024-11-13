@@ -7,7 +7,7 @@ let lastY = 0;
 // Capture mouse wheel for zooming
 cameraInteractionBox.addEventListener("wheel", (event) => {
     const zoomAmount = event.deltaY < 0 ? 1 : -1; // Positive for zoom in, negative for zoom out
-    window.sendCameraZoom(zoomAmount);
+    window.sendCameraZoom(-zoomAmount);
     event.preventDefault();
 });
 
