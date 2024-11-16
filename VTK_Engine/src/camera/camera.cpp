@@ -146,6 +146,8 @@ void Camera::rotateCamera(double deltaX, double deltaY) {
 		newPoint[1] + m_camera->GetFocalPoint()[1],
 		newPoint[2] + m_camera->GetFocalPoint()[2]
 	);
+
+	m_camera->Modified();
 }
 
 void Camera::zoomCamera(double zoomFactor) {
@@ -165,4 +167,6 @@ void Camera::zoomCamera(double zoomFactor) {
 		position[1] + zoomFactor*cameraDirection[1],
 		position[2] + zoomFactor*cameraDirection[2]
 	);
+
+	m_camera->Modified();
 }

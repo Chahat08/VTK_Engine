@@ -15,7 +15,7 @@ public:
 	Window& operator=(Window&&) = delete;
 
 protected:
-	Window(int width, int height, int xpos, int ypos, bool borders = false, std::string name = "Title");
+	Window(int width, int height, int xpos, int ypos, int gpuIndex = 0, bool borders = false, std::string name = "Title");
 	~Window();
 
 	vtkRenderWindow* m_window{ nullptr };

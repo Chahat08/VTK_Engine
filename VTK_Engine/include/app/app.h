@@ -18,7 +18,8 @@ public:
 		int windowXPos, int windowYPos,
 		int xpos, int ypos, 
 		float physicalHeight, float physicalDistance,
-		int clientID, std::string& url
+		int clientID, std::string& url,
+		int gpuIndex
 	);
 	void run();
 
@@ -28,7 +29,8 @@ private:
 		int xpos, int ypos,
 		int windowXPos, int windowYPos,
 		float physicalHeight, float physicalDistance,
-		int clientID, std::string& url);
+		int clientID, std::string& url,
+		int gpuIndex);
 	~App();
 	App(const App&) = delete;
 	App& operator=(const App&) = delete;

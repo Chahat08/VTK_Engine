@@ -19,12 +19,11 @@ App::App(int sceneWidth, int sceneHeight,
 	int windowXPos, int windowYPos,
 	int xpos, int ypos,
 	float physicalHeight, float physicalDistance,
-	int clientID, std::string& url) :Window(instanceWidth, instanceHeight, windowXPos, windowYPos) {
+	int clientID, std::string& url,
+	int gpuIndex) :Window(instanceWidth, instanceHeight, windowXPos, windowYPos, gpuIndex, false) {
 
 	m_reader = new VolumeReader();
 	m_reader->readVolume(Config::readerConfig["fileName"].c_str(), VolumeReader::FileType::MetaImage);
-
-	vtkNew<vtkNamedColors> colors;
 
 	m_mapper = new VolumeMapper();
 	m_mapper->SetInputConnection(m_reader->getOutputPort());
@@ -40,13 +39,6 @@ App::App(int sceneWidth, int sceneHeight,
 	m_renderer->SetBackground(bgColor[0], bgColor[1], bgColor[2]);
 	m_renderer->ResetCamera();
 
-	float instancePositionX = xpos, instancePositionY = ypos;
-
-	/*m_window->SetSize(instanceWidth, instanceHeight);
-	m_window->SetPosition(instancePositionX, instancePositionY);
-	m_window->BordersOff();*/
-	m_window->AddRenderer(m_renderer);
-
 	m_camera = new Camera(sceneWidth, sceneHeight,
 		instanceWidth, instanceHeight, 
 		xpos, ypos, 
@@ -57,6 +49,7 @@ App::App(int sceneWidth, int sceneHeight,
 
 	m_interactor = new Interactor(m_renderer, m_mapper, m_property, m_camera);
 	m_interactor->setRenderCallback([this]() {this->render(); });
+
 	m_clientID = clientID;
 	m_client = new SocketClient(url, m_clientID, m_interactor);
 }
@@ -72,14 +65,16 @@ App& App::getInstance(
 	int xpos, int ypos,
 	int windowXPos, int windowYPos,
 	float physicalHeight, float physicalDistance, 
-	int clientID, std::string& url) {
+	int clientID, std::string& url,
+	int gpuIndex) {
 	static App instance(
 		sceneWidth, sceneHeight, 
 		instanceWidth, instanceHeight, 
 		windowXPos, windowYPos,
 		xpos, ypos,	
 		physicalHeight, physicalDistance,
-		clientID, url);
+		clientID, url,
+		gpuIndex);
 	return instance;
 }
 
