@@ -93,6 +93,21 @@
                 </div>
             </div>
         </div>
+        <div class="second-row">
+            <div class="panel">
+                <div class="joystick-container" id="left-joystick">
+                    <div id="left-handle" class="joystick-handle"></div>
+                </div>
+            </div>
+            <div class="panel middle-panel">
+                <!-- Middle panel content -->
+            </div>
+            <div class="panel">
+                <div class="joystick-container" id="right-joystick">
+                    <div id="right-handle" class="joystick-handle"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script type="text/javascript">
@@ -112,6 +127,7 @@
     <script src="{{ url_for('static', filename='js/opacityEditor.js')}}"></script>
     <script src="{{ url_for('static', filename='js/colorEditor.js')}}"></script>
     <script src="{{ url_for('static', filename='js/cameraInteraction.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/joystick.js')}}"></script>
 
 </body>
 </html>

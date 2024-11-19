@@ -53,11 +53,13 @@ App::App(int sceneWidth, int sceneHeight,
 	m_clientID = clientID;
 	m_client = new SocketClient(url, m_clientID, m_interactor);
 
+	std::cout << "APP CREATED" << std::endl;
 }
 
 void App::run() {
+	std::cout << "Running app" << std::endl;
 	render();
-	std::cout << m_window->ReportCapabilities() << std::endl;
+	// std::cout << m_window->ReportCapabilities() << std::endl;
 	m_client->startPolling();
 }
 

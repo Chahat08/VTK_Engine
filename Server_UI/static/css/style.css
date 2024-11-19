@@ -199,19 +199,64 @@ h5 {
         border: 1px solid #ddd;
     }
 
-/* Responsive design */
+
+/* New styles for the second row */
+.second-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+    .second-row .panel {
+        background-color: white;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+.joystick-container {
+    width: 200px;
+    height: 200px;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+    position: relative;
+    touch-action: none;
+}
+
+.joystick-handle {
+    width: 60px;
+    height: 60px;
+    background-color: #007bff;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+}
+
+
+.middle-panel {
+    flex: 1;
+    margin: 0 20px;
+}
+
+/* Responsive design update */
 @media (max-width: 768px) {
-    .main-content {
+    .second-row {
         flex-direction: column;
     }
 
-    .center-panel {
-        margin: 20px 0;
+    .left-joystick, .right-joystick {
+        width: 100%;
+        height: 150px;
+        margin-bottom: 20px;
     }
 
-    .left-panel, .right-panel {
-        display: none; /* Hide side panels on small screens */
+    .middle-panel {
+        margin: 0;
     }
+} }
 }
 
 .interaction-container {
