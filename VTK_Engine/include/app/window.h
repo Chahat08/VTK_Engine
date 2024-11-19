@@ -3,6 +3,7 @@
 
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
+#include <vtkWin32OpenGLRenderWindow.h>
 
 #include <string>
 
@@ -18,7 +19,7 @@ protected:
 	Window(int width, int height, int xpos, int ypos, int gpuIndex = 0, bool borders = false, std::string name = "Title");
 	~Window();
 
-	vtkRenderWindow* m_window{ nullptr };
+	vtkWin32OpenGLRenderWindow* m_window{ nullptr };
 	vtkRenderer* m_renderer{ nullptr };
 
 	void render();

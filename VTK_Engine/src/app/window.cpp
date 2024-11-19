@@ -1,7 +1,7 @@
 #include "app/window.h"
 
 Window::Window(int width, int height, int xpos, int ypos, int gpuIndex, bool borders, std::string name) {
-	m_window = vtkRenderWindow::New();
+	m_window = vtkWin32OpenGLRenderWindow::New();
 	m_window->SetSize(width, height);
 	m_window->SetPosition(xpos, ypos);
 	m_window->SetBorders(borders);
