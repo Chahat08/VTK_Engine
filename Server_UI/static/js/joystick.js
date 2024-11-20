@@ -5,10 +5,14 @@ class Joystick {
         this.isDragging = false;
         this.startX = 0;
         this.startY = 0;
+        this.currentX = 0;
+        this.currentY = 0;
+        this.updateInterval = null; // To store the interval ID
 
         this.handleStart = this.handleStart.bind(this);
         this.handleMove = this.handleMove.bind(this);
         this.handleEnd = this.handleEnd.bind(this);
+        this.sendJoystickData = this.sendJoystickData.bind(this);
 
         this.joystick.addEventListener('mousedown', this.handleStart);
         this.joystick.addEventListener('touchstart', this.handleStart);
@@ -24,6 +28,9 @@ class Joystick {
         this.isDragging = true;
         this.startX = e.clientX || e.touches[0].clientX;
         this.startY = e.clientY || e.touches[0].clientY;
+
+        // Start sending data at regular intervals
+        this.updateInterval = setInterval(this.sendJoystickData, 50); // 50 ms interval (~20 updates per second)
     }
 
     handleMove(e) {
@@ -41,23 +48,38 @@ class Joystick {
         const distance = Math.min(Math.sqrt(deltaX * deltaX + deltaY * deltaY), maxDistance);
         const angle = Math.atan2(deltaY, deltaX);
 
-        const x = Math.round(Math.cos(angle) * distance);
-        const y = Math.round(Math.sin(angle) * distance);
+        this.currentX = Math.round(Math.cos(angle) * distance);
+        this.currentY = Math.round(Math.sin(angle) * distance);
 
-        this.handle.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
-
-        // Normalize x and y values to range -1 to 1
-        const normalizedX = x / maxDistance;
-        const normalizedY = -y / maxDistance;
-
-        socket.send(JSON.stringify({ joystick: this.joystick.id, x: normalizedX, y: normalizedY }));
+        this.handle.style.transform = `translate(calc(-50% + ${this.currentX}px), calc(-50% + ${this.currentY}px))`;
     }
 
     handleEnd() {
         this.isDragging = false;
+
+        // Reset handle position
         this.handle.style.transform = 'translate(-50%, -50%)';
 
+        // Stop sending data
+        clearInterval(this.updateInterval);
+        this.updateInterval = null;
+
+        // Send neutral (0, 0) data to indicate release
         socket.send(JSON.stringify({ joystick: this.joystick.id, x: 0, y: 0 }));
+    }
+
+    sendJoystickData() {
+        if (!this.isDragging) return;
+
+        const joystickRect = this.joystick.getBoundingClientRect();
+        const maxDistance = joystickRect.width / 2 - this.handle.offsetWidth / 2;
+
+        // Normalize x and y values to range -1 to 1
+        const normalizedX = this.currentX / maxDistance;
+        const normalizedY = -this.currentY / maxDistance;
+
+        // Send current normalized values
+        socket.send(JSON.stringify({ joystick: this.joystick.id, x: normalizedX, y: normalizedY }));
     }
 }
 

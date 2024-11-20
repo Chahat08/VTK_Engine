@@ -57,6 +57,9 @@ void Interactor::parseJson(const std::string& message) const {
 
 	else if (obj["cameraZoom"].error() == simdjson::SUCCESS)
 		cameraZoomUpdate(obj);
+
+	else if (obj["joystick"].error() == simdjson::SUCCESS)
+		cameraJoystickUpdates(obj);
 }
 
 void Interactor::handleServerMessage(const std::string& message) const {
@@ -205,5 +208,25 @@ void Interactor::cameraZoomUpdate(simdjson::ondemand::object& jsonData) const {
 	if (zoom_error == simdjson::SUCCESS) {
 		m_camera->zoomCamera(zoom);
 		reRender();
+	}
+}
+
+void Interactor::cameraJoystickUpdates(simdjson::ondemand::object& jsonData) const {
+	std::string_view joystick;
+	simdjson::error_code blendMode_error = jsonData["joystick"].get_string(joystick);
+
+	double deltaX = 0, deltaY = 0;
+	simdjson::error_code x_error = jsonData["x"].get(deltaX);
+	simdjson::error_code y_error = jsonData["y"].get(deltaY);
+
+	if (blendMode_error == simdjson::SUCCESS) {
+		if (joystick == "right-joystick") {
+			m_camera->rotateCamera(deltaX, deltaY);
+			reRender();
+		}
+		else if (joystick == "left-joystick") {
+			m_camera->moveCamera(deltaX, 0, deltaY);
+			reRender();
+		}
 	}
 }

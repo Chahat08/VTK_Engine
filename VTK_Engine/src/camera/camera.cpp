@@ -2,6 +2,7 @@
 #include "interaction/frontendData.h"
 #include <vtkTransform.h>
 #include <vtkMath.h>
+#include <vtkQuaternion.h>
 
 #include <vtkNew.h>
 
@@ -57,6 +58,7 @@ Camera::Camera(int sceneWidth, int sceneHeight,
 
 	m_camera->SetUseExplicitProjectionTransformMatrix(true);
 	m_camera->SetExplicitProjectionTransformMatrix(getInstanceProjectionMatrix());
+	m_cameraRight = new double[3];
 	resetCameraPosition();
 }
 
@@ -103,6 +105,9 @@ void Camera::resetCameraPosition() {
 		m_camera->SetPosition(0, 0, 0);
 		setFocalPoint(0, 0, 0);
 		setViewUp(0, 1, 0);
+		m_cameraRight[0] = 1;
+		m_cameraRight[1] = 0;
+		m_cameraRight[2] = 0;
 	}
 	else {
 		m_camera->SetPosition(
@@ -120,35 +125,62 @@ void Camera::resetCameraPosition() {
 }
 
 void Camera::rotateCamera(double deltaX, double deltaY) {
-	double width = static_cast<double>(FrontendData::defaultInteractionPanelWidth);
-	double height = static_cast<double>(FrontendData::defaultInteractionPanelHeight);
+	double xRotationScale = 10.0;
+    double yRotationScale = 10.0;
 
-	double yAngle = deltaX;// vtkMath::Pi() / height;
-	double xAngle = -deltaY;// vtkMath::Pi() / width;
+	double viewUp[3], viewDir[3];
+	m_camera->GetViewUp(viewUp);
 
+	double pos[3], focal[3];
+	m_camera->GetPosition(pos);
+	m_camera->GetFocalPoint(focal);
+	for (int i = 0; i < 3; i++) {
+		viewDir[i] = focal[i] - pos[i];
+	}
+	vtkMath::Normalize(viewDir);
 
-
-	std::vector<double> currentPosition = {
-		m_camera->GetPosition()[0] - m_camera->GetFocalPoint()[0],
-		m_camera->GetPosition()[1] - m_camera->GetFocalPoint()[1],
-		m_camera->GetPosition()[2] - m_camera->GetFocalPoint()[2],
-	};
-
-	vtkNew<vtkTransform> transform;
-	transform->PostMultiply();
-	transform->RotateX(xAngle);
-	transform->RotateY(yAngle);
-	
-	double* newPoint = transform->TransformPoint(currentPosition[0], currentPosition[1], currentPosition[2]);
-
-	m_camera->SetPosition(
-		newPoint[0] + m_camera->GetFocalPoint()[0],
-		newPoint[1] + m_camera->GetFocalPoint()[1],
-		newPoint[2] + m_camera->GetFocalPoint()[2]
+	double angle = vtkMath::DegreesFromRadians(
+		acos(vtkMath::Dot(viewDir, viewUp))
 	);
 
+	const double MIN_ANGLE = 10.0;  
+	const double MAX_ANGLE = 170.0; 
+
+	if ((angle < MIN_ANGLE && deltaY > 0) ||
+		(angle > MAX_ANGLE && deltaY < 0)) {
+		deltaY = 0;
+	}
+    
+    double yAngle = deltaX * xRotationScale;
+    double xAngle = deltaY * yRotationScale;
+    
+    std::vector<double> currentPosition = {
+        m_camera->GetPosition()[0] - m_camera->GetFocalPoint()[0],
+        m_camera->GetPosition()[1] - m_camera->GetFocalPoint()[1],
+        m_camera->GetPosition()[2] - m_camera->GetFocalPoint()[2],
+    };
+    
+    vtkNew<vtkTransform> transform;
+    transform->PostMultiply();
+    transform->RotateWXYZ(yAngle, m_camera->GetViewUp()[0], m_camera->GetViewUp()[1], m_camera->GetViewUp()[2]);
+    
+    double newRightVector[3];
+    transform->TransformVector(m_cameraRight, newRightVector);
+    transform->RotateWXYZ(xAngle, newRightVector[0], newRightVector[1], newRightVector[2]);
+    
+    double newPoint[3];
+    transform->TransformPoint(currentPosition.data(), newPoint);
+    
+    m_camera->SetPosition(
+        newPoint[0] + m_camera->GetFocalPoint()[0],
+        newPoint[1] + m_camera->GetFocalPoint()[1],
+        newPoint[2] + m_camera->GetFocalPoint()[2]
+    );
+    
 	m_camera->Modified();
 }
+
+
 
 void Camera::zoomCamera(double zoomFactor) {
 	double* position = m_camera->GetPosition();
@@ -166,6 +198,42 @@ void Camera::zoomCamera(double zoomFactor) {
 		position[0] + zoomFactor*cameraDirection[0],
 		position[1] + zoomFactor*cameraDirection[1],
 		position[2] + zoomFactor*cameraDirection[2]
+	);
+
+	m_camera->Modified();
+
+}
+
+void Camera::moveCamera(double deltaX, double deltaY, double deltaZ) {
+	double* position = m_camera->GetPosition();
+	double* focalPoint = m_camera->GetFocalPoint();
+	double* viewUp = m_camera->GetViewUp();
+
+	double* cameraDirection = new double[3] {
+		position[0] - focalPoint[0],
+			position[1] - focalPoint[1],
+			position[2] - focalPoint[2]
+		};
+	vtkMath::Normalize(cameraDirection);
+
+	double* cameraRight = new double[3];
+	vtkMath::Cross(cameraDirection, viewUp, cameraRight);
+	vtkMath::Normalize(cameraRight);
+
+	double* cameraUp = new double[3];
+	vtkMath::Cross(cameraRight, cameraDirection, cameraUp);
+	vtkMath::Normalize(cameraUp);
+
+	m_camera->SetPosition(
+		position[0] + deltaX * cameraRight[0] + deltaY * cameraUp[0] + deltaZ * cameraDirection[0],
+		position[1] + deltaX * cameraRight[1] + deltaY * cameraUp[1] + deltaZ * cameraDirection[1],
+		position[2] + deltaX * cameraRight[2] + deltaY * cameraUp[2] + deltaZ * cameraDirection[2]
+	);
+
+	m_camera->SetFocalPoint(
+		focalPoint[0] + deltaX * cameraRight[0] + deltaY * cameraUp[0] + deltaZ * cameraDirection[0],
+		focalPoint[1] + deltaX * cameraRight[1] + deltaY * cameraUp[1] + deltaZ * cameraDirection[1],
+		focalPoint[2] + deltaX * cameraRight[2] + deltaY * cameraUp[2] + deltaZ * cameraDirection[2]
 	);
 
 	m_camera->Modified();

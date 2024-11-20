@@ -22,8 +22,13 @@ public:
 	void setVolumeBounds(std::vector<std::pair<double, double>> bounds);
 	void resetCameraPosition();  
 
+	// arcball camera 
+	bool rotating = false;
 	void rotateCamera(double deltaX, double deltaY);
 	void zoomCamera(double zoomFactor);
+
+	// free camera
+	void moveCamera(double deltaX, double deltaY, double deltaZ);
 
 	vtkExternalOpenGLCamera* getCamera();
 
@@ -35,6 +40,7 @@ private:
 	int m_xpos = 0, m_ypos = 0;
 	float m_physicalHeight = 0.0, m_physicalDistance = 0.0;
 
+	double* m_cameraRight;
 	std::vector<std::pair<double, double>> m_volumeBounds;
 
 	float convertScale(float originalValue, float originalMin, float originalMax, float newMin, float newMax);
