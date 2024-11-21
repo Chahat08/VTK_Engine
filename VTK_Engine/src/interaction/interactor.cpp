@@ -58,14 +58,14 @@ void Interactor::parseJson(const std::string& message) const {
 	else if (obj["cameraZoom"].error() == simdjson::SUCCESS)
 		cameraZoomUpdate(obj);
 
-	else if (obj["joystick"].error() == simdjson::SUCCESS)
+	else if (obj["joystick"].error() == simdjson::SUCCESS || obj["direction"].error() == simdjson::SUCCESS)
 		cameraJoystickUpdates(obj);
 }
 
 void Interactor::handleServerMessage(const std::string& message) const {
 	std::cout << "Server: " << message << std::endl;
 
-	if (!message.starts_with("CONNECT")) 
+	if (!message.starts_with("CONNECT"))
 		parseJson(message);
 }
 
@@ -127,7 +127,7 @@ void Interactor::shadingUpdate(simdjson::ondemand::object& jsonData) const {
 	}
 }
 
-void Interactor::interpolationTypeUpdate(simdjson::ondemand::object& jsonData) const{
+void Interactor::interpolationTypeUpdate(simdjson::ondemand::object& jsonData) const {
 	std::string_view interpolationType;
 	simdjson::error_code interpolation_error = jsonData["interpolationType"].get_string(interpolationType);
 
@@ -215,18 +215,23 @@ void Interactor::cameraJoystickUpdates(simdjson::ondemand::object& jsonData) con
 	std::string_view joystick;
 	simdjson::error_code blendMode_error = jsonData["joystick"].get_string(joystick);
 
-	double deltaX = 0, deltaY = 0;
-	simdjson::error_code x_error = jsonData["x"].get(deltaX);
-	simdjson::error_code y_error = jsonData["y"].get(deltaY);
-
 	if (blendMode_error == simdjson::SUCCESS) {
-		if (joystick == "right-joystick") {
-			m_camera->rotateCamera(deltaX, deltaY);
-			reRender();
-		}
-		else if (joystick == "left-joystick") {
-			m_camera->moveCamera(deltaX, 0, deltaY);
-			reRender();
-		}
+		double deltaX = 0, deltaZ = 0;
+		simdjson::error_code x_error = jsonData["x"].get(deltaX);
+		simdjson::error_code y_error = jsonData["y"].get(deltaZ);
+
+		m_camera->moveCamera(deltaX, 0, deltaZ);
 	}
+
+	else {
+		std::string_view dir;
+		simdjson::error_code direction = jsonData["direction"].get(dir);
+
+		if (dir == "up")
+			m_camera->moveCamera(0, 1, 0);
+		else if (dir == "down")
+			m_camera->moveCamera(0, -1, 0);
+	}
+
+	reRender();
 }

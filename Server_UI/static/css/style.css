@@ -236,11 +236,15 @@ h5 {
 }
 
 
-.middle-panel {
+.middle-left-panel {
     flex: 1;
-    margin: 0 20px;
+    margin: 0 10px 0 20px;
 }
-
+.middle-right-panel {
+    flex: 1;
+    width: 60px;
+    margin: 0 20px 0 10px;
+}
 /* Responsive design update */
 @media (max-width: 768px) {
     .second-row {
@@ -261,6 +265,7 @@ h5 {
 
 .interaction-container {
     border: 1px solid #ddd;
+    width: 60px;
     padding: 10px;
     border-radius: 5px;
     background-color: #fafafa;
@@ -274,3 +279,30 @@ h5 {
     cursor: grab;
     position: relative;
 }
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 100%;
+}
+
+.direction-button {
+    width: 80px;
+    height: 50px;
+    background-color: #007bff;
+    color: white;
+    font-size: 1.5em;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    user-select: none;
+    touch-action: none;
+}
+
+    .direction-button:active {
+        background-color: #0056b3;
+    }

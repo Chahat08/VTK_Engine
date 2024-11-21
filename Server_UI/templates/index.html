@@ -18,11 +18,7 @@
         </header>
         <div class="main-content">
             <div class="panel left-panel">
-                <div class="interaction-container">
-                    <h5>Camera Interaction Panel</h5>
-                    <div id="cameraInteraction" class="interaction-box">
-                    </div>
-                </div>
+                
             </div>
             <div class="panel center-panel">
                 <div class="editor-container">
@@ -99,12 +95,18 @@
                     <div id="left-handle" class="joystick-handle"></div>
                 </div>
             </div>
-            <div class="panel middle-panel">
-                <!-- Middle panel content -->
+            <div class="panel middle-left-panel">
+            </div>
+            <div class="panel middle-right-panel">
+                <div class="interaction-container">
+                    <div id="cameraInteraction" class="interaction-box">
+                    </div>
+                </div>
             </div>
             <div class="panel">
-                <div class="joystick-container" id="right-joystick">
-                    <div id="right-handle" class="joystick-handle"></div>
+                <div class="button-container">
+                    <button id="upButton" class="direction-button">↑</button>
+                    <button id="downButton" class="direction-button">↓</button>
                 </div>
             </div>
         </div>
@@ -122,6 +124,37 @@
         socket.onerror = function (error) {
             console.error("WebSocket Error:", error);
         };
+
+        const upButton = document.getElementById("upButton");
+        const downButton = document.getElementById("downButton");
+
+        let intervalId = null;
+
+        const startSending = (direction) => {
+            if (intervalId !== null) return; 
+            intervalId = setInterval(() => {
+                socket.send(JSON.stringify({ direction }));
+            }, 100); 
+        };
+
+        const stopSending = () => {
+            clearInterval(intervalId);
+            intervalId = null;
+        };
+
+        upButton.addEventListener("mousedown", () => startSending("up"));
+        upButton.addEventListener("mouseup", stopSending);
+        upButton.addEventListener("mouseleave", stopSending);
+        upButton.addEventListener("touchstart", () => startSending("up"));
+        upButton.addEventListener("touchend", stopSending);
+        upButton.addEventListener("touchcancel", stopSending);
+
+        downButton.addEventListener("mousedown", () => startSending("down"));
+        downButton.addEventListener("mouseup", stopSending);
+        downButton.addEventListener("mouseleave", stopSending);
+        downButton.addEventListener("touchstart", () => startSending("down"));
+        downButton.addEventListener("touchend", stopSending);
+        downButton.addEventListener("touchcancel", stopSending);
     </script>
     <script src="{{ url_for('static', filename='js/websocketSend.js') }}"></script>
     <script src="{{ url_for('static', filename='js/opacityEditor.js')}}"></script>

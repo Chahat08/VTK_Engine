@@ -29,8 +29,7 @@ class Joystick {
         this.startX = e.clientX || e.touches[0].clientX;
         this.startY = e.clientY || e.touches[0].clientY;
 
-        // Start sending data at regular intervals
-        this.updateInterval = setInterval(this.sendJoystickData, 50); // 50 ms interval (~20 updates per second)
+        this.updateInterval = setInterval(this.sendJoystickData, 50); 
     }
 
     handleMove(e) {
