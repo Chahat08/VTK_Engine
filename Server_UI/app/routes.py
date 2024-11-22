@@ -7,7 +7,7 @@ main = Blueprint('main', __name__)
 
 @main.route('/')
 def index():
-    websocket_ip = os.getenv('HOST_IP', '0.0.0.0')
+    websocket_ip = os.getenv('HOST_IP', 'localhost')
     websocket_port = os.getenv('PORT', '5000')
     websocket_url = f"ws://{websocket_ip}:{websocket_port}/connect"
     return render_template('index.html', websocket_url=websocket_url)
