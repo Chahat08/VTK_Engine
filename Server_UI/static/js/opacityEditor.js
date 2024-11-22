@@ -4,7 +4,8 @@ const height = 200;
 const svg = d3.select("#opacityEditor")
     .attr("width", width)
     .attr("height", height)
-    .style("border", "1px solid black");
+    .style("border", "1px solid black")
+    .style("touch-action","none");
 
 const xScale = d3.scaleLinear().domain(intensityRange).range([0, width]);
 const yScale = d3.scaleLinear().domain([0, 1]).range([height, 0]);
@@ -41,12 +42,17 @@ label.append("text")
     .attr("font-size", "10px")
     .attr("dy", ".35em");
 
+const dragBehavior = d3.drag()
+    .on("start", dragStarted)
+    .on("drag", dragged)
+    .on("end", dragEnded);
+
 const updateControlPoints = () => {
     svg.selectAll(".control-point")
         .data(controlPoints, d => d.id)
         .join("circle")
         .attr("class", "control-point")
-        .attr("r", 5)
+        .attr("r", 8)
         .attr("cx", d => xScale(d.x))
         .attr("cy", d => yScale(d.y))
         .attr("fill", d => (d.id === selectedPointId) ? "green" : "red")
@@ -55,11 +61,7 @@ const updateControlPoints = () => {
             event.stopPropagation();
             selectControlPoint(d.id);
         })
-        .call(d3.drag()
-            .on("start", dragStarted)
-            .on("drag", dragged)
-            .on("end", dragEnded)
-        );
+        .call(dragBehavior);
 };
 
 const updateLine = () => {
@@ -122,9 +124,11 @@ function dragStarted(event, d) {
 }
 
 function dragged(event, d) {
-    const [mouseX, mouseY] = d3.pointer(event, svg.node());
+    const [mouseX, mouseY] = event.sourceEvent.touches
+        ? d3.pointer(event.sourceEvent.touches[0], svg.node()) 
+        : d3.pointer(event, svg.node()); 
+
     if (d.x === intensityRange[0] || d.x === intensityRange[1]) {
-        // For end points, only allow vertical movement
         d.y = Math.max(0, Math.min(1, yScale.invert(mouseY)));
     } else {
         d.x = Math.max(intensityRange[0], Math.min(intensityRange[1], xScale.invert(mouseX)));
@@ -156,7 +160,6 @@ document.addEventListener("click", () => {
     updateControlPoints();
 });
 
-// Remove selected control point
 d3.select("#opacityMinusButton").on("click", () => {
     if (selectedPointId && controlPoints.length > 2) {
         const selectedPoint = controlPoints.find(d => d.id === selectedPointId);
@@ -171,7 +174,6 @@ d3.select("#opacityMinusButton").on("click", () => {
     }
 });
 
-// Remove all control points except the end points
 d3.select("#opacityRemoveAllButton").on("click", () => {
     controlPoints = controlPoints.filter(d => d.x === intensityRange[0] || d.x === intensityRange[1]);
     selectedPointId = null;
@@ -188,7 +190,7 @@ function addOpacityStopFromIntensity(intensity) {
     const newPoint = {
         id: Date.now(),
         x: intensity,
-        y: 0.5 // Default opacity
+        y: 0.5 
     };
     controlPoints.push(newPoint);
     updateControlPoints();

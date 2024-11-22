@@ -10,6 +10,7 @@ def index():
     websocket_ip = os.getenv('HOST_IP', 'localhost')
     websocket_port = os.getenv('PORT', '5000')
     websocket_url = f"ws://{websocket_ip}:{websocket_port}/connect"
+    print(websocket_url)
     return render_template('index.html', websocket_url=websocket_url)
 
 @main.route('/submit', methods=['POST'])
