@@ -18,7 +18,8 @@
         </header>
         <div class="main-content">
             <div class="panel left-panel">
-                
+                <h3>Connected Clients</h3>
+                <ul id="clientList"></ul>
             </div>
             <div class="panel center-panel">
                 <div class="editor-container">
@@ -136,6 +137,7 @@
 
         socket.onopen = function () {
             console.log("WebSocket connection established");
+            socket.send("Frontend_Client");
         };
         socket.onclose = function () {
             console.log("WebSocket connection closed");
@@ -143,6 +145,25 @@
         socket.onerror = function (error) {
             console.error("WebSocket Error:", error);
         };
+        
+        socket.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+            if (data.action === "update_client_list") {
+                updateClientListUI(data.clients);
+            }
+        };
+
+        const clientListContainer = document.getElementById("clientList");
+        function updateClientListUI(clients) {
+            clientListContainer.innerHTML = ""; 
+            clients.forEach(clientId => {
+                if (clientId.localeCompare("Frontend_Client")!==0) {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = clientId;
+                    clientListContainer.appendChild(listItem);
+                }
+            });
+            }
     </script>
     <script src="{{ url_for('static', filename='js/websocketSend.js') }}"></script>
     <script src="{{ url_for('static', filename='js/opacityEditor.js')}}"></script>
