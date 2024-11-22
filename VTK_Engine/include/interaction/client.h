@@ -19,14 +19,14 @@ using easywsclient::WebSocket;
 
 class SocketClient {
 public:
-	SocketClient(std::string& url, int clientID, Interactor* interactor);
+	SocketClient(std::string& url, std::string clientID, Interactor* interactor);
 	~SocketClient();
 
 	void startPolling();
 	void closeConnection();
 private:
 	std::string m_url;
-	int m_client_id;
+	std::string m_client_id;
 	static WebSocket::pointer m_ws;
 
 	Interactor* m_interactor;

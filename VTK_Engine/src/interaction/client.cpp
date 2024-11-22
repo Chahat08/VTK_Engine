@@ -3,7 +3,7 @@
 
 WebSocket::pointer SocketClient::m_ws = nullptr;
 
-SocketClient::SocketClient(std::string& m_url, int clientID, Interactor* interactor) {
+SocketClient::SocketClient(std::string& m_url, std::string clientID, Interactor* interactor) {
 	INT rc;
 	WSADATA wsaData;
 
@@ -17,7 +17,7 @@ SocketClient::SocketClient(std::string& m_url, int clientID, Interactor* interac
 	if (!m_ws) return; // render anyway
 	assert(m_ws);
 	m_client_id = clientID;
-	send("CONNECT " + std::to_string(clientID));
+	send(clientID);
 
 	m_interactor = interactor;
 }

@@ -19,7 +19,7 @@ public:
 		int xpos, int ypos, 
 		float physicalHeight, float physicalDistance,
 		float angleToRotate,
-		int clientID, std::string& url,
+		std::string clientID, std::string& url,
 		int gpuIndex
 	);
 	void run();
@@ -31,13 +31,13 @@ private:
 		int windowXPos, int windowYPos,
 		float physicalHeight, float physicalDistance,
 		float angleToRotate,
-		int clientID, std::string& url,
+		std::string clientID, std::string& url,
 		int gpuIndex);
 	~App();
 	App(const App&) = delete;
 	App& operator=(const App&) = delete;
 
-	int m_clientID;
+	std::string m_clientID;
 
 	Camera* m_camera;
 	VolumeReader* m_reader;

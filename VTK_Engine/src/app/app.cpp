@@ -14,7 +14,7 @@ App::App(int sceneWidth, int sceneHeight,
 	int xpos, int ypos,
 	float physicalHeight, float physicalDistance,
 	float angleToRotate,
-	int clientID, std::string& url,
+	std::string clientID, std::string& url,
 	int gpuIndex) :Window(instanceWidth, instanceHeight, windowXPos, windowYPos, gpuIndex, false) {
 
 	m_reader = new VolumeReader();
@@ -63,7 +63,7 @@ App& App::getInstance(
 	int windowXPos, int windowYPos,
 	float physicalHeight, float physicalDistance, 
 	float angleToRotate,
-	int clientID, std::string& url,
+	std::string clientID, std::string& url,
 	int gpuIndex) {
 	static App instance(
 		sceneWidth, sceneHeight, 

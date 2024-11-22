@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
 	float physicalDistance = std::stof(argv[10]);
 	float angleToRotate = std::stof(argv[11]);
 	int columnNumber = std::stoi(argv[12]);
-	int clientID = std::stoi(argv[13]);
+	std::string clientID = argv[13];
 	std::string url = argv[14];
 	int gpuIndex = std::stoi(argv[15]);
 
