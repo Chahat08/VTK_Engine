@@ -4,12 +4,12 @@ const colorSlider = d3.select("#colorEditor")
     .style("width", `${sliderWidth}px`)
     .style("height", `${sliderHeight}px`)
     .style("position", "relative")
-    .style("border", "1px solid black");
+    .style("border", "1px solid black")
+    .style("touch-action", "none");
 
 let selectedLine = null;
-let lineColors = window.lineColors; // Array to store line and color pairs
+let lineColors = window.lineColors; 
 
-// Function to update the gradient
 function updateGradient() {
     const gradientStops = lineColors.map(({ line, color }) => {
         const percentage = (parseFloat(line.style("left")) / sliderWidth) * 100;
@@ -18,7 +18,6 @@ function updateGradient() {
     colorSlider.style("background", `linear-gradient(to right, ${gradientStops})`);
 }
 
-// Function to add a new dividing line at a specified position
 function addDividingLine(xPosition, color) {
     const line = colorSlider.append("div")
         .style("position", "absolute")
@@ -33,10 +32,23 @@ function addDividingLine(xPosition, color) {
             event.stopPropagation();
             selectLine(line);
         })
-        .call(d3.drag()
-            .on("drag", (event) => {
-                const newX = Math.max(0, Math.min(sliderWidth, d3.pointer(event, colorSlider.node())[0]));
+        .call(d3.drag() 
+            .on("start", function () {
+                selectLine(line);
+            })
+            .on("drag", function (event) {
+                let pointerX;
+
+                if (event.sourceEvent.touches) {
+                    pointerX = event.sourceEvent.touches[0].clientX - colorSlider.node().getBoundingClientRect().left;
+                } else {
+                    pointerX = d3.pointer(event, colorSlider.node())[0];
+                }
+
+                const newX = Math.max(0, Math.min(sliderWidth, pointerX));
+
                 line.style("left", `${newX}px`);
+
                 updateGradient();
                 window.sendColorStops();
             })
@@ -48,7 +60,6 @@ function addDividingLine(xPosition, color) {
     window.sendColorStops();
 }
 
-// Function to handle selecting a line
 function selectLine(line) {
     if (selectedLine) {
         selectedLine.style("border", "none");
@@ -81,13 +92,11 @@ function showColorPicker() {
         });
 }
 
-// Add initial red and blue sliders
 addDividingLine(0, "#FF0000");
 addDividingLine(sliderWidth, "#0000FF");
 
-// Add a new dividing line when clicking on the color editor
 colorSlider.on("click", function (event) {
-    if (event.target === this) {  // Only add new line if clicking on the slider, not existing lines
+    if (event.target === this) {  
         const [x] = d3.pointer(event);
         const leftColor = lineColors.reduce((prev, curr) =>
             parseFloat(curr.line.style("left")) < x && parseFloat(curr.line.style("left")) > parseFloat(prev.line.style("left")) ? curr : prev
@@ -96,9 +105,8 @@ colorSlider.on("click", function (event) {
     }
 });
 
-// Delete the selected line when the delete button is clicked
 d3.select("#deleteDividerButton").on("click", () => {
-    if (selectedLine && lineColors.length > 2) {  // Prevent deleting if only 2 lines remain
+    if (selectedLine && lineColors.length > 2) {  
         const index = lineColors.findIndex(lc => lc.line === selectedLine);
         if (index !== -1) {
             selectedLine.remove();
@@ -111,7 +119,6 @@ d3.select("#deleteDividerButton").on("click", () => {
     }
 });
 
-// Remove all sliders except the two at the ends
 d3.select("#removeAllButton").on("click", () => {
     lineColors.slice(1, -1).forEach(({ line }) => line.remove());
     lineColors = [lineColors[0], lineColors[lineColors.length - 1]];
@@ -121,7 +128,6 @@ d3.select("#removeAllButton").on("click", () => {
     window.sendColorStops();
 });
 
-// Deselect line on clicking outside
 document.addEventListener("click", (event) => {
     if (!event.target.closest("#colorEditor") && !event.target.closest("#colorPicker")) {
         if (selectedLine) {
@@ -134,5 +140,5 @@ document.addEventListener("click", (event) => {
 
 function addColorStopFromIntensity(intensity) {
     const position = (intensity - intensityRange[0]) / (intensityRange[1] - intensityRange[0]) * sliderWidth;
-    addDividingLine(position, "#CCCCCC"); // Default color
+    addDividingLine(position, "#CCCCCC"); 
 }

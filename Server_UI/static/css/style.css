@@ -131,6 +131,7 @@ h5 {
 
 .divider-line {
     background-color: black;
+    pointer-events: auto;
 }
 
 .background-color-container {
