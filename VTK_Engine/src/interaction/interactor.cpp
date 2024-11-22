@@ -220,7 +220,7 @@ void Interactor::cameraJoystickUpdates(simdjson::ondemand::object& jsonData) con
 		simdjson::error_code x_error = jsonData["x"].get(deltaX);
 		simdjson::error_code y_error = jsonData["y"].get(deltaZ);
 
-		m_camera->moveCamera(deltaX, 0, deltaZ);
+		m_camera->moveCamera(deltaX, 0, -deltaZ);
 	}
 
 	else {
@@ -228,9 +228,9 @@ void Interactor::cameraJoystickUpdates(simdjson::ondemand::object& jsonData) con
 		simdjson::error_code direction = jsonData["direction"].get(dir);
 
 		if (dir == "up")
-			m_camera->moveCamera(0, 1, 0);
-		else if (dir == "down")
 			m_camera->moveCamera(0, -1, 0);
+		else if (dir == "down")
+			m_camera->moveCamera(0, 1, 0);
 	}
 
 	reRender();

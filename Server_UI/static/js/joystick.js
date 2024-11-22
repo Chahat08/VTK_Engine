@@ -7,7 +7,7 @@ class Joystick {
         this.startY = 0;
         this.currentX = 0;
         this.currentY = 0;
-        this.updateInterval = null; // To store the interval ID
+        this.updateInterval = null; 
 
         this.handleStart = this.handleStart.bind(this);
         this.handleMove = this.handleMove.bind(this);
@@ -56,14 +56,11 @@ class Joystick {
     handleEnd() {
         this.isDragging = false;
 
-        // Reset handle position
         this.handle.style.transform = 'translate(-50%, -50%)';
 
-        // Stop sending data
         clearInterval(this.updateInterval);
         this.updateInterval = null;
 
-        // Send neutral (0, 0) data to indicate release
         socket.send(JSON.stringify({ joystick: this.joystick.id, x: 0, y: 0 }));
     }
 
@@ -73,19 +70,16 @@ class Joystick {
         const joystickRect = this.joystick.getBoundingClientRect();
         const maxDistance = joystickRect.width / 2 - this.handle.offsetWidth / 2;
 
-        // Normalize x and y values to range -1 to 1
         const normalizedX = this.currentX / maxDistance;
         const normalizedY = -this.currentY / maxDistance;
 
-        // Send current normalized values
         socket.send(JSON.stringify({ joystick: this.joystick.id, x: normalizedX, y: normalizedY }));
     }
 }
 
-// Initialize joysticks
 document.addEventListener('DOMContentLoaded', () => {
     const leftJoystick = new Joystick('left-joystick', 'left-handle');
-    const rightJoystick = new Joystick('right-joystick', 'right-handle');
+    //const rightJoystick = new Joystick('right-joystick', 'right-handle');
 });
 
 console.log("Joystick script loaded successfully");

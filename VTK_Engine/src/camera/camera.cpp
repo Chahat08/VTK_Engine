@@ -125,8 +125,8 @@ void Camera::resetCameraPosition() {
 }
 
 void Camera::rotateCamera(double deltaX, double deltaY) {
-	double xRotationScale = 10.0;
-    double yRotationScale = 10.0;
+	double xRotationScale = 1.0;
+    double yRotationScale = 1.0;
 
 	double viewUp[3], viewDir[3];
 	m_camera->GetViewUp(viewUp);
@@ -205,6 +205,7 @@ void Camera::zoomCamera(double zoomFactor) {
 }
 
 void Camera::moveCamera(double deltaX, double deltaY, double deltaZ) {
+	
 	double* position = m_camera->GetPosition();
 	double* focalPoint = m_camera->GetFocalPoint();
 	double* viewUp = m_camera->GetViewUp();
