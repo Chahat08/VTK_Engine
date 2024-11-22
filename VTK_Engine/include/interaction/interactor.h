@@ -52,7 +52,9 @@ private:
 	void cameraPositionUpdate(simdjson::ondemand::object& jsonData) const;
 	void cameraZoomUpdate(simdjson::ondemand::object& jsonData) const;
 	void cameraJoystickUpdates(simdjson::ondemand::object& jsonData) const;
-
+	void cameraResetUpdate() const;
+	void cameraArcballSpeedUpdate(simdjson::ondemand::object& jsonData) const;
+	void cameraFreeCameraSpeedUpdate(simdjson::ondemand::object& jsonData) const;
 };
 
 #endif

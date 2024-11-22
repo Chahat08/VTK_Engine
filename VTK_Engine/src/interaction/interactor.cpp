@@ -60,6 +60,15 @@ void Interactor::parseJson(const std::string& message) const {
 
 	else if (obj["joystick"].error() == simdjson::SUCCESS || obj["direction"].error() == simdjson::SUCCESS)
 		cameraJoystickUpdates(obj);
+
+	else if (obj["resetCamera"].error() == simdjson::SUCCESS)
+		cameraResetUpdate();
+
+	else if (obj["arcballSpeed"].error() == simdjson::SUCCESS)
+		cameraArcballSpeedUpdate(obj);
+
+	else if (obj["freeCameraSpeed"].error() == simdjson::SUCCESS)
+		cameraFreeCameraSpeedUpdate(obj);
 }
 
 void Interactor::handleServerMessage(const std::string& message) const {
@@ -196,7 +205,7 @@ void Interactor::cameraPositionUpdate(simdjson::ondemand::object& jsonData) cons
 	simdjson::error_code y_error = cameraDrag["deltaY"].get(deltaY);
 
 	if (x_error == simdjson::SUCCESS && y_error == simdjson::SUCCESS) {
-		m_camera->rotateCamera(deltaX, deltaY);
+		m_camera->arcballMove(deltaX, deltaY);
 		reRender();
 	}
 }
@@ -206,7 +215,7 @@ void Interactor::cameraZoomUpdate(simdjson::ondemand::object& jsonData) const {
 	simdjson::error_code zoom_error = jsonData["cameraZoom"].get(zoom);
 
 	if (zoom_error == simdjson::SUCCESS) {
-		m_camera->zoomCamera(zoom);
+		m_camera->arcballZoom(zoom);
 		reRender();
 	}
 }
@@ -220,7 +229,7 @@ void Interactor::cameraJoystickUpdates(simdjson::ondemand::object& jsonData) con
 		simdjson::error_code x_error = jsonData["x"].get(deltaX);
 		simdjson::error_code y_error = jsonData["y"].get(deltaZ);
 
-		m_camera->moveCamera(deltaX, 0, -deltaZ);
+		m_camera->freeCameraMove(deltaX, 0, -deltaZ);
 	}
 
 	else {
@@ -228,10 +237,31 @@ void Interactor::cameraJoystickUpdates(simdjson::ondemand::object& jsonData) con
 		simdjson::error_code direction = jsonData["direction"].get(dir);
 
 		if (dir == "up")
-			m_camera->moveCamera(0, -1, 0);
+			m_camera->freeCameraMove(0, -1, 0);
 		else if (dir == "down")
-			m_camera->moveCamera(0, 1, 0);
+			m_camera->freeCameraMove(0, 1, 0);
 	}
 
 	reRender();
+}
+
+void Interactor::cameraResetUpdate() const {
+	m_camera->resetCameraPosition();
+	reRender();
+}
+
+void Interactor::cameraArcballSpeedUpdate(simdjson::ondemand::object& jsonData) const {
+	float speed = 0.0;
+	simdjson::error_code speed_error = jsonData["arcballSpeed"].get(speed);
+
+	if (speed_error == simdjson::SUCCESS) 
+		m_camera->setArcBallSpeed(speed);
+}
+
+void Interactor::cameraFreeCameraSpeedUpdate(simdjson::ondemand::object& jsonData) const {
+	float speed = 0.0;
+	simdjson::error_code speed_error = jsonData["freeCameraSpeed"].get(speed);
+
+	if (speed_error == simdjson::SUCCESS) 
+		m_camera->setFreeCameraSpeed(speed);
 }

@@ -94,6 +94,14 @@ void Camera::setRoll(double roll) {
 	m_camera->Roll(roll);
 }
 
+void Camera::setArcBallSpeed(float speed) {
+	m_arcBallSpeed = speed;
+}
+
+void Camera::setFreeCameraSpeed(float speed) {
+	m_freeCameraSpeed = speed;
+}
+
 vtkExternalOpenGLCamera* Camera::getCamera() {
 	return m_camera;
 }
@@ -107,7 +115,7 @@ void Camera::orientCamera() {
 
 	double* position = m_camera->GetPosition();
 	double* direction = new double[3] {
-			focalPoint[0] - position[0],
+		focalPoint[0] - position[0],
 			focalPoint[1] - position[1],
 			focalPoint[2] - position[2]
 		};
@@ -119,9 +127,9 @@ void Camera::orientCamera() {
 	vtkMath::Normalize(direction);
 
 	m_camera->SetFocalPoint(
-		position[0]+(direction[0]*m_physicalDistance), 
-		position[1]+(direction[1]*m_physicalDistance), 
-		position[2]+(direction[2]*m_physicalDistance)
+		position[0] + (direction[0] * m_physicalDistance),
+		position[1] + (direction[1] * m_physicalDistance),
+		position[2] + (direction[2] * m_physicalDistance)
 	);
 
 	double* viewUp = m_camera->GetViewUp();
@@ -145,7 +153,7 @@ void Camera::resetCameraPosition() {
 		m_camera->SetPosition(
 			(m_volumeBounds[0].first + m_volumeBounds[0].second) / 2.0,
 			(m_volumeBounds[1].first + m_volumeBounds[1].second) / 2.0,
-			4*m_volumeBounds[2].second 
+			4 * m_volumeBounds[2].second
 		);
 		setFocalPoint(
 			(m_volumeBounds[0].first + m_volumeBounds[0].second) / 2.0,
@@ -157,10 +165,7 @@ void Camera::resetCameraPosition() {
 	orientCamera();
 }
 
-void Camera::rotateCamera(double deltaX, double deltaY) {
-	double xRotationScale = 1.0;
-    double yRotationScale = 1.0;
-
+void Camera::arcballMove(double deltaX, double deltaY) {
 	double viewUp[3], viewDir[3];
 	m_camera->GetViewUp(viewUp);
 
@@ -176,69 +181,72 @@ void Camera::rotateCamera(double deltaX, double deltaY) {
 		acos(vtkMath::Dot(viewDir, viewUp))
 	);
 
-	const double MIN_ANGLE = 10.0;  
-	const double MAX_ANGLE = 170.0; 
+	const double MIN_ANGLE = 10.0;
+	const double MAX_ANGLE = 170.0;
 
 	if ((angle < MIN_ANGLE && deltaY > 0) ||
 		(angle > MAX_ANGLE && deltaY < 0)) {
 		deltaY = 0;
 	}
-    
-    double yAngle = deltaX * xRotationScale;
-    double xAngle = deltaY * yRotationScale;
-    
-    std::vector<double> currentPosition = {
-        m_camera->GetPosition()[0] - m_camera->GetFocalPoint()[0],
-        m_camera->GetPosition()[1] - m_camera->GetFocalPoint()[1],
-        m_camera->GetPosition()[2] - m_camera->GetFocalPoint()[2],
-    };
-    
-    vtkNew<vtkTransform> transform;
-    transform->PostMultiply();
-    transform->RotateWXYZ(yAngle, m_camera->GetViewUp()[0], m_camera->GetViewUp()[1], m_camera->GetViewUp()[2]);
-    
-    double newRightVector[3];
-    transform->TransformVector(m_cameraRight, newRightVector);
-    transform->RotateWXYZ(xAngle, newRightVector[0], newRightVector[1], newRightVector[2]);
-    
-    double newPoint[3];
-    transform->TransformPoint(currentPosition.data(), newPoint);
-    
-    m_camera->SetPosition(
-        newPoint[0] + m_camera->GetFocalPoint()[0],
-        newPoint[1] + m_camera->GetFocalPoint()[1],
-        newPoint[2] + m_camera->GetFocalPoint()[2]
-    );
-    
+
+	double yAngle = deltaX * m_arcBallSpeed;
+	double xAngle = deltaY * m_arcBallSpeed;
+
+	std::vector<double> currentPosition = {
+		m_camera->GetPosition()[0] - m_camera->GetFocalPoint()[0],
+		m_camera->GetPosition()[1] - m_camera->GetFocalPoint()[1],
+		m_camera->GetPosition()[2] - m_camera->GetFocalPoint()[2],
+	};
+
+	vtkNew<vtkTransform> transform;
+	transform->PostMultiply();
+	transform->RotateWXYZ(yAngle, m_camera->GetViewUp()[0], m_camera->GetViewUp()[1], m_camera->GetViewUp()[2]);
+
+	double newRightVector[3];
+	transform->TransformVector(m_cameraRight, newRightVector);
+	transform->RotateWXYZ(xAngle, newRightVector[0], newRightVector[1], newRightVector[2]);
+
+	double newPoint[3];
+	transform->TransformPoint(currentPosition.data(), newPoint);
+
+	m_camera->SetPosition(
+		newPoint[0] + m_camera->GetFocalPoint()[0],
+		newPoint[1] + m_camera->GetFocalPoint()[1],
+		newPoint[2] + m_camera->GetFocalPoint()[2]
+	);
+
 	m_camera->Modified();
 }
 
 
 
-void Camera::zoomCamera(double zoomFactor) {
+void Camera::arcballZoom(double zoomFactor) {
 	double* position = m_camera->GetPosition();
 	double* focalPoint = m_camera->GetFocalPoint();
 
-	double* cameraDirection = new double[3]{
+	double* cameraDirection = new double[3] {
 		position[0] - focalPoint[0],
-		position[1] - focalPoint[1],
-		position[2] - focalPoint[2]
-	};
+			position[1] - focalPoint[1],
+			position[2] - focalPoint[2]
+		};
 
 	vtkMath::Normalize(cameraDirection);
 
 	m_camera->SetPosition(
-		position[0] + zoomFactor*cameraDirection[0],
-		position[1] + zoomFactor*cameraDirection[1],
-		position[2] + zoomFactor*cameraDirection[2]
+		position[0] + zoomFactor * cameraDirection[0] * m_arcBallSpeed,
+		position[1] + zoomFactor * cameraDirection[1] * m_arcBallSpeed,
+		position[2] + zoomFactor * cameraDirection[2] * m_arcBallSpeed
 	);
 
 	m_camera->Modified();
 
 }
 
-void Camera::moveCamera(double deltaX, double deltaY, double deltaZ) {
-	
+void Camera::freeCameraMove(double deltaX, double deltaY, double deltaZ) {
+	deltaX *= m_freeCameraSpeed;
+	deltaY *= m_freeCameraSpeed;
+	deltaZ *= m_freeCameraSpeed;
+
 	double* position = m_camera->GetPosition();
 	double* focalPoint = m_camera->GetFocalPoint();
 	double* viewUp = m_camera->GetViewUp();

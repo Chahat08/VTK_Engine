@@ -19,17 +19,19 @@ public:
 	void setPitch(double pitch);
 	void setYaw(double yaw);
 	void setRoll(double roll);
+
+	void setArcBallSpeed(float speed);
+	void setFreeCameraSpeed(float speed);
 	
 	void setVolumeBounds(std::vector<std::pair<double, double>> bounds);
 	void resetCameraPosition();  
 
 	// arcball camera 
-	bool rotating = false;
-	void rotateCamera(double deltaX, double deltaY);
-	void zoomCamera(double zoomFactor);
+	void arcballMove(double deltaX, double deltaY);
+	void arcballZoom(double zoomFactor);
 
 	// free camera
-	void moveCamera(double deltaX, double deltaY, double deltaZ);
+	void freeCameraMove(double deltaX, double deltaY, double deltaZ);
 
 	vtkExternalOpenGLCamera* getCamera();
 
@@ -41,6 +43,9 @@ private:
 	int m_xpos = 0, m_ypos = 0;
 	float m_physicalHeight = 0.0, m_physicalDistance = 0.0;
 	float m_angleToRotate = 0.0;
+
+	float m_arcBallSpeed = 1.0;
+	float m_freeCameraSpeed = 1.0;
 
 	double* m_cameraRight;
 	std::vector<std::pair<double, double>> m_volumeBounds;

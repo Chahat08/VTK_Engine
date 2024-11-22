@@ -317,3 +317,85 @@ h5 {
     -webkit-user-select: none; 
     user-select: none;
 }
+
+.camera-controls-container {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+.camera-controls-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+    .camera-controls-header h5 {
+        margin: 0;
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #333;
+    }
+
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+    .btn:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+    }
+
+    .btn:active {
+        background-color: #004085;
+        border-color: #00376d;
+    }
+
+.control-group {
+    margin: 10px 0;
+}
+
+    .control-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: #555;
+        margin-bottom: 5px;
+    }
+
+    .control-group input[type="range"] {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    .control-group span {
+        display: inline-block;
+        margin-left: 10px;
+        font-size: 0.9em;
+        color: #555;
+    }
+
