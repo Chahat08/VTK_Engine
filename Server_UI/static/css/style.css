@@ -202,7 +202,6 @@ h5 {
     }
 
 
-/* New styles for the second row */
 .second-row {
     display: flex;
     justify-content: space-between;
@@ -247,7 +246,6 @@ h5 {
     width: 60px;
     margin: 0 20px 0 10px;
 }
-/* Responsive design update */
 @media (max-width: 768px) {
     .second-row {
         flex-direction: column;
@@ -397,5 +395,66 @@ h5 {
         margin-left: 10px;
         font-size: 0.9em;
         color: #555;
+    }
+.client-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.client-list-container {
+    max-height: 300px;
+    overflow-y: auto; 
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.client-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 5px;
+    background-color: #e9ecef;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+}
+
+    .client-box .client-info {
+        flex-grow: 1;
+        margin-right: 10px;
+    }
+
+    .client-box .terminate-button {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 12px;
+    }
+
+        .client-box .terminate-button:hover {
+            background-color: #bd2130;
+        }
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+    .btn-danger:hover {
+        background-color: #bd2130;
     }
 
