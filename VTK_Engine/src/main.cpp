@@ -19,12 +19,15 @@ int main(int argc, char* argv[])
 	int windowYPos = std::stoi(argv[8]);
 	float physicalHeight = std::stof(argv[9]);
 	float physicalDistance = std::stof(argv[10]);
-	int clientID = std::stoi(argv[11]);
-	std::string url = argv[12];
-	int gpuIndex = std::stoi(argv[13]);
+	float angleToRotate = std::stof(argv[11]);
+	int columnNumber = std::stoi(argv[12]);
+	int clientID = std::stoi(argv[13]);
+	std::string url = argv[14];
+	int gpuIndex = std::stoi(argv[15]);
 
 	App::getInstance(
 		sceneWidth, sceneHeight, instanceWidth, instanceHeight, xpos, ypos, windowXPos, windowYPos, physicalHeight, physicalDistance,
+		angleToRotate * columnNumber,
 		clientID, url, gpuIndex
 	).run();
 

@@ -43,7 +43,8 @@ vtkMatrix4x4* Camera::getInstanceProjectionMatrix() {
 Camera::Camera(int sceneWidth, int sceneHeight,
 	int instanceWidth, int instanceHeight,
 	int xpos, int ypos,
-	float physicalHeight, float physicalDistance) {
+	float physicalHeight, float physicalDistance,
+	float angleToRotate) {
 
 	m_sceneWidth = sceneWidth;
 	m_sceneHeight = sceneHeight;
@@ -53,6 +54,7 @@ Camera::Camera(int sceneWidth, int sceneHeight,
 	m_ypos = ypos;
 	m_physicalHeight = physicalHeight;
 	m_physicalDistance = physicalDistance;
+	m_angleToRotate = angleToRotate;
 
 	m_camera = vtkExternalOpenGLCamera::New();
 
@@ -100,6 +102,36 @@ void Camera::setVolumeBounds(std::vector<std::pair<double, double>> bounds) {
 	m_volumeBounds = bounds;
 }
 
+void Camera::orientCamera() {
+	double* focalPoint = m_camera->GetFocalPoint();
+
+	double* position = m_camera->GetPosition();
+	double* direction = new double[3] {
+			focalPoint[0] - position[0],
+			focalPoint[1] - position[1],
+			focalPoint[2] - position[2]
+		};
+
+	vtkNew<vtkTransform> transform;
+	transform->PostMultiply();
+	transform->RotateY(m_angleToRotate);
+	transform->TransformDoubleVector(direction);
+	vtkMath::Normalize(direction);
+
+	m_camera->SetFocalPoint(
+		position[0]+(direction[0]*m_physicalDistance), 
+		position[1]+(direction[1]*m_physicalDistance), 
+		position[2]+(direction[2]*m_physicalDistance)
+	);
+
+	double* viewUp = m_camera->GetViewUp();
+
+	vtkMath::Cross(direction, viewUp, m_cameraRight);
+	vtkMath::Normalize(m_cameraRight);
+
+	m_camera->Modified();
+}
+
 void Camera::resetCameraPosition() {
 	if (m_volumeBounds.empty()) {
 		m_camera->SetPosition(0, 0, 0);
@@ -122,6 +154,7 @@ void Camera::resetCameraPosition() {
 		);
 		setViewUp(0, 1, 0);
 	}
+	orientCamera();
 }
 
 void Camera::rotateCamera(double deltaX, double deltaY) {

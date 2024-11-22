@@ -9,7 +9,8 @@ public:
 	Camera(int sceneWidth, int sceneHeight,
 		int instanceWidth, int instanceHeight,
 		int xpos, int ypos,
-		float physicalHeight, float physicalDistance);
+		float physicalHeight, float physicalDistance,
+		float angleToRotate);
 	~Camera();
 
 	void setPosition(double x, double y, double z);
@@ -39,12 +40,14 @@ private:
 	int m_instanceWidth = 0, m_instanceHeight = 0;
 	int m_xpos = 0, m_ypos = 0;
 	float m_physicalHeight = 0.0, m_physicalDistance = 0.0;
+	float m_angleToRotate = 0.0;
 
 	double* m_cameraRight;
 	std::vector<std::pair<double, double>> m_volumeBounds;
 
 	float convertScale(float originalValue, float originalMin, float originalMax, float newMin, float newMax);
 	vtkMatrix4x4* getInstanceProjectionMatrix();
+	void orientCamera();
 };
 
 #endif

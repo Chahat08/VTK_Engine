@@ -8,17 +8,12 @@
 #include <vtkNamedColors.h >
 #include "interaction/frontendData.h"
 
-float convertScale(float originalValue, float originalMin, float originalMax, float newMin, float newMax) {
-	double originalRange = originalMax - originalMin;
-	double newRange = newMax - newMin;
-	return (((originalValue - originalMin) * newRange) / originalRange) + newMin;
-}
-
 App::App(int sceneWidth, int sceneHeight,
 	int instanceWidth, int instanceHeight,
 	int windowXPos, int windowYPos,
 	int xpos, int ypos,
 	float physicalHeight, float physicalDistance,
+	float angleToRotate,
 	int clientID, std::string& url,
 	int gpuIndex) :Window(instanceWidth, instanceHeight, windowXPos, windowYPos, gpuIndex, false) {
 
@@ -42,7 +37,8 @@ App::App(int sceneWidth, int sceneHeight,
 	m_camera = new Camera(sceneWidth, sceneHeight,
 		instanceWidth, instanceHeight, 
 		xpos, ypos, 
-		physicalHeight, physicalDistance);
+		physicalHeight, physicalDistance,
+		angleToRotate);
 	m_camera->setVolumeBounds(m_volume->getVolumeBounds());
 	m_camera->resetCameraPosition();
 	m_renderer->SetActiveCamera(m_camera->getCamera());
@@ -52,12 +48,9 @@ App::App(int sceneWidth, int sceneHeight,
 
 	m_clientID = clientID;
 	m_client = new SocketClient(url, m_clientID, m_interactor);
-
-	std::cout << "APP CREATED" << std::endl;
 }
 
 void App::run() {
-	std::cout << "Running app" << std::endl;
 	render();
 	// std::cout << m_window->ReportCapabilities() << std::endl;
 	m_client->startPolling();
@@ -69,6 +62,7 @@ App& App::getInstance(
 	int xpos, int ypos,
 	int windowXPos, int windowYPos,
 	float physicalHeight, float physicalDistance, 
+	float angleToRotate,
 	int clientID, std::string& url,
 	int gpuIndex) {
 	static App instance(
@@ -77,6 +71,7 @@ App& App::getInstance(
 		windowXPos, windowYPos,
 		xpos, ypos,	
 		physicalHeight, physicalDistance,
+		angleToRotate,
 		clientID, url,
 		gpuIndex);
 	return instance;

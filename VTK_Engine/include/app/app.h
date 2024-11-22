@@ -18,6 +18,7 @@ public:
 		int windowXPos, int windowYPos,
 		int xpos, int ypos, 
 		float physicalHeight, float physicalDistance,
+		float angleToRotate,
 		int clientID, std::string& url,
 		int gpuIndex
 	);
@@ -29,6 +30,7 @@ private:
 		int xpos, int ypos,
 		int windowXPos, int windowYPos,
 		float physicalHeight, float physicalDistance,
+		float angleToRotate,
 		int clientID, std::string& url,
 		int gpuIndex);
 	~App();
