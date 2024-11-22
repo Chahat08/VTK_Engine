@@ -20,7 +20,7 @@ def websocket_handler(ws):
         while True:
             message = ws.receive()
             if message:
-                print(f"Message from {client_id}: {message}")
+                print(f"{client_id}: {message}")
                 relay_message_to_clients(message)
             else:
                 break
