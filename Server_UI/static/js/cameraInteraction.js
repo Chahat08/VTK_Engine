@@ -1,17 +1,17 @@
 const cameraInteractionBox = document.getElementById("cameraInteraction");
 
+cameraInteractionBox.style.touchAction = "none";
+
 let isDragging = false;
 let lastX = 0;
 let lastY = 0;
 
-// Capture mouse wheel for zooming
 cameraInteractionBox.addEventListener("wheel", (event) => {
-    const zoomAmount = event.deltaY < 0 ? 1 : -1; // Positive for zoom in, negative for zoom out
+    const zoomAmount = event.deltaY < 0 ? 1 : -1;
     window.sendCameraZoom(-zoomAmount);
     event.preventDefault();
 });
 
-// Capture mouse down, move, and up for dragging
 cameraInteractionBox.addEventListener("mousedown", (event) => {
     isDragging = true;
     lastX = event.clientX;
@@ -26,7 +26,6 @@ cameraInteractionBox.addEventListener("mousemove", (event) => {
         lastX = event.clientX;
         lastY = event.clientY;
 
-        // Send drag offsets to server
         window.sendCameraDrag(deltaX, deltaY);
     }
 });
@@ -36,7 +35,6 @@ cameraInteractionBox.addEventListener("mouseup", () => {
     cameraInteractionBox.style.cursor = "grab";
 });
 
-// Handle mouse leaving the box while dragging
 cameraInteractionBox.addEventListener("mouseleave", () => {
     if (isDragging) {
         isDragging = false;
@@ -44,27 +42,47 @@ cameraInteractionBox.addEventListener("mouseleave", () => {
     }
 });
 
-// Touch events for mobile pinch zoom
-let initialPinchDistance = null;
-
 cameraInteractionBox.addEventListener("touchstart", (event) => {
-    if (event.touches.length === 2) {
+    if (event.touches.length === 1) {
+        isDragging = true;
+        lastX = event.touches[0].clientX;
+        lastY = event.touches[0].clientY;
+        cameraInteractionBox.style.cursor = "grabbing";
+    } else if (event.touches.length === 2) {
+        
         initialPinchDistance = getPinchDistance(event.touches);
     }
 });
 
 cameraInteractionBox.addEventListener("touchmove", (event) => {
-    if (event.touches.length === 2 && initialPinchDistance != null) {
+    if (event.touches.length === 1 && isDragging) {
+        
+        const currentX = event.touches[0].clientX;
+        const currentY = event.touches[0].clientY;
+        const deltaX = currentX - lastX;
+        const deltaY = currentY - lastY;
+
+        lastX = currentX;
+        lastY = currentY;
+
+        window.sendCameraDrag(deltaX, deltaY);
+        event.preventDefault(); 
+    } else if (event.touches.length === 2 && initialPinchDistance != null) {
+        
         const currentDistance = getPinchDistance(event.touches);
         const pinchFactor = currentDistance > initialPinchDistance ? 1 : -1;
-        window.sendCameraZoom(pinchFactor);
 
+        window.sendCameraZoom(pinchFactor);
         initialPinchDistance = currentDistance;
-        event.preventDefault();
+        event.preventDefault(); 
     }
 });
 
 cameraInteractionBox.addEventListener("touchend", (event) => {
+    if (event.touches.length === 0) {
+        isDragging = false;
+        cameraInteractionBox.style.cursor = "grab";
+    }
     if (event.touches.length < 2) {
         initialPinchDistance = null;
     }

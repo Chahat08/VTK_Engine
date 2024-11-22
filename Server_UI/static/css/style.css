@@ -271,6 +271,7 @@ h5 {
     padding: 10px;
     border-radius: 5px;
     background-color: #fafafa;
+    touch-action: none;
 }
 
 .interaction-box {
@@ -280,6 +281,7 @@ h5 {
     border: 1px solid #ccc;
     cursor: grab;
     position: relative;
+    touch-action: none;
 }
 
 .button-container {
