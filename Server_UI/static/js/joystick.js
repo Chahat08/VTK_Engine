@@ -15,16 +15,18 @@ class Joystick {
         this.sendJoystickData = this.sendJoystickData.bind(this);
 
         this.joystick.addEventListener('mousedown', this.handleStart);
-        this.joystick.addEventListener('touchstart', this.handleStart);
+        this.joystick.addEventListener('touchstart', this.handleStart, { passive: false });
 
         document.addEventListener('mousemove', this.handleMove);
-        document.addEventListener('touchmove', this.handleMove);
+        document.addEventListener('touchmove', this.handleMove, { passive: false });
 
         document.addEventListener('mouseup', this.handleEnd);
         document.addEventListener('touchend', this.handleEnd);
     }
 
     handleStart(e) {
+        e.preventDefault();
+
         this.isDragging = true;
         this.startX = e.clientX || e.touches[0].clientX;
         this.startY = e.clientY || e.touches[0].clientY;
@@ -54,6 +56,7 @@ class Joystick {
     }
 
     handleEnd() {
+        if (!this.isDragging) return;
         this.isDragging = false;
 
         this.handle.style.transform = 'translate(-50%, -50%)';
@@ -81,5 +84,3 @@ document.addEventListener('DOMContentLoaded', () => {
     const leftJoystick = new Joystick('left-joystick', 'left-handle');
     //const rightJoystick = new Joystick('right-joystick', 'right-handle');
 });
-
-console.log("Joystick script loaded successfully");

@@ -310,3 +310,10 @@ h5 {
     .direction-button:active {
         background-color: #0056b3;
     }
+
+#upButton,
+#downButton {
+    -webkit-touch-callout: none; 
+    -webkit-user-select: none; 
+    user-select: none;
+}

@@ -124,43 +124,13 @@
         socket.onerror = function (error) {
             console.error("WebSocket Error:", error);
         };
-
-        const upButton = document.getElementById("upButton");
-        const downButton = document.getElementById("downButton");
-
-        let intervalId = null;
-
-        const startSending = (direction) => {
-            if (intervalId !== null) return; 
-            intervalId = setInterval(() => {
-                socket.send(JSON.stringify({ direction }));
-            }, 100); 
-        };
-
-        const stopSending = () => {
-            clearInterval(intervalId);
-            intervalId = null;
-        };
-
-        upButton.addEventListener("mousedown", () => startSending("up"));
-        upButton.addEventListener("mouseup", stopSending);
-        upButton.addEventListener("mouseleave", stopSending);
-        upButton.addEventListener("touchstart", () => startSending("up"));
-        upButton.addEventListener("touchend", stopSending);
-        upButton.addEventListener("touchcancel", stopSending);
-
-        downButton.addEventListener("mousedown", () => startSending("down"));
-        downButton.addEventListener("mouseup", stopSending);
-        downButton.addEventListener("mouseleave", stopSending);
-        downButton.addEventListener("touchstart", () => startSending("down"));
-        downButton.addEventListener("touchend", stopSending);
-        downButton.addEventListener("touchcancel", stopSending);
     </script>
     <script src="{{ url_for('static', filename='js/websocketSend.js') }}"></script>
     <script src="{{ url_for('static', filename='js/opacityEditor.js')}}"></script>
     <script src="{{ url_for('static', filename='js/colorEditor.js')}}"></script>
     <script src="{{ url_for('static', filename='js/cameraInteraction.js')}}"></script>
     <script src="{{ url_for('static', filename='js/joystick.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/movementButtons.js')}}"></script>
 
 </body>
 </html>
