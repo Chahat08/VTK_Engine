@@ -15,12 +15,13 @@ class App;
 
 class Interactor {
 public:
-	Interactor(vtkRenderer* renderer, VolumeMapper* mapper, VolumeProperty* property, Camera* camera);
+	Interactor(vtkRenderer* renderer, VolumeMapper* mapper, VolumeProperty* property, Camera* camera, std::string clientID);
 	~Interactor();
 
 	void handleServerMessage(const std::string& message) const;
 private:
 	friend class App;
+	friend class SocketClient;
 
 	VolumeMapper* m_mapper;
 	VolumeProperty* m_property;
@@ -31,7 +32,15 @@ private:
 	void setRenderCallback(const std::function<void()>& callback);
 	void reRender() const;
 
+	std::string m_clientID;
+	std::function<void()> m_terminateCallback;
+	void setTerminateCallback(const std::function<void()>& callback);
+	void terminate() const;
+
 	void parseJson(const std::string& message) const;
+
+	// app updates
+	void terminateAppUpdate(simdjson::ondemand::object& jsonData) const;
 
 	// renderer updates
 	void rendererBackgroundColorUpdate(simdjson::ondemand::object& jsonData) const;

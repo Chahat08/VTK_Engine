@@ -43,16 +43,15 @@ App::App(int sceneWidth, int sceneHeight,
 	m_camera->resetCameraPosition();
 	m_renderer->SetActiveCamera(m_camera->getCamera());
 
-	m_interactor = new Interactor(m_renderer, m_mapper, m_property, m_camera);
+	m_clientID = clientID;
+	m_interactor = new Interactor(m_renderer, m_mapper, m_property, m_camera, clientID);
 	m_interactor->setRenderCallback([this]() {this->render(); });
 
-	m_clientID = clientID;
 	m_client = new SocketClient(url, m_clientID, m_interactor);
 }
 
 void App::run() {
 	render();
-	// std::cout << m_window->ReportCapabilities() << std::endl;
 	m_client->startPolling();
 }
 
@@ -79,4 +78,11 @@ App& App::getInstance(
 
 App::~App() {
 	m_renderer->Delete();
+	delete m_camera;
+	delete m_reader;
+	delete m_mapper;
+	delete m_property;
+	delete m_volume;
+	delete m_client;
+	delete m_interactor;
 }

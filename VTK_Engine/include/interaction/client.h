@@ -24,6 +24,7 @@ public:
 
 	void startPolling();
 	void closeConnection();
+	std::string getID();
 private:
 	std::string m_url;
 	std::string m_client_id;
@@ -33,7 +34,6 @@ private:
 
 	void receive(const std::string& message);
 	void send(const std::string& message);
-
 };
 
 #endif

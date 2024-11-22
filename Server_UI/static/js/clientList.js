@@ -8,7 +8,7 @@ socket.onmessage = function (event) {
 };
 
 terminateAllButton.addEventListener("click", () => {
-    socket.send(JSON.stringify({ action: "terminate_all" }));    
+    socket.send(JSON.stringify({ "terminate_all":true }));    
 });
 
 function updateClientListUI(clients) {
@@ -37,7 +37,7 @@ function updateClientListUI(clients) {
         terminateButton.classList.add("terminate-button");
         terminateButton.textContent = "X";
         terminateButton.addEventListener("click", () => {
-            socket.send(JSON.stringify({ action: "terminate_client", clientId }));
+            socket.send(JSON.stringify({ "terminate_client":clientId }));
         });
         clientBox.appendChild(terminateButton);
 

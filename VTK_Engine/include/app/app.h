@@ -23,7 +23,6 @@ public:
 		int gpuIndex
 	);
 	void run();
-
 private:
 	App(int sceneWidth, int sceneHeight,
 		int instanceWidth, int instanceHeight,

@@ -4,6 +4,7 @@ Volume::Volume() {
 }
 
 Volume::~Volume() {
+	this->Delete();
 }
 
 std::vector<std::pair<double, double>> Volume::getVolumeBounds() {

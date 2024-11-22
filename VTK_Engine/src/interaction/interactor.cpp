@@ -1,11 +1,16 @@
 #include "interaction/interactor.h"
 
 
-Interactor::Interactor(vtkRenderer* renderer, VolumeMapper* mapper, VolumeProperty* property, Camera* camera) {
+Interactor::Interactor(vtkRenderer* renderer, VolumeMapper* mapper, VolumeProperty* property, Camera* camera, std::string clientID) {
 	m_property = property;
 	m_camera = camera;
 	m_renderer = renderer;
 	m_mapper = mapper;
+	m_clientID = clientID;
+}
+
+Interactor::~Interactor() {
+	
 }
 
 void Interactor::setRenderCallback(const std::function<void()>& callback) {
@@ -15,6 +20,15 @@ void Interactor::setRenderCallback(const std::function<void()>& callback) {
 void Interactor::reRender() const {
 	if (m_renderCallback)
 		m_renderCallback();
+}
+
+void Interactor::setTerminateCallback(const std::function<void()>& callback) {
+	m_terminateCallback = callback;
+}
+
+void Interactor::terminate() const {
+	if (m_terminateCallback)
+		m_terminateCallback();
 }
 
 void Interactor::parseJson(const std::string& message) const {
@@ -69,6 +83,12 @@ void Interactor::parseJson(const std::string& message) const {
 
 	else if (obj["freeCameraSpeed"].error() == simdjson::SUCCESS)
 		cameraFreeCameraSpeedUpdate(obj);
+
+	else if (obj["terminate_all"].error() == simdjson::SUCCESS)
+		terminate();
+	
+	else if(obj["terminate_client"].error()==simdjson::SUCCESS)
+		terminateAppUpdate(obj);
 }
 
 void Interactor::handleServerMessage(const std::string& message) const {
@@ -264,4 +284,13 @@ void Interactor::cameraFreeCameraSpeedUpdate(simdjson::ondemand::object& jsonDat
 
 	if (speed_error == simdjson::SUCCESS) 
 		m_camera->setFreeCameraSpeed(speed);
+}
+
+void Interactor::terminateAppUpdate(simdjson::ondemand::object& jsonData) const {
+	std::string_view client;
+	simdjson::error_code terminate_error = jsonData["terminate_client"].get(client);
+
+	if (terminate_error == simdjson::SUCCESS)
+		if(client==m_clientID)
+			terminate();
 }

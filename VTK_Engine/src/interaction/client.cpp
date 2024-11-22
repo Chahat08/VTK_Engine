@@ -20,6 +20,7 @@ SocketClient::SocketClient(std::string& m_url, std::string clientID, Interactor*
 	send(clientID);
 
 	m_interactor = interactor;
+	m_interactor->setTerminateCallback([this]() { closeConnection(); });
 }
 
 void SocketClient::send(const std::string& message) {
@@ -41,12 +42,14 @@ void SocketClient::startPolling() {
 	delete m_ws;
 }
 
+std::string SocketClient::getID() {
+	return m_client_id;
+}
+
 void SocketClient::closeConnection() {
 	m_ws->close();
-	delete m_ws;
 }
 
 SocketClient::~SocketClient() {
-	m_ws->close();
 	delete m_ws;
 }
