@@ -166,59 +166,48 @@ void Camera::resetCameraPosition() {
 }
 
 void Camera::arcballMove(double deltaX, double deltaY) {
-	double viewUp[3], viewDir[3];
-	m_camera->GetViewUp(viewUp);
+	double* focalPoint = m_camera->GetFocalPoint();
+	double* viewUp = m_camera->GetViewUp();
+	double* position = m_camera->GetPosition();
 
-	double pos[3], focal[3];
-	m_camera->GetPosition(pos);
-	m_camera->GetFocalPoint(focal);
-	for (int i = 0; i < 3; i++) {
-		viewDir[i] = focal[i] - pos[i];
-	}
-	vtkMath::Normalize(viewDir);
+	double axis[3];
+	axis[0] = -m_cameraRight[0];
+	axis[1] = -m_cameraRight[1];
+	axis[2] = -m_cameraRight[2];
 
-	double angle = vtkMath::DegreesFromRadians(
-		acos(vtkMath::Dot(viewDir, viewUp))
-	);
+	double center[3];
+	center[0] = (m_volumeBounds[0].first + m_volumeBounds[0].second) / 2.0;
+	center[1] = (m_volumeBounds[1].first + m_volumeBounds[1].second) / 2.0;	
+	center[2] = (m_volumeBounds[2].first + m_volumeBounds[2].second) / 2.0;
 
-	const double MIN_ANGLE = 10.0;
-	const double MAX_ANGLE = 170.0;
+	vtkSmartPointer<vtkTransform> transform = vtkSmartPointer<vtkTransform>::New();
+	transform->Identity();
 
-	if ((angle < MIN_ANGLE && deltaY > 0) ||
-		(angle > MAX_ANGLE && deltaY < 0)) {
-		deltaY = 0;
-	}
+	transform->Translate(center[0], center[1], center[2]);
+	transform->RotateWXYZ(deltaX*m_arcBallSpeed, viewUp);
+	transform->RotateWXYZ(-deltaY*m_arcBallSpeed, axis);  
+	transform->Translate(-center[0], -center[1], -center[2]);
 
-	double yAngle = deltaX * m_arcBallSpeed;
-	double xAngle = deltaY * m_arcBallSpeed;
+	double newPosition[3];
+	transform->TransformPoint(position, newPosition); 
+	m_camera->SetPosition(newPosition);
 
-	std::vector<double> currentPosition = {
-		m_camera->GetPosition()[0] - m_camera->GetFocalPoint()[0],
-		m_camera->GetPosition()[1] - m_camera->GetFocalPoint()[1],
-		m_camera->GetPosition()[2] - m_camera->GetFocalPoint()[2],
-	};
+	double newFocalPoint[3];
+	transform->TransformPoint(focalPoint, newFocalPoint); 
+	m_camera->SetFocalPoint(newFocalPoint);
 
-	vtkNew<vtkTransform> transform;
-	transform->PostMultiply();
-	transform->RotateWXYZ(yAngle, m_camera->GetViewUp()[0], m_camera->GetViewUp()[1], m_camera->GetViewUp()[2]);
+	m_camera->OrthogonalizeViewUp();
+	double* direction = new double[3] {
+		newFocalPoint[0] - newPosition[0],
+			newFocalPoint[1] - newPosition[1],
+			newFocalPoint[2] - newPosition[2]
+		};
 
-	double newRightVector[3];
-	transform->TransformVector(m_cameraRight, newRightVector);
-	transform->RotateWXYZ(xAngle, newRightVector[0], newRightVector[1], newRightVector[2]);
-
-	double newPoint[3];
-	transform->TransformPoint(currentPosition.data(), newPoint);
-
-	m_camera->SetPosition(
-		newPoint[0] + m_camera->GetFocalPoint()[0],
-		newPoint[1] + m_camera->GetFocalPoint()[1],
-		newPoint[2] + m_camera->GetFocalPoint()[2]
-	);
+	vtkMath::Cross(direction, viewUp, m_cameraRight);
+	vtkMath::Normalize(m_cameraRight);
 
 	m_camera->Modified();
 }
-
-
 
 void Camera::arcballZoom(double zoomFactor) {
 	double* position = m_camera->GetPosition();
@@ -239,7 +228,6 @@ void Camera::arcballZoom(double zoomFactor) {
 	);
 
 	m_camera->Modified();
-
 }
 
 void Camera::freeCameraMove(double deltaX, double deltaY, double deltaZ) {
