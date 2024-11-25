@@ -20,12 +20,26 @@
             <div class="panel left-panel">
                 <div class="client-panel-header">
                     <h3>Clients</h3>
+                    <div class="dropdown-container">
+                        <button class="dropbtn">Env</button>
+                        <div class="dropdown-content">
+                            <div class="dropdown-item">
+                                <span>Silo</span>
+                                <button class="run-btn" id="runSiloButton">▶</button>
+                            </div>
+                            <div class="dropdown-item">
+                                <span>MiniRD</span>
+                                <button class="run-btn" id="runMiniRDButton">▶</button>
+                            </div>
+                        </div>
+                    </div>
                     <button id="terminateAllButton" class="btn btn-danger">Terminate All</button>
                 </div>
                 <div id="clientListContainer" class="client-list-container">
 
                 </div>
             </div>
+
             <div class="panel center-panel">
                 <div class="editor-container">
                     <div class="opacity-container">
@@ -150,6 +164,16 @@
         socket.onerror = function (error) {
             console.error("WebSocket Error:", error);
         };
+
+        document.getElementById("runSiloButton").addEventListener("click", () => {
+            console.log("Silo environment selected");
+            socket.send(JSON.stringify({ action: "run_environment", environment: "Silo" }));
+        });
+
+        document.getElementById("runMiniRDButton").addEventListener("click", () => {
+            console.log("MiniRD environment selected");
+            socket.send(JSON.stringify({ action: "run_environment", environment: "MiniRD" }));
+        });
 
     </script>
     <script src="{{ url_for('static', filename='js/clientList.js') }}"></script>
