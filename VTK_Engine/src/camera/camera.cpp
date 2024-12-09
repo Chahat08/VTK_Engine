@@ -268,3 +268,10 @@ void Camera::freeCameraMove(double deltaX, double deltaY, double deltaZ) {
 
 	m_camera->Modified();
 }
+
+void Camera::printSelf() {
+	std::cout << "Camera position: " << m_camera->GetPosition()[0] << ", " << m_camera->GetPosition()[1] << ", " << m_camera->GetPosition()[2] << std::endl;
+	std::cout << "Camera focal point: " << m_camera->GetFocalPoint()[0] << ", " << m_camera->GetFocalPoint()[1] << ", " << m_camera->GetFocalPoint()[2] << std::endl;
+	std::cout << "Camera view up: " << m_camera->GetViewUp()[0] << ", " << m_camera->GetViewUp()[1] << ", " << m_camera->GetViewUp()[2] << std::endl;
+	std::cout << "Camera right: " << m_cameraRight[0] << ", " << m_cameraRight[1] << ", " << m_cameraRight[2] << std::endl;
+}

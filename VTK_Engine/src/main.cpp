@@ -31,6 +31,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     std::wstring wUrl(argv[14]);
     std::string url(wUrl.begin(), wUrl.end());
     int gpuIndex = std::stoi(argv[15]);
+	bool showConsole = std::stoi(argv[16]);
+
+    if (showConsole) {
+        AllocConsole();
+        FILE* fp;
+        freopen_s(&fp, "CONOUT$", "w", stdout);
+        freopen_s(&fp, "CONOUT$", "w", stderr);
+        freopen_s(&fp, "CONIN$", "r", stdin);
+    }
 
     App::getInstance(
         sceneWidth, sceneHeight, instanceWidth, instanceHeight, xpos, ypos, windowXPos, windowYPos, physicalHeight, physicalDistance,

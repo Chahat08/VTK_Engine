@@ -34,7 +34,8 @@ public:
 	void freeCameraMove(double deltaX, double deltaY, double deltaZ);
 
 	vtkExternalOpenGLCamera* getCamera();
-
+	
+	void printSelf();
 private:
 	vtkExternalOpenGLCamera* m_camera{ nullptr };
 
