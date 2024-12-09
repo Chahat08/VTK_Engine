@@ -39,7 +39,7 @@ void Interactor::parseJson(const std::string& message) const {
 
 	simdjson::ondemand::object obj = doc.get_object();
 
-	if (obj["bgColor"].error() == simdjson::SUCCESS)
+	/*if (obj["bgColor"].error() == simdjson::SUCCESS)
 		rendererBackgroundColorUpdate(obj);
 
 	else if (obj["controlPoints"].error() == simdjson::SUCCESS)
@@ -82,9 +82,9 @@ void Interactor::parseJson(const std::string& message) const {
 		cameraArcballSpeedUpdate(obj);
 
 	else if (obj["freeCameraSpeed"].error() == simdjson::SUCCESS)
-		cameraFreeCameraSpeedUpdate(obj);
+		cameraFreeCameraSpeedUpdate(obj);*/
 
-	else if (obj["terminate_all"].error() == simdjson::SUCCESS)
+	if (obj["terminate_all"].error() == simdjson::SUCCESS)
 		terminate();
 	
 	else if(obj["terminate_client"].error()==simdjson::SUCCESS)

@@ -14,6 +14,8 @@ VolumeProperty::VolumeProperty() {
 	this->SetScalarOpacity(m_scalarOpacity);
 	setColorPoints(FrontendData::defaultColorStops);
 	setOpacityPoints(FrontendData::defaultOpacityPoints);
+	std::vector<float> isoVals = { 500.0, 1150.0 };
+	setIsovalues(isoVals);
 }
 
 VolumeProperty::~VolumeProperty() {
