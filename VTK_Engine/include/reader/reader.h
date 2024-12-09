@@ -4,6 +4,7 @@
 // TODO: add support for different file types
 
 #include <vtkMetaImageReader.h>
+#include <vtkStructuredPointsReader.h>
 
 class VolumeReader {
 public:
@@ -12,6 +13,8 @@ public:
 
 	enum FileType {
 		MetaImage,
+		StructuredPoints,
+		OpenVDB
 	};
 
 	void readVolume(const char* filename, FileType type = FileType::MetaImage);
@@ -19,7 +22,8 @@ public:
 	void clearVolume();
 
 private:
-	vtkMetaImageReader* m_reader{ nullptr };
+	vtkMetaImageReader* m_metaImageReader{ nullptr };
+	vtkStructuredPointsReader* m_structuredPointsReader{ nullptr };
 };
 
 #endif

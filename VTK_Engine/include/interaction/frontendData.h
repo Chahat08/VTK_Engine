@@ -26,12 +26,13 @@ namespace FrontendData {
 
 	static std::vector<OpacityControlPoint> defaultOpacityPoints = {
 		{0.0, 0.0},
-		{4095.0, 1.0} 
+		{109.817, 0.085},
+		{255.0, 1.0} 
 	};
 
 	static std::vector<ColorGradientStopPoint> defaultColorStops = {
-		{0.0, "#FF0000"},
-		{4095.0, "#0000FF"}
+		{0.0, "#EEFF00"},
+		{255.0, "#FF0000"}
 	};
 
 	static std::string defaultBackgroundColor = "#000000";

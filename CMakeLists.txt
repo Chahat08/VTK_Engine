@@ -17,6 +17,7 @@ find_package(VTK COMPONENTS
 	CommonDataModel
 	CommonMisc
 	IOImage
+	IOLegacy
 	InteractionStyle
 	RenderingContextOpenGL2
 	RenderingCore

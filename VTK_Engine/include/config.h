@@ -9,8 +9,8 @@
 
 namespace Config {
 	static std::unordered_map<std::string, std::string> readerConfig = {
-		{"fileName", "FullHead.mhd"},
-		{"fileType", "MetaImage"}
+		{"fileName", "ironProt.vtk"},
+		{"fileType", "StructuredPoints"}
 	};
 
 	static std::unordered_map<std::string, std::string> mapperConfig = {

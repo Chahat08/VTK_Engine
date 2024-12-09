@@ -151,16 +151,15 @@ void Camera::resetCameraPosition() {
 	}
 	else {
 		m_camera->SetPosition(
-			(m_volumeBounds[0].first + m_volumeBounds[0].second) / 2.0,
-			(m_volumeBounds[1].first + m_volumeBounds[1].second) / 2.0,
-			4 * m_volumeBounds[2].second
+			-51.668, -14.0646, 101.498
 		);
 		setFocalPoint(
-			(m_volumeBounds[0].first + m_volumeBounds[0].second) / 2.0,
-			(m_volumeBounds[1].first + m_volumeBounds[1].second) / 2.0,
-			(m_volumeBounds[2].first + m_volumeBounds[2].second) / 2.0
+			-49.5469, -12.8588, 99.7532
 		);
-		setViewUp(0, 1, 0);
+		setViewUp(-0.209655, -0.139951, 0.72416);
+		m_cameraRight[0] = 0.675283;
+		m_cameraRight[1] = -0.139951;
+		m_cameraRight[2] = 0.72416;
 	}
 	orientCamera();
 }
