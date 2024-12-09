@@ -228,6 +228,8 @@ void Interactor::cameraPositionUpdate(simdjson::ondemand::object& jsonData) cons
 		m_camera->arcballMove(deltaX, deltaY);
 		reRender();
 	}
+	m_camera->printSelf();
+
 }
 
 void Interactor::cameraZoomUpdate(simdjson::ondemand::object& jsonData) const {
@@ -238,6 +240,8 @@ void Interactor::cameraZoomUpdate(simdjson::ondemand::object& jsonData) const {
 		m_camera->arcballZoom(zoom);
 		reRender();
 	}
+	m_camera->printSelf();
+
 }
 
 void Interactor::cameraJoystickUpdates(simdjson::ondemand::object& jsonData) const {
@@ -261,7 +265,7 @@ void Interactor::cameraJoystickUpdates(simdjson::ondemand::object& jsonData) con
 		else if (dir == "down")
 			m_camera->freeCameraMove(0, 1, 0);
 	}
-
+	m_camera->printSelf();
 	reRender();
 }
 
