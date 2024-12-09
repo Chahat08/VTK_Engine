@@ -9,14 +9,14 @@
 
 namespace Config {
 	static std::unordered_map<std::string, std::string> readerConfig = {
-		{"fileName", "FullHead.mhd"},
+		{"fileName", "HeadMRVolume.mhd"},
 		{"fileType", "MetaImage"}
 	};
 
 	static std::unordered_map<std::string, std::string> mapperConfig = {
 		{"AutoAdjustSampleDistances", "off"},
 		{"SampleDistance", "0.5" },
-		{"BlendMode", "IsoSurface"}
+		{"BlendMode", "Composite"}
 	};
 
 	struct IsoValue {

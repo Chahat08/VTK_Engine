@@ -26,12 +26,19 @@ namespace FrontendData {
 
 	static std::vector<OpacityControlPoint> defaultOpacityPoints = {
 		{0.0, 0.0},
-		{4095.0, 1.0} 
+		{30.767, 0.0},
+		{96.0473, 0.475},
+		{74.6273, 0.0},
+		{148.067, 0.655 },
+		{255.0, 0.02} 
 	};
 
 	static std::vector<ColorGradientStopPoint> defaultColorStops = {
 		{0.0, "#FF0000"},
-		{4095.0, "#0000FF"}
+		{255.0, "#0000FF"},
+		{100.12728, "#009DFF"},
+		{254.65728, "#080075"},
+		{139.397279, "#C8FF00"}
 	};
 
 	static std::string defaultBackgroundColor = "#000000";
@@ -40,7 +47,7 @@ namespace FrontendData {
 	static bool defaultAutoSampling = true;
 	static float defaultSampleDistance = 0.5f;
 	static std::string defaultBlendMode = "Composite";
-	static float defaultIsosurfaceValue = (4095.0 / 2.0);
+	static float defaultIsosurfaceValue = (255.0 / 2.0);
 	static int defaultInteractionPanelWidth = 300;
 	static int defaultInteractionPanelHeight = 300;
 

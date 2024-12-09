@@ -39,52 +39,7 @@ void Interactor::parseJson(const std::string& message) const {
 
 	simdjson::ondemand::object obj = doc.get_object();
 
-	if (obj["bgColor"].error() == simdjson::SUCCESS)
-		rendererBackgroundColorUpdate(obj);
-
-	else if (obj["controlPoints"].error() == simdjson::SUCCESS)
-		transferFunctionOpacityUpdate(obj);
-
-	else if (obj["colorStops"].error() == simdjson::SUCCESS)
-		transferFunctionColorUpdate(obj);
-
-	else if (obj["shading"].error() == simdjson::SUCCESS)
-		shadingUpdate(obj);
-
-	else if (obj["interpolationType"].error() == simdjson::SUCCESS)
-		interpolationTypeUpdate(obj);
-
-	else if (obj["autosampleDistances"].error() == simdjson::SUCCESS)
-		autoSampleDistancesUpdate(obj);
-
-	else if (obj["sampleDistance"].error() == simdjson::SUCCESS)
-		sampleDistanceUpdate(obj);
-
-	else if (obj["blendMode"].error() == simdjson::SUCCESS)
-		blendModeUpdate(obj);
-
-	else if (obj["isosurfaceValues"].error() == simdjson::SUCCESS)
-		addIsovalueUpdate(obj);
-
-	else if (obj["cameraDrag"].error() == simdjson::SUCCESS)
-		cameraPositionUpdate(obj);
-
-	else if (obj["cameraZoom"].error() == simdjson::SUCCESS)
-		cameraZoomUpdate(obj);
-
-	else if (obj["joystick"].error() == simdjson::SUCCESS || obj["direction"].error() == simdjson::SUCCESS)
-		cameraJoystickUpdates(obj);
-
-	else if (obj["resetCamera"].error() == simdjson::SUCCESS)
-		cameraResetUpdate();
-
-	else if (obj["arcballSpeed"].error() == simdjson::SUCCESS)
-		cameraArcballSpeedUpdate(obj);
-
-	else if (obj["freeCameraSpeed"].error() == simdjson::SUCCESS)
-		cameraFreeCameraSpeedUpdate(obj);
-
-	else if (obj["terminate_all"].error() == simdjson::SUCCESS)
+	if (obj["terminate_all"].error() == simdjson::SUCCESS)
 		terminate();
 	
 	else if(obj["terminate_client"].error()==simdjson::SUCCESS)
