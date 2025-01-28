@@ -19,7 +19,7 @@ public:
 		int xpos, int ypos, 
 		float physicalHeight, float physicalDistance,
 		float angleToRotate,
-		std::string clientID, std::string& url,
+		std::string clientID, std::string& url, bool isHeadNode,
 		int gpuIndex
 	);
 	void run();
@@ -30,13 +30,14 @@ private:
 		int windowXPos, int windowYPos,
 		float physicalHeight, float physicalDistance,
 		float angleToRotate,
-		std::string clientID, std::string& url,
+		std::string clientID, std::string& url, bool isHeadNode,
 		int gpuIndex);
 	~App();
 	App(const App&) = delete;
 	App& operator=(const App&) = delete;
 
 	std::string m_clientID;
+	bool m_isHeadNode;
 
 	Camera* m_camera;
 	VolumeReader* m_reader;

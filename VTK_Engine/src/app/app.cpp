@@ -6,6 +6,8 @@
 #include <vtkRendererCollection.h>
 #include <vtkContourValues.h>
 #include <vtkNamedColors.h >
+#include <vtkImageData.h>
+#include <vtkPoints.h>
 #include "interaction/frontendData.h"
 
 App::App(int sceneWidth, int sceneHeight,
@@ -14,11 +16,36 @@ App::App(int sceneWidth, int sceneHeight,
 	int xpos, int ypos,
 	float physicalHeight, float physicalDistance,
 	float angleToRotate,
-	std::string clientID, std::string& url,
+	std::string clientID, std::string& url, bool isHeadNode,
 	int gpuIndex) :Window(instanceWidth, instanceHeight, windowXPos, windowYPos, gpuIndex, false) {
 
 	m_reader = new VolumeReader();
 	m_reader->readVolume(Config::readerConfig["fileName"].c_str(), VolumeReader::FileType::MetaImage);
+
+	if (false) {
+		/*vtkSmartPointer<vtkImageData> imageData =
+			vtkImageData::SafeDownCast(m_reader->getImageData());
+
+		m_reader->update();
+
+		if (!imageData)
+		{
+			std::cerr << "Could not cast reader output to vtkImageData!\n";
+			return;
+		}
+
+		double range[2];
+		imageData->GetScalarRange(range);
+		std::cout << "Intensity range: [" << range[0] << ", " << range[1] << "]\n";
+
+		void* voxels = imageData->GetScalarPointer();
+		if (!voxels)
+		{
+			std::cerr << "No voxel data in the image!\n";
+			return;
+		}*/
+	}
+
 
 	m_mapper = new VolumeMapper();
 	m_mapper->SetInputConnection(m_reader->getOutputPort());
@@ -43,6 +70,7 @@ App::App(int sceneWidth, int sceneHeight,
 	m_camera->resetCameraPosition();
 	m_renderer->SetActiveCamera(m_camera->getCamera());
 
+	m_isHeadNode = isHeadNode;
 	m_clientID = clientID;
 	m_interactor = new Interactor(m_renderer, m_mapper, m_property, m_camera, clientID);
 	m_interactor->setRenderCallback([this]() {this->render(); });
@@ -62,7 +90,7 @@ App& App::getInstance(
 	int windowXPos, int windowYPos,
 	float physicalHeight, float physicalDistance, 
 	float angleToRotate,
-	std::string clientID, std::string& url,
+	std::string clientID, std::string& url, bool isHeadNode,
 	int gpuIndex) {
 	static App instance(
 		sceneWidth, sceneHeight, 
@@ -71,7 +99,7 @@ App& App::getInstance(
 		xpos, ypos,	
 		physicalHeight, physicalDistance,
 		angleToRotate,
-		clientID, url,
+		clientID, url, isHeadNode,
 		gpuIndex);
 	return instance;
 }

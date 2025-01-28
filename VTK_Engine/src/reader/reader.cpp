@@ -16,6 +16,14 @@ vtkAlgorithmOutput* VolumeReader::getOutputPort() {
 	return m_reader->GetOutputPort();
 }
 
+vtkImageData* VolumeReader::getImageData() {
+	return m_reader->GetOutput();
+}
+
+void VolumeReader::update() {
+	m_reader->Update();
+}
+
 void VolumeReader::clearVolume() {
 	m_reader->RemoveAllInputs();
 }
