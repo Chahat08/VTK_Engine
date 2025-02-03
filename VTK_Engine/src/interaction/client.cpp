@@ -1,6 +1,5 @@
 #include "interaction/client.h"
 
-
 WebSocket::pointer SocketClient::m_ws = nullptr;
 
 SocketClient::SocketClient(std::string& m_url, std::string clientID, Interactor* interactor) {
