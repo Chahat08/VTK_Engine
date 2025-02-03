@@ -5,7 +5,7 @@
 #include <vtkPiecewiseFunction.h>
 #include <vtkRendererCollection.h>
 #include <vtkContourValues.h>
-#include <vtkNamedColors.h >
+#include <vtkNamedColors.h>
 #include <vtkImageData.h>
 #include <vtkPoints.h>
 #include "interaction/frontendData.h"
