@@ -33,6 +33,5 @@ int main(int argc, char* argv[])
         clientID, url, isHeadNode, gpuIndex
     ).run();
 
-    LocalFree(argv);
     return 0;
 }
