@@ -19,6 +19,47 @@
             }
         },
         {
+            "name": "linux-base",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe",
+                "VTK_DIR": "$env{VTK_DIR}"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            }
+        },
+        {
+            "name": "x64-debug-linux",
+            "displayName": "x64 Debug (Linux)",
+            "inherits": "linux-base",
+            "architecture": {
+                "value": "x86_64",
+                "strategy": "external"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "x64-release-linux",
+            "displayName": "x64 Release (Linux)",
+            "inherits": "linux-base",
+            "architecture": {
+              "value": "x86_64",
+              "strategy": "external"
+            },
+            "cacheVariables": {
+              "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
             "name": "x64-debug",
             "displayName": "x64 Debug",
             "inherits": "windows-base",

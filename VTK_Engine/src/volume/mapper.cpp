@@ -1,4 +1,6 @@
 #include "volume/mapper.h"
+#include <vtkImageData.h>
+#include <vtkPoints.h>
 
 VolumeMapper::VolumeMapper() {
 	this->SetAutoAdjustSampleDistances(FrontendData::defaultAutoSampling);
