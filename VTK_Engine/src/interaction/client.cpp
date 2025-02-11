@@ -4,6 +4,7 @@
 WebSocket::pointer SocketClient::m_ws = nullptr;
 
 SocketClient::SocketClient(std::string& m_url, std::string clientID, Interactor* interactor) {
+#ifdef _WIN32
 	INT rc;
 	WSADATA wsaData;
 
@@ -11,6 +12,7 @@ SocketClient::SocketClient(std::string& m_url, std::string clientID, Interactor*
 	if (rc) {
 		printf("WSAStartup Failed.\n");
 	}
+#endif
 
 	this->m_url = m_url;
 	m_ws = WebSocket::from_url(m_url);
