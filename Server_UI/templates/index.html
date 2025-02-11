@@ -117,22 +117,96 @@
             </div>
             <div class="panel middle-left-panel">
                 <div class="camera-controls-container">
-                    <div class="camera-controls-header">
-                        <h5>Camera Controls</h5>
-                        <div class="button-group">
-                            <button id="resetPositionButton" class="btn btn-primary">Reset Position</button>
-                            <button id="resetSpeedButton" class="btn btn-primary">Reset Speed</button>
+                    <!-- Tab buttons -->
+                    <div class="tab-container">
+                        <button class="tab-button active" data-tab="cameraTab">Camera Controls</button>
+                        <button class="tab-button" data-tab="flexTab">Flex Curvature</button>
+                    </div>
+
+                    <!-- Tab 1 content: existing camera controls -->
+                    <div class="tab-content" id="cameraTab" style="display: block;">
+                        <div class="camera-controls-header">
+                            <h5>Camera Controls</h5>
+                            <div class="button-group">
+                                <button id="resetPositionButton" class="btn btn-primary">Reset Position</button>
+                                <button id="resetSpeedButton" class="btn btn-primary">Reset Speed</button>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label for="cameraSpeedSlider">Camera Movement Speed:</label>
+                            <input type="range" id="cameraSpeedSlider" min="0.1" max="3.0" step="0.1" value="1">
+                            <span id="cameraSpeedValue">1</span>
+                        </div>
+                        <div class="control-group">
+                            <label for="arcballSpeedSlider">Arcball Speed:</label>
+                            <input type="range" id="arcballSpeedSlider" min="0.1" max="3.0" step="0.1" value="1">
+                            <span id="arcballSpeedValue">1</span>
                         </div>
                     </div>
-                    <div class="control-group">
-                        <label for="cameraSpeedSlider">Camera Movement Speed:</label>
-                        <input type="range" id="cameraSpeedSlider" min="0.1" max="3.0" step="0.1" value="1">
-                        <span id="cameraSpeedValue">1</span>
-                    </div>
-                    <div class="control-group">
-                        <label for="arcballSpeedSlider">Arcball Speed:</label>
-                        <input type="range" id="arcballSpeedSlider" min="0.1" max="3.0" step="0.1" value="1">
-                        <span id="arcballSpeedValue">1</span>
+
+                    <!-- Tab 2 content: four vertical sliders -->
+                    <div class="tab-content" id="flexTab" style="display: none;">
+                        <h5>Flex Curvature</h5>
+                        <div class="flex-sliders-container">
+
+                            <!-- Example of a single vertical slider + label -->
+                            <div class="vertical-slider-group">
+                                <label for="slider1">Slider 1 Value: <span id="slider1Value">0</span></label>
+                                <input type="range"
+                                       id="slider1"
+                                       min="-90"
+                                       max="90"
+                                       value="0"
+                                       step="1"
+                                       class="vertical-slider"
+                                       list="tickmarks">
+                            </div>
+
+                            <div class="vertical-slider-group">
+                                <label for="slider2">Slider 2 Value: <span id="slider2Value">0</span></label>
+                                <input type="range"
+                                       id="slider2"
+                                       min="-90"
+                                       max="90"
+                                       value="0"
+                                       step="1"
+                                       class="vertical-slider"
+                                       list="tickmarks">
+                            </div>
+
+                            <div class="vertical-slider-group">
+                                <label for="slider3">Slider 3 Value: <span id="slider3Value">0</span></label>
+                                <input type="range"
+                                       id="slider3"
+                                       min="-90"
+                                       max="90"
+                                       value="0"
+                                       step="1"
+                                       class="vertical-slider"
+                                       list="tickmarks">
+                            </div>
+
+                            <div class="vertical-slider-group">
+                                <label for="slider4">Slider 4 Value: <span id="slider4Value">0</span></label>
+                                <input type="range"
+                                       id="slider4"
+                                       min="-90"
+                                       max="90"
+                                       value="0"
+                                       step="1"
+                                       class="vertical-slider"
+                                       list="tickmarks">
+                            </div>
+
+                            <!-- Datalist to show tick marks at -90, -45, 0, 45, 90 -->
+                            <datalist id="tickmarks">
+                                <option value="-90" label="-90"></option>
+                                <option value="-45" label="-45"></option>
+                                <option value="0" label="0"></option>
+                                <option value="45" label="45"></option>
+                                <option value="90" label="90"></option>
+                            </datalist>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -174,8 +248,42 @@
             console.log("MiniRD environment selected");
             socket.send(JSON.stringify({ action: "run_environment", environment: "MiniRD" }));
         });
-
     </script>
+    <script>
+        // Tab switching
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove 'active' class from all tab buttons
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+
+                // Add 'active' class to the clicked button
+                button.classList.add('active');
+
+                // Hide all tab-content sections
+                tabContents.forEach(tc => tc.style.display = 'none');
+
+                // Show only the matching tab-content
+                const targetContent = document.getElementById(button.dataset.tab);
+                if (targetContent) {
+                    targetContent.style.display = 'block';
+                }
+            });
+        });
+
+        // Update displayed value on each vertical slider
+        document.querySelectorAll('.vertical-slider').forEach(slider => {
+            slider.addEventListener('input', e => {
+                const valueSpan = document.getElementById(slider.id + 'Value');
+                if (valueSpan) {
+                    valueSpan.textContent = e.target.value;
+                }
+            });
+        });
+    </script>
+
     <script src="{{ url_for('static', filename='js/clientList.js') }}"></script>
     <script src="{{ url_for('static', filename='js/websocketSend.js') }}"></script>
     <script src="{{ url_for('static', filename='js/opacityEditor.js')}}"></script>
