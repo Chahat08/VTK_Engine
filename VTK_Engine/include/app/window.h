@@ -1,10 +1,13 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <vtkRenderWindow.h>
-#include <vtkRenderer.h>
-#include <vtkWin32OpenGLRenderWindow.h>
+#ifdef _WIN32
+	#include <vtkWin32OpenGLRenderWindow.h>
+#else
+	#include <vtkRenderWindow.h>
+#endif
 
+#include <vtkRenderer.h>
 #include <string>
 
 class Window {
@@ -18,8 +21,11 @@ public:
 protected:
 	Window(int width, int height, int xpos, int ypos, int gpuIndex = 0, bool borders = false, std::string name = "Title");
 	~Window();
-
+#ifdef _WIN32
 	vtkWin32OpenGLRenderWindow* m_window{ nullptr };
+#else
+	vtkRenderWindow* m_window{ nullptr };
+#endif
 	vtkRenderer* m_renderer{ nullptr };
 
 	void render();

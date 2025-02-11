@@ -60,7 +60,12 @@ set(SOURCE_DIRS
 	"include/config.h"
 )
 
-add_executable (VTK_Engine WIN32 ${SOURCE_DIRS})
+if(WIN32)
+    add_executable(VTK_Engine WIN32 ${SOURCE_DIRS})
+else()
+    add_executable(VTK_Engine ${SOURCE_DIRS})
+endif()
+
 
 target_include_directories(VTK_Engine PUBLIC ${INCLUDE_DIRS})
 
