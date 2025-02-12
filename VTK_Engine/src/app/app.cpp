@@ -9,6 +9,7 @@
 #include <vtkImageData.h>
 #include <vtkPoints.h>
 #include "interaction/frontendData.h"
+#include "volume/slice.h"
 
 App::App(int sceneWidth, int sceneHeight,
 	int instanceWidth, int instanceHeight,
@@ -46,7 +47,6 @@ App::App(int sceneWidth, int sceneHeight,
 		}*/
 	}
 
-
 	m_mapper = new VolumeMapper();
 	m_mapper->SetInputConnection(m_reader->getOutputPort());
 
@@ -56,7 +56,10 @@ App::App(int sceneWidth, int sceneHeight,
 	m_volume->SetMapper(m_mapper);
 	m_volume->SetProperty(m_property);
 	
-	m_renderer->AddVolume(m_volume);
+	/*VolumeSlicer* m_volumeSlice = new VolumeSlicer(m_reader);
+	m_renderer->AddActor(m_volumeSlice->getSliceActor());
+	m_renderer->AddVolume(m_volume);*/
+
 	std::vector<float> bgColor = FrontendData::getColor(FrontendData::defaultBackgroundColor);
 	m_renderer->SetBackground(bgColor[0], bgColor[1], bgColor[2]);
 	m_renderer->ResetCamera();
@@ -69,6 +72,7 @@ App::App(int sceneWidth, int sceneHeight,
 	m_camera->setVolumeBounds(m_volume->getVolumeBounds());
 	m_camera->resetCameraPosition();
 	m_renderer->SetActiveCamera(m_camera->getCamera());
+
 
 	m_isHeadNode = isHeadNode;
 	m_clientID = clientID;
