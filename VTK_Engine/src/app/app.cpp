@@ -56,9 +56,9 @@ App::App(int sceneWidth, int sceneHeight,
 	m_volume->SetMapper(m_mapper);
 	m_volume->SetProperty(m_property);
 	
-	VolumeSlicer* m_volumeSlice = new VolumeSlicer(m_reader);
+	/*VolumeSlicer* m_volumeSlice = new VolumeSlicer(m_reader);
 	m_renderer->AddActor(m_volumeSlice->getSliceActor());
-	m_renderer->AddVolume(m_volume);
+	m_renderer->AddVolume(m_volume);*/
 
 	std::vector<float> bgColor = FrontendData::getColor(FrontendData::defaultBackgroundColor);
 	m_renderer->SetBackground(bgColor[0], bgColor[1], bgColor[2]);
