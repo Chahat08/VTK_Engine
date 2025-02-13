@@ -27,6 +27,7 @@ public:
 	void setVolumeBounds(std::vector<std::pair<double, double>> bounds);
 	void resetCameraPosition();  
 
+	void modifyColumnAngle(float angle);
 	void sliceModeCameraOrientation();
 
 	// arcball camera 

@@ -7,6 +7,7 @@
 #include "camera/camera.h"
 #include "utils/json/simdjson.h"
 #include "volume/outline.h"
+#include "volume/volume.h"
 
 #include <functional>
 
@@ -16,7 +17,7 @@ class App;
 
 class Interactor {
 public:
-	Interactor(vtkRenderer* renderer, VolumeMapper* mapper, VolumeProperty* property, Camera* camera, VolumeOutline* outline, std::string clientID);
+	Interactor(vtkRenderer* renderer, VolumeMapper* mapper, VolumeProperty* property, Volume* volume, Camera* camera, VolumeOutline* outline, std::string clientID, int flexColumnNumber);
 	~Interactor();
 	
 	void handleServerMessage(const std::string& message) const;
@@ -29,6 +30,7 @@ private:
 	vtkRenderer* m_renderer;
 	Camera* m_camera;
 	VolumeOutline* m_volumeOutline;
+	Volume* m_volume;
 
 	std::function<void()> m_renderCallback;
 	void setRenderCallback(const std::function<void()>& callback);
@@ -69,6 +71,10 @@ private:
 	void cameraResetUpdate() const;
 	void cameraArcballSpeedUpdate(simdjson::ondemand::object& jsonData) const;
 	void cameraFreeCameraSpeedUpdate(simdjson::ondemand::object& jsonData) const;
+
+	// FlexiCAVE display angle change
+	int m_columnNumber = 1;
+	void flexDisplayAngleUpdate(simdjson::ondemand::object& jsonData) const;
 };
 
 #endif

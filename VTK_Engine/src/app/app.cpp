@@ -19,7 +19,8 @@ App::App(int sceneWidth, int sceneHeight,
 	float physicalHeight, float physicalDistance,
 	float angleToRotate,
 	std::string clientID, std::string& url, bool isHeadNode,
-	int gpuIndex) :Window(instanceWidth, instanceHeight, windowXPos, windowYPos, gpuIndex, false) {
+	int gpuIndex,
+	int flexColumnNumber) :Window(instanceWidth, instanceHeight, windowXPos, windowYPos, gpuIndex, false) {
 
 	m_reader = new VolumeReader();
 	m_reader->readVolume(Config::readerConfig["fileName"].c_str(), VolumeReader::FileType::MetaImage);
@@ -57,7 +58,7 @@ App::App(int sceneWidth, int sceneHeight,
 
 	m_isHeadNode = isHeadNode;
 	m_clientID = clientID;
-	m_interactor = new Interactor(m_renderer, m_mapper, m_property, m_camera, m_volumeOutline, clientID);
+	m_interactor = new Interactor(m_renderer, m_mapper, m_property, m_volume, m_camera, m_volumeOutline, clientID, flexColumnNumber);
 	m_interactor->setRenderCallback([this]() {this->render(); });
 
 	m_client = new SocketClient(url, m_clientID, m_interactor);
@@ -76,7 +77,8 @@ App& App::getInstance(
 	float physicalHeight, float physicalDistance, 
 	float angleToRotate,
 	std::string clientID, std::string& url, bool isHeadNode,
-	int gpuIndex) {
+	int gpuIndex,
+	int flexColumnNumber) {
 	static App instance(
 		sceneWidth, sceneHeight, 
 		instanceWidth, instanceHeight, 
@@ -85,7 +87,8 @@ App& App::getInstance(
 		physicalHeight, physicalDistance,
 		angleToRotate,
 		clientID, url, isHeadNode,
-		gpuIndex);
+		gpuIndex,
+		flexColumnNumber);
 	return instance;
 }
 

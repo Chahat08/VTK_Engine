@@ -33,6 +33,11 @@ void VolumeMapper::setBlendMode(std::string mode) {
 	else {
 		this->SetBlendModeToComposite();
 	}
+	blendMode = mode;
+}
+
+std::string VolumeMapper::getBlendMode() {
+	return blendMode;
 }
 
 VolumeMapper::~VolumeMapper() {

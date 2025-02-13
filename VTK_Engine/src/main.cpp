@@ -50,6 +50,12 @@ int main(int argc, char* argv[])
     bool isHeadNode = std::stoi(argv[15]);
     int gpuIndex = std::stoi(argv[16]);
 	bool showConsole = std::stoi(argv[17]);
+    std::wstring wEnv(argv[18]);
+    std::string env(wEnv.begin(), wEnv.end());
+    int flexColumnNumber = 0; 
+    if (argc > 18) {
+        flexColumnNumber = std::stoi(argv[18]);
+    }
 
 #else
 
@@ -70,6 +76,11 @@ int main(int argc, char* argv[])
     bool isHeadNode = std::stoi(argv[15]);
     int gpuIndex = std::stoi(argv[16]);
     bool showConsole = std::stoi(argv[17]);
+    std::string env(argv[18]);
+    int flexColumnNumber = 0;
+    if (argc > 18) {
+        flexColumnNumber = std::stoi(argv[18]);
+    }
 
 #endif
 
@@ -96,7 +107,8 @@ int main(int argc, char* argv[])
     App::getInstance(
         sceneWidth, sceneHeight, instanceWidth, instanceHeight, xpos, ypos, windowXPos, windowYPos, physicalHeight, physicalDistance,
         angleToRotate * columnNumber,
-        clientID, url, isHeadNode, gpuIndex
+        clientID, url, isHeadNode, gpuIndex,
+        flexColumnNumber
     ).run();
 
 #ifdef _WIN32

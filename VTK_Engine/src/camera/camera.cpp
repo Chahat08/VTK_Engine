@@ -276,6 +276,11 @@ void Camera::printSelf() {
 	std::cout << "Camera right: " << m_cameraRight[0] << ", " << m_cameraRight[1] << ", " << m_cameraRight[2] << std::endl;
 }
 
+void Camera::modifyColumnAngle(float angle) {
+	m_angleToRotate = angle;
+	orientCamera();
+}
+
 void Camera::sliceModeCameraOrientation() {
 	double baseNormal[3] = { 0.0, 0.0, 1.0 };
 	vtkSmartPointer<vtkTransform> vectorTransform =
@@ -300,4 +305,6 @@ void Camera::sliceModeCameraOrientation() {
 		center[2] - rotatedNormal[2] * distance
 	);
 	m_camera->SetViewUp(0, 1, 0);
+
+	m_camera->Modified();
 }
