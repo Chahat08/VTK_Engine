@@ -8,7 +8,7 @@ Interactor::Interactor(vtkRenderer* renderer, VolumeMapper* mapper, VolumeProper
 	m_mapper = mapper;
 	m_clientID = clientID;
 	m_volumeOutline = outline;
-	m_columnNumber = m_columnNumber;
+	m_columnNumber = flexColumnNumber;
 	m_volume = volume;
 }
 
@@ -332,6 +332,7 @@ void Interactor::flexDisplayAngleUpdate(simdjson::ondemand::object& jsonData) co
 			m_volume->setSlicePlane(angle);
 			m_camera->modifyColumnAngle(angle);
 			if (m_mapper->getBlendMode() == "Slice") m_camera->sliceModeCameraOrientation();
+			reRender();
 		}
 	}
 }
