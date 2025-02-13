@@ -62,6 +62,13 @@ bgColorPicker.addEventListener("input", (event) => {
     }
 });
 
+const outlineCheckbox = document.getElementById("outlineCheckbox");
+outlineCheckbox.addEventListener("change", () => {
+    if (socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ outline: outlineCheckbox.checked }));
+    }
+});
+
 const shadingCheckbox = document.getElementById("shadingCheckbox");
 shadingCheckbox.addEventListener("change", () => {
     if (socket.readyState === WebSocket.OPEN) {

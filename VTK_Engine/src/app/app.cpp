@@ -8,8 +8,9 @@
 #include <vtkNamedColors.h>
 #include <vtkImageData.h>
 #include <vtkPoints.h>
+#include <vtkPlane.h>
+#include <vtkTransform.h>
 #include "interaction/frontendData.h"
-#include "volume/slice.h"
 
 App::App(int sceneWidth, int sceneHeight,
 	int instanceWidth, int instanceHeight,
@@ -18,34 +19,11 @@ App::App(int sceneWidth, int sceneHeight,
 	float physicalHeight, float physicalDistance,
 	float angleToRotate,
 	std::string clientID, std::string& url, bool isHeadNode,
-	int gpuIndex) :Window(instanceWidth, instanceHeight, windowXPos, windowYPos, gpuIndex, false) {
+	int gpuIndex,
+	int flexColumnNumber) :Window(instanceWidth, instanceHeight, windowXPos, windowYPos, gpuIndex, false) {
 
 	m_reader = new VolumeReader();
 	m_reader->readVolume(Config::readerConfig["fileName"].c_str(), VolumeReader::FileType::MetaImage);
-
-	if (false) {
-		/*vtkSmartPointer<vtkImageData> imageData =
-			vtkImageData::SafeDownCast(m_reader->getImageData());
-
-		m_reader->update();
-
-		if (!imageData)
-		{
-			std::cerr << "Could not cast reader output to vtkImageData!\n";
-			return;
-		}
-
-		double range[2];
-		imageData->GetScalarRange(range);
-		std::cout << "Intensity range: [" << range[0] << ", " << range[1] << "]\n";
-
-		void* voxels = imageData->GetScalarPointer();
-		if (!voxels)
-		{
-			std::cerr << "No voxel data in the image!\n";
-			return;
-		}*/
-	}
 
 	m_mapper = new VolumeMapper();
 	m_mapper->SetInputConnection(m_reader->getOutputPort());
@@ -55,10 +33,15 @@ App::App(int sceneWidth, int sceneHeight,
 	m_volume = new Volume();
 	m_volume->SetMapper(m_mapper);
 	m_volume->SetProperty(m_property);
-	
-	/*VolumeSlicer* m_volumeSlice = new VolumeSlicer(m_reader);
-	m_renderer->AddActor(m_volumeSlice->getSliceActor());
-	m_renderer->AddVolume(m_volume);*/
+	m_volume->setVolumeParameters(m_reader);
+	m_volume->setSlicePlane(angleToRotate);
+
+	//m_volumeSlice = new VolumeSlicer(m_reader, m_volume);
+	m_volumeOutline = new VolumeOutline(m_reader);
+
+	//m_renderer->AddActor(m_volumeSlice->getSliceActor());
+	m_renderer->AddActor(m_volumeOutline->getVolumeOutline());
+	m_renderer->AddVolume(m_volume);
 
 	std::vector<float> bgColor = FrontendData::getColor(FrontendData::defaultBackgroundColor);
 	m_renderer->SetBackground(bgColor[0], bgColor[1], bgColor[2]);
@@ -73,10 +56,9 @@ App::App(int sceneWidth, int sceneHeight,
 	m_camera->resetCameraPosition();
 	m_renderer->SetActiveCamera(m_camera->getCamera());
 
-
 	m_isHeadNode = isHeadNode;
 	m_clientID = clientID;
-	m_interactor = new Interactor(m_renderer, m_mapper, m_property, m_camera, clientID);
+	m_interactor = new Interactor(m_renderer, m_mapper, m_property, m_volume, m_camera, m_volumeOutline, clientID, flexColumnNumber);
 	m_interactor->setRenderCallback([this]() {this->render(); });
 
 	m_client = new SocketClient(url, m_clientID, m_interactor);
@@ -95,7 +77,8 @@ App& App::getInstance(
 	float physicalHeight, float physicalDistance, 
 	float angleToRotate,
 	std::string clientID, std::string& url, bool isHeadNode,
-	int gpuIndex) {
+	int gpuIndex,
+	int flexColumnNumber) {
 	static App instance(
 		sceneWidth, sceneHeight, 
 		instanceWidth, instanceHeight, 
@@ -104,7 +87,8 @@ App& App::getInstance(
 		physicalHeight, physicalDistance,
 		angleToRotate,
 		clientID, url, isHeadNode,
-		gpuIndex);
+		gpuIndex,
+		flexColumnNumber);
 	return instance;
 }
 

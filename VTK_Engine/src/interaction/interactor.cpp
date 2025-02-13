@@ -1,12 +1,15 @@
 #include "interaction/interactor.h"
 
 
-Interactor::Interactor(vtkRenderer* renderer, VolumeMapper* mapper, VolumeProperty* property, Camera* camera, std::string clientID) {
+Interactor::Interactor(vtkRenderer* renderer, VolumeMapper* mapper, VolumeProperty* property, Volume* volume, Camera* camera, VolumeOutline* outline, std::string clientID, int flexColumnNumber) {
 	m_property = property;
 	m_camera = camera;
 	m_renderer = renderer;
 	m_mapper = mapper;
 	m_clientID = clientID;
+	m_volumeOutline = outline;
+	m_columnNumber = m_columnNumber;
+	m_volume = volume;
 }
 
 Interactor::~Interactor() {
@@ -47,6 +50,9 @@ void Interactor::parseJson(const std::string& message) const {
 
 	else if (obj["colorStops"].error() == simdjson::SUCCESS)
 		transferFunctionColorUpdate(obj);
+
+	else if (obj["outline"].error() == simdjson::SUCCESS)
+		outlineUpdate(obj);
 
 	else if (obj["shading"].error() == simdjson::SUCCESS)
 		shadingUpdate(obj);
@@ -89,6 +95,9 @@ void Interactor::parseJson(const std::string& message) const {
 	
 	else if(obj["terminate_client"].error()==simdjson::SUCCESS)
 		terminateAppUpdate(obj);
+
+	else if (obj["flexAngle"].error() == simdjson::SUCCESS)
+		flexDisplayAngleUpdate(obj);
 }
 
 void Interactor::handleServerMessage(const std::string& message) const {
@@ -145,6 +154,18 @@ void Interactor::transferFunctionColorUpdate(simdjson::ondemand::object& jsonDat
 	reRender();
 }
 
+void Interactor::outlineUpdate(simdjson::ondemand::object& jsonData) const {
+	bool outline = false;
+	simdjson::error_code outline_error = jsonData["outline"].get(outline);
+
+	if (outline_error == simdjson::SUCCESS) {
+		m_volumeOutline->getVolumeOutline()->SetVisibility(outline);
+		m_volumeOutline->getVolumeOutline()->Modified();
+		m_renderer->Modified();
+		reRender();
+	}
+}
+
 void Interactor::shadingUpdate(simdjson::ondemand::object& jsonData) const {
 	bool shading = false;
 	simdjson::error_code shading_error = jsonData["shading"].get(shading);
@@ -196,6 +217,7 @@ void Interactor::blendModeUpdate(simdjson::ondemand::object& jsonData) const {
 	if (blendMode_error == simdjson::SUCCESS) {
 		m_mapper->setBlendMode(std::string(blendMode));
 		m_mapper->Modified();
+		if (m_mapper->getBlendMode() == "Slice") m_camera->sliceModeCameraOrientation();
 		reRender();
 	}
 }
@@ -246,9 +268,9 @@ void Interactor::cameraZoomUpdate(simdjson::ondemand::object& jsonData) const {
 
 void Interactor::cameraJoystickUpdates(simdjson::ondemand::object& jsonData) const {
 	std::string_view joystick;
-	simdjson::error_code blendMode_error = jsonData["joystick"].get_string(joystick);
+	simdjson::error_code joystick_error = jsonData["joystick"].get_string(joystick);
 
-	if (blendMode_error == simdjson::SUCCESS) {
+	if (joystick_error == simdjson::SUCCESS) {
 		double deltaX = 0, deltaZ = 0;
 		simdjson::error_code x_error = jsonData["x"].get(deltaX);
 		simdjson::error_code y_error = jsonData["y"].get(deltaZ);
@@ -297,4 +319,19 @@ void Interactor::terminateAppUpdate(simdjson::ondemand::object& jsonData) const 
 	if (terminate_error == simdjson::SUCCESS)
 		if(client==m_clientID)
 			terminate();
+}
+
+void Interactor::flexDisplayAngleUpdate(simdjson::ondemand::object& jsonData) const {
+	float angle = 0.0;
+	simdjson::error_code angle_error = jsonData["flexAngle"].get(angle);
+
+	if (angle_error == simdjson::SUCCESS) {
+		int col = 0;
+		simdjson::error_code col_error = jsonData["col"].get(col);
+		if (col == m_columnNumber) {
+			m_volume->setSlicePlane(angle);
+			m_camera->modifyColumnAngle(angle);
+			if (m_mapper->getBlendMode() == "Slice") m_camera->sliceModeCameraOrientation();
+		}
+	}
 }

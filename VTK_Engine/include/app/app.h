@@ -9,6 +9,8 @@
 #include "volume/volume.h"
 #include "interaction/client.h"
 #include "interaction/interactor.h"
+#include "volume/slice.h"
+#include "volume/outline.h"
 
 class App :private Window {
 public:
@@ -20,7 +22,7 @@ public:
 		float physicalHeight, float physicalDistance,
 		float angleToRotate,
 		std::string clientID, std::string& url, bool isHeadNode,
-		int gpuIndex
+		int gpuIndex, int flexColumnNumber
 	);
 	void run();
 private:
@@ -31,7 +33,8 @@ private:
 		float physicalHeight, float physicalDistance,
 		float angleToRotate,
 		std::string clientID, std::string& url, bool isHeadNode,
-		int gpuIndex);
+		int gpuIndex,
+		int flexColumnNumber);
 	~App();
 	App(const App&) = delete;
 	App& operator=(const App&) = delete;
@@ -46,6 +49,8 @@ private:
 	Volume* m_volume;
 	SocketClient* m_client;
 	Interactor* m_interactor;
+	VolumeSlicer* m_volumeSlice;
+	VolumeOutline* m_volumeOutline;
 };
 
 #endif

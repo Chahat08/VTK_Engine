@@ -38,6 +38,8 @@ set(VOLUME
 	"src/volume/property.cpp"
 	"include/volume/slice.h"
 	"src/volume/slice.cpp"
+	"include/volume/outline.h"
+	"src/volume/outline.cpp"
 )
 
 set(UTILS

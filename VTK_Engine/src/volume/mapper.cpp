@@ -27,9 +27,17 @@ void VolumeMapper::setBlendMode(std::string mode) {
 	else if (mode == "Additive") {
 		this->SetBlendModeToAdditive();
 	}
+	else if (mode == "Slice") {
+		this->SetBlendModeToSlice();
+	}
 	else {
 		this->SetBlendModeToComposite();
 	}
+	blendMode = mode;
+}
+
+std::string VolumeMapper::getBlendMode() {
+	return blendMode;
 }
 
 VolumeMapper::~VolumeMapper() {

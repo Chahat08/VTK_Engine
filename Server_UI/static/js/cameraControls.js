@@ -7,13 +7,13 @@ resetPositionButton.addEventListener("click", () => {
 });
 
 resetSpeedButton.addEventListener("click", () => {
-    cameraSpeedSlider.value = 1;
-    cameraSpeedValue.textContent = "1"; 
+    cameraSpeedSlider.value = 2;
+    cameraSpeedValue.textContent = "2"; 
 
     arcballSpeedSlider.value = 1;
     arcballSpeedValue.textContent = "1";
 
-    socket.send(JSON.stringify({ freeCameraSpeed: 1 }));
+    socket.send(JSON.stringify({ freeCameraSpeed: 2 }));
     socket.send(JSON.stringify({ arcballSpeed: 1 }));
 });
 

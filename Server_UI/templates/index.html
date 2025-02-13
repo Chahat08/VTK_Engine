@@ -64,7 +64,11 @@
                 <div class="background-color-container">
                     <label for="bgColorPicker">Background Color:</label>
                     <input type="color" id="bgColorPicker" value="#000000">
+                    <label>
+                        Outline: <input type="checkbox" id="outlineCheckbox" checked>
+                    </label>
                 </div>
+                
 
                 <div class="render-options-container">
                     <label>
@@ -96,6 +100,7 @@
                             <option value="Average Intensity">Average Intensity</option>
                             <option value="Additive">Additive</option>
                             <option value="Isosurface">Isosurface</option>
+                            <option value="Slice">Slice</option>
                         </select>
                     </div>
 
@@ -117,16 +122,13 @@
             </div>
             <div class="panel middle-left-panel">
                 <div class="camera-controls-container">
-                    <!-- Tab buttons -->
-                    <div class="tab-container">
-                        <button class="tab-button active" data-tab="cameraTab">Camera Controls</button>
-                        <button class="tab-button" data-tab="flexTab">Flex Curvature</button>
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="camera">Camera Controls</button>
+                        <button class="tab-btn" data-tab="flex">Flex Curvature</button>
                     </div>
 
-                    <!-- Tab 1 content: existing camera controls -->
-                    <div class="tab-content" id="cameraTab" style="display: block;">
+                    <div class="tab-content" id="camera-tab" style="display: block;">
                         <div class="camera-controls-header">
-                            <h5>Camera Controls</h5>
                             <div class="button-group">
                                 <button id="resetPositionButton" class="btn btn-primary">Reset Position</button>
                                 <button id="resetSpeedButton" class="btn btn-primary">Reset Speed</button>
@@ -144,68 +146,52 @@
                         </div>
                     </div>
 
-                    <!-- Tab 2 content: four vertical sliders -->
-                    <div class="tab-content" id="flexTab" style="display: none;">
-                        <h5>Flex Curvature</h5>
-                        <div class="flex-sliders-container">
-
-                            <!-- Example of a single vertical slider + label -->
-                            <div class="vertical-slider-group">
-                                <label for="slider1">Slider 1 Value: <span id="slider1Value">0</span></label>
-                                <input type="range"
-                                       id="slider1"
-                                       min="-90"
-                                       max="90"
-                                       value="0"
-                                       step="1"
-                                       class="vertical-slider"
-                                       list="tickmarks">
+                    <div class="tab-content" id="flex-tab" style="display: none;">
+                        <div class="flex-sliders">
+                            <div class="vertical-slider-container">
+                                <span class="slider-value" id="flex12Value">0°</span>
+                                <input type="range" id="flex12Slider" class="vertical-slider" min="-90" max="90" value="0" step="1">
+                                <div class="slider-marks">
+                                    <span class="mark">90°</span>
+                                    <span class="mark">45°</span>
+                                    <span class="mark">0°</span>
+                                    <span class="mark">-45°</span>
+                                    <span class="mark">-90°</span>
+                                </div>
                             </div>
-
-                            <div class="vertical-slider-group">
-                                <label for="slider2">Slider 2 Value: <span id="slider2Value">0</span></label>
-                                <input type="range"
-                                       id="slider2"
-                                       min="-90"
-                                       max="90"
-                                       value="0"
-                                       step="1"
-                                       class="vertical-slider"
-                                       list="tickmarks">
+                            <div class="vertical-slider-container">
+                                <span class="slider-value" id="flex23Value">0°</span>
+                                <input type="range" id="flex23Slider" class="vertical-slider" min="-90" max="90" value="0" step="1">
+                                <div class="slider-marks">
+                                    <span class="mark">90°</span>
+                                    <span class="mark">45°</span>
+                                    <span class="mark">0°</span>
+                                    <span class="mark">-45°</span>
+                                    <span class="mark">-90°</span>
+                                </div>
                             </div>
-
-                            <div class="vertical-slider-group">
-                                <label for="slider3">Slider 3 Value: <span id="slider3Value">0</span></label>
-                                <input type="range"
-                                       id="slider3"
-                                       min="-90"
-                                       max="90"
-                                       value="0"
-                                       step="1"
-                                       class="vertical-slider"
-                                       list="tickmarks">
+                            <div class="vertical-slider-container">
+                                <span class="slider-value" id="flex34Value">0°</span>
+                                <input type="range"id="flex34Slider" class="vertical-slider" min="-90" max="90" value="0" step="1">
+                                <div class="slider-marks">
+                                    <span class="mark">90°</span>
+                                    <span class="mark">45°</span>
+                                    <span class="mark">0°</span>
+                                    <span class="mark">-45°</span>
+                                    <span class="mark">-90°</span>
+                                </div>
                             </div>
-
-                            <div class="vertical-slider-group">
-                                <label for="slider4">Slider 4 Value: <span id="slider4Value">0</span></label>
-                                <input type="range"
-                                       id="slider4"
-                                       min="-90"
-                                       max="90"
-                                       value="0"
-                                       step="1"
-                                       class="vertical-slider"
-                                       list="tickmarks">
+                            <div class="vertical-slider-container">
+                                <span class="slider-value" id="flex45Value">0°</span>
+                                <input type="range" id="flex45Slider" class="vertical-slider" min="-90" max="90" value="0" step="1">
+                                <div class="slider-marks">
+                                    <span class="mark">90°</span>
+                                    <span class="mark">45°</span>
+                                    <span class="mark">0°</span>
+                                    <span class="mark">-45°</span>
+                                    <span class="mark">-90°</span>
+                                </div>
                             </div>
-
-                            <!-- Datalist to show tick marks at -90, -45, 0, 45, 90 -->
-                            <datalist id="tickmarks">
-                                <option value="-90" label="-90"></option>
-                                <option value="-45" label="-45"></option>
-                                <option value="0" label="0"></option>
-                                <option value="45" label="45"></option>
-                                <option value="90" label="90"></option>
-                            </datalist>
                         </div>
                     </div>
                 </div>
@@ -250,36 +236,29 @@
         });
     </script>
     <script>
-        // Tab switching
-        const tabButtons = document.querySelectorAll('.tab-button');
-        const tabContents = document.querySelectorAll('.tab-content');
+        // CAMERA CONTROLS/FLEX CURVATURE TAB
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
 
-        tabButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                // Remove 'active' class from all tab buttons
-                tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(content => content.style.display = 'none');
 
-                // Add 'active' class to the clicked button
-                button.classList.add('active');
-
-                // Hide all tab-content sections
-                tabContents.forEach(tc => tc.style.display = 'none');
-
-                // Show only the matching tab-content
-                const targetContent = document.getElementById(button.dataset.tab);
-                if (targetContent) {
-                    targetContent.style.display = 'block';
-                }
+                    tab.classList.add('active');
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-tab`).style.display = 'block';
+                });
             });
-        });
 
-        // Update displayed value on each vertical slider
-        document.querySelectorAll('.vertical-slider').forEach(slider => {
-            slider.addEventListener('input', e => {
-                const valueSpan = document.getElementById(slider.id + 'Value');
-                if (valueSpan) {
-                    valueSpan.textContent = e.target.value;
-                }
+            const verticalSliders = document.querySelectorAll('.vertical-slider');
+            verticalSliders.forEach(slider => {
+                const valueDisplay = slider.parentElement.querySelector('.slider-value');
+
+                slider.addEventListener('input', function () {
+                    valueDisplay.textContent = this.value + '°';
+                });
             });
         });
     </script>
@@ -292,6 +271,7 @@
     <script src="{{ url_for('static', filename='js/joystick.js')}}"></script>
     <script src="{{ url_for('static', filename='js/movementButtons.js')}}"></script>
     <script src="{{ url_for('static', filename='js/cameraControls.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/flexCurvature.js')}}"></script>
 
 </body>
 </html>
