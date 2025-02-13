@@ -16,16 +16,17 @@ find_package(VTK COMPONENTS
 	CommonCore
 	CommonDataModel
 	CommonMisc
+	FiltersCore
+	FiltersModeling
+	FiltersSources
 	IOImage
-	InteractionStyle
 	RenderingContextOpenGL2
 	RenderingCore
 	RenderingFreeType
 	RenderingGL2PSOpenGL2
 	RenderingOpenGL2
 	RenderingVolumeOpenGL2
-	RenderingExternal
-	
+	RenderingExternal	
 )
 
 # Include sub-projects.

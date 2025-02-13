@@ -9,6 +9,8 @@
 #include "volume/volume.h"
 #include "interaction/client.h"
 #include "interaction/interactor.h"
+#include "volume/slice.h"
+#include "volume/outline.h"
 
 class App :private Window {
 public:
@@ -46,6 +48,8 @@ private:
 	Volume* m_volume;
 	SocketClient* m_client;
 	Interactor* m_interactor;
+	VolumeSlicer* m_volumeSlice;
+	VolumeOutline* m_volumeOutline;
 };
 
 #endif

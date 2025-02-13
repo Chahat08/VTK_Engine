@@ -275,3 +275,29 @@ void Camera::printSelf() {
 	std::cout << "Camera view up: " << m_camera->GetViewUp()[0] << ", " << m_camera->GetViewUp()[1] << ", " << m_camera->GetViewUp()[2] << std::endl;
 	std::cout << "Camera right: " << m_cameraRight[0] << ", " << m_cameraRight[1] << ", " << m_cameraRight[2] << std::endl;
 }
+
+void Camera::sliceModeCameraOrientation() {
+	double baseNormal[3] = { 0.0, 0.0, 1.0 };
+	vtkSmartPointer<vtkTransform> vectorTransform =
+		vtkSmartPointer<vtkTransform>::New();
+	vectorTransform->RotateY(m_angleToRotate); 
+
+	double rotatedNormal[3];
+	vectorTransform->TransformVector(baseNormal, rotatedNormal);
+	vtkMath::Normalize(rotatedNormal);
+
+	double center[3];
+	center[0] = (m_volumeBounds[0].first + m_volumeBounds[0].second) / 2.0;
+	center[1] = (m_volumeBounds[1].first + m_volumeBounds[1].second) / 2.0;
+	center[2] = (m_volumeBounds[2].first + m_volumeBounds[2].second) / 2.0;
+
+	double distance = 200.0;
+
+	m_camera->SetFocalPoint(center);
+	m_camera->SetPosition(
+		center[0] - rotatedNormal[0] * distance,
+		center[1] - rotatedNormal[1] * distance,
+		center[2] - rotatedNormal[2] * distance
+	);
+	m_camera->SetViewUp(0, 1, 0);
+}

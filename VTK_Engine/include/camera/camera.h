@@ -3,6 +3,7 @@
 
 #include <vtkExternalOpenGLCamera.h>
 #include <vtkMatrix4x4.h>
+#include "volume/slice.h"
 
 class Camera {
 public:
@@ -25,6 +26,8 @@ public:
 	
 	void setVolumeBounds(std::vector<std::pair<double, double>> bounds);
 	void resetCameraPosition();  
+
+	void sliceModeCameraOrientation();
 
 	// arcball camera 
 	void arcballMove(double deltaX, double deltaY);
