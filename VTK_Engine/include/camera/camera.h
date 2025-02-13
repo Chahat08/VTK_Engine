@@ -49,7 +49,7 @@ private:
 	float m_angleToRotate = 0.0;
 
 	float m_arcBallSpeed = 1.0;
-	float m_freeCameraSpeed = 1.0;
+	float m_freeCameraSpeed = 2.0;
 
 	double* m_cameraRight;
 	std::vector<std::pair<double, double>> m_volumeBounds;

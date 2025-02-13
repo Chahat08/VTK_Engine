@@ -6,6 +6,7 @@
 #include "volume/mapper.h"
 #include "camera/camera.h"
 #include "utils/json/simdjson.h"
+#include "volume/outline.h"
 
 #include <functional>
 
@@ -15,9 +16,9 @@ class App;
 
 class Interactor {
 public:
-	Interactor(vtkRenderer* renderer, VolumeMapper* mapper, VolumeProperty* property, Camera* camera, std::string clientID);
+	Interactor(vtkRenderer* renderer, VolumeMapper* mapper, VolumeProperty* property, Camera* camera, VolumeOutline* outline, std::string clientID);
 	~Interactor();
-
+	
 	void handleServerMessage(const std::string& message) const;
 private:
 	friend class App;
@@ -27,6 +28,7 @@ private:
 	VolumeProperty* m_property;
 	vtkRenderer* m_renderer;
 	Camera* m_camera;
+	VolumeOutline* m_volumeOutline;
 
 	std::function<void()> m_renderCallback;
 	void setRenderCallback(const std::function<void()>& callback);
@@ -45,6 +47,9 @@ private:
 	// renderer updates
 	void rendererBackgroundColorUpdate(simdjson::ondemand::object& jsonData) const;
 
+	// volume outline updates
+	void outlineUpdate(simdjson::ondemand::object& jsonData) const;
+	
 	// volume mapper updates
 	void autoSampleDistancesUpdate(simdjson::ondemand::object& jsonData) const;
 	void sampleDistanceUpdate(simdjson::ondemand::object& jsonData) const;

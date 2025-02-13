@@ -57,7 +57,7 @@ App::App(int sceneWidth, int sceneHeight,
 
 	m_isHeadNode = isHeadNode;
 	m_clientID = clientID;
-	m_interactor = new Interactor(m_renderer, m_mapper, m_property, m_camera, clientID);
+	m_interactor = new Interactor(m_renderer, m_mapper, m_property, m_camera, m_volumeOutline, clientID);
 	m_interactor->setRenderCallback([this]() {this->render(); });
 
 	m_client = new SocketClient(url, m_clientID, m_interactor);

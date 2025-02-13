@@ -1,12 +1,13 @@
 #include "interaction/interactor.h"
 
 
-Interactor::Interactor(vtkRenderer* renderer, VolumeMapper* mapper, VolumeProperty* property, Camera* camera, std::string clientID) {
+Interactor::Interactor(vtkRenderer* renderer, VolumeMapper* mapper, VolumeProperty* property, Camera* camera, VolumeOutline* outline, std::string clientID) {
 	m_property = property;
 	m_camera = camera;
 	m_renderer = renderer;
 	m_mapper = mapper;
 	m_clientID = clientID;
+	m_volumeOutline = outline;
 }
 
 Interactor::~Interactor() {
@@ -47,6 +48,9 @@ void Interactor::parseJson(const std::string& message) const {
 
 	else if (obj["colorStops"].error() == simdjson::SUCCESS)
 		transferFunctionColorUpdate(obj);
+
+	else if (obj["outline"].error() == simdjson::SUCCESS)
+		outlineUpdate(obj);
 
 	else if (obj["shading"].error() == simdjson::SUCCESS)
 		shadingUpdate(obj);
@@ -143,6 +147,18 @@ void Interactor::transferFunctionColorUpdate(simdjson::ondemand::object& jsonDat
 
 	m_property->setColorPoints(colorStops);
 	reRender();
+}
+
+void Interactor::outlineUpdate(simdjson::ondemand::object& jsonData) const {
+	bool outline = false;
+	simdjson::error_code outline_error = jsonData["outline"].get(outline);
+
+	if (outline_error == simdjson::SUCCESS) {
+		m_volumeOutline->getVolumeOutline()->SetVisibility(outline);
+		m_volumeOutline->getVolumeOutline()->Modified();
+		m_renderer->Modified();
+		reRender();
+	}
 }
 
 void Interactor::shadingUpdate(simdjson::ondemand::object& jsonData) const {
