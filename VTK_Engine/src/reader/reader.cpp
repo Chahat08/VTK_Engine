@@ -26,7 +26,6 @@ void VolumeReader::readVolume(const char* filename) {
 		m_TIFFReader = vtkTIFFReader::New();
 		m_TIFFReader->SetFileDimensionality(3);
 		m_TIFFReader->SetNumberOfScalarComponents(3);
-		m_TIFFReader->UpdateInformation();
 		m_TIFFReader->SetFileName(filename);
 		m_TIFFReader->Update();
 

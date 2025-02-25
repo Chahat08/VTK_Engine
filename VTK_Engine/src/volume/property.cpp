@@ -15,6 +15,7 @@ VolumeProperty::VolumeProperty() {
 	setColorPoints(FrontendData::defaultColorStops);
 	setOpacityPoints(FrontendData::defaultOpacityPoints);
 
+	// TODO: Non independent componenets handling, like RGB/RGBA datasets.
 	//this->SetIndependentComponents(false);
 }
 

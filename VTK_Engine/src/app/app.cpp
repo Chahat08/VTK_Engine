@@ -39,15 +39,6 @@ App::App(int sceneWidth, int sceneHeight,
 	m_volume->setVolumeParameters(m_reader);
 	m_volume->setSlicePlane(angleToRotate);
 
-	std::cout << m_volume->getVolumeBounds()[0].first << " " << m_volume->getVolumeBounds()[0].second << std::endl;
-	std::cout << m_volume->getVolumeBounds()[1].first << " " << m_volume->getVolumeBounds()[1].second << std::endl;
-	std::cout << m_volume->getVolumeBounds()[2].first << " " << m_volume->getVolumeBounds()[2].second << std::endl;
-
-	std::cout << std::endl;
-
-	std::cout << m_volume->intensityRange[0] << " " << m_volume->intensityRange[1] << std::endl;
-
-
 	//m_volumeSlice = new VolumeSlicer(m_reader, m_volume);
 	m_volumeOutline = new VolumeOutline(m_reader);
 
