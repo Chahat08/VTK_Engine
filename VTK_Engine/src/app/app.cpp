@@ -20,13 +20,16 @@ App::App(int sceneWidth, int sceneHeight,
 	float angleToRotate,
 	std::string clientID, std::string& url, bool isHeadNode,
 	int gpuIndex,
-	int flexColumnNumber) :Window(instanceWidth, instanceHeight, windowXPos, windowYPos, gpuIndex, false) {
+	int flexColumnNumber,
+	std::string volumeFile) :Window(instanceWidth, instanceHeight, windowXPos, windowYPos, gpuIndex, false) {
 
 	m_reader = new VolumeReader();
-	m_reader->readVolume(Config::readerConfig["fileName"].c_str(), VolumeReader::FileType::MetaImage);
+	m_reader->readVolume(volumeFile.c_str());
 
 	m_mapper = new VolumeMapper();
-	m_mapper->SetInputConnection(m_reader->getOutputPort());
+	if (m_reader->fileType == VolumeReader::TIFF) // special handler for tiffs
+		m_mapper->SetInputData(m_reader->getImageData()); 
+	else m_mapper->SetInputConnection(m_reader->getOutputPort());
 
 	m_property = new VolumeProperty();
 
@@ -34,7 +37,18 @@ App::App(int sceneWidth, int sceneHeight,
 	m_volume->SetMapper(m_mapper);
 	m_volume->SetProperty(m_property);
 	m_volume->setVolumeParameters(m_reader);
+	m_volume->printSelf();
 	m_volume->setSlicePlane(angleToRotate);
+
+	//std::vector<FrontendData::ColorGradientStopPoint> colorStops;
+	//colorStops.push_back({ m_volume->intensityRange[0], "#FF0000"});
+	//colorStops.push_back({ m_volume->intensityRange[1], "#0000FF"});
+	//m_property->setColorPoints(colorStops);
+
+	//std::vector<FrontendData::OpacityControlPoint> opacityPoints;
+	//opacityPoints.push_back({ m_volume->intensityRange[0], 0.0 });
+	//opacityPoints.push_back({ m_volume->intensityRange[1], 1.0 });
+	//m_property->setOpacityPoints(opacityPoints);
 
 	//m_volumeSlice = new VolumeSlicer(m_reader, m_volume);
 	m_volumeOutline = new VolumeOutline(m_reader);
@@ -61,7 +75,7 @@ App::App(int sceneWidth, int sceneHeight,
 	m_interactor = new Interactor(m_renderer, m_mapper, m_property, m_volume, m_camera, m_volumeOutline, clientID, flexColumnNumber);
 	m_interactor->setRenderCallback([this]() {this->render(); });
 
-	m_client = new SocketClient(url, m_clientID, m_interactor);
+	m_client = new SocketClient(url, m_clientID, m_interactor, {m_volume->intensityRange[0], m_volume->intensityRange[1]});
 }
 
 void App::run() {
@@ -78,7 +92,8 @@ App& App::getInstance(
 	float angleToRotate,
 	std::string clientID, std::string& url, bool isHeadNode,
 	int gpuIndex,
-	int flexColumnNumber) {
+	int flexColumnNumber,
+	std::string volumeFile) {
 	static App instance(
 		sceneWidth, sceneHeight, 
 		instanceWidth, instanceHeight, 
@@ -88,7 +103,8 @@ App& App::getInstance(
 		angleToRotate,
 		clientID, url, isHeadNode,
 		gpuIndex,
-		flexColumnNumber);
+		flexColumnNumber,
+		volumeFile);
 	return instance;
 }
 

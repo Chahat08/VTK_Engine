@@ -22,7 +22,8 @@ public:
 		float physicalHeight, float physicalDistance,
 		float angleToRotate,
 		std::string clientID, std::string& url, bool isHeadNode,
-		int gpuIndex, int flexColumnNumber
+		int gpuIndex, int flexColumnNumber,
+		std::string volumeFile
 	);
 	void run();
 private:
@@ -34,7 +35,8 @@ private:
 		float angleToRotate,
 		std::string clientID, std::string& url, bool isHeadNode,
 		int gpuIndex,
-		int flexColumnNumber);
+		int flexColumnNumber,
+		std::string volumeFile);
 	~App();
 	App(const App&) = delete;
 	App& operator=(const App&) = delete;

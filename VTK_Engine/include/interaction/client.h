@@ -12,6 +12,7 @@
 #include <cassert>
 #include <iostream>
 #include <string>
+#include <utility>
 
 #include "interaction/interactor.h"
 
@@ -19,12 +20,13 @@ using easywsclient::WebSocket;
 
 class SocketClient {
 public:
-	SocketClient(std::string& url, std::string clientID, Interactor* interactor);
+	SocketClient(std::string& url, std::string clientID, Interactor* interactor, std::pair<double, double> valueRange);
 	~SocketClient();
 
 	void startPolling();
 	void closeConnection();
 	std::string getID();
+
 private:
 	std::string m_url;
 	std::string m_client_id;

@@ -3,7 +3,7 @@
 
 WebSocket::pointer SocketClient::m_ws = nullptr;
 
-SocketClient::SocketClient(std::string& m_url, std::string clientID, Interactor* interactor) {
+SocketClient::SocketClient(std::string& m_url, std::string clientID, Interactor* interactor, std::pair<double, double> valueRange) {
 #ifdef _WIN32
 	INT rc;
 	WSADATA wsaData;
@@ -20,7 +20,9 @@ SocketClient::SocketClient(std::string& m_url, std::string clientID, Interactor*
 	assert(m_ws);
 	m_client_id = clientID;
 	send(clientID);
-
+	// sending the intensity range of the volume to the server
+	send("valRange " + std::to_string(valueRange.first) + " " + std::to_string(valueRange.second));
+	std::cout << "SENT THE STUFF" << std::endl;
 	m_interactor = interactor;
 	m_interactor->setTerminateCallback([this]() { closeConnection(); });
 }
