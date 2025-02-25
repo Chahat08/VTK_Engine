@@ -3,8 +3,7 @@
 #include <vtkImageCast.h>
 #include <vtkPointData.h>
 #include <vtkDataArray.h>
-
-
+#include <cmath>
 
 VolumeReader::VolumeReader() {
 }
