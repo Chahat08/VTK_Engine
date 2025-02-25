@@ -30,6 +30,15 @@ void Volume::setVolumeParameters(VolumeReader* reader) {
 	extent = imageData->GetExtent();
 }
 
+void Volume::printSelf() const{
+	std::cout << "Volume Info: " << std::endl;
+	std::cout << "INTENSITY RANGE: " << intensityRange[0] << " " << intensityRange[1] << std::endl;
+	std::cout << "DIMENSIONS: " << dimensions[0] << " " << dimensions[1] <<" "<<dimensions[2] << std::endl;
+	std::cout << "SPACING: " << spacing[0] << " " << spacing[1] <<" "<<spacing[2] << std::endl;
+	std::cout << "ORIGIN: " << origin[0] << " " << origin[1] <<" "<<origin[2] << std::endl;
+	std::cout << "EXTENT: " << extent[0] << " " << extent[1] << ", " << extent[2] << " " << extent[3] << ", " << extent[4] << " " << extent[5] << std::endl;
+}
+
 void Volume::readVoxels(VolumeReader* reader) {
 	vtkImageData* imageData = reader->getImageData();
 	void* voxels = imageData->GetScalarPointer();

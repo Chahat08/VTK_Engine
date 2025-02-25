@@ -21,7 +21,12 @@ def websocket_handler(ws):
             message = ws.receive()
             if message:
                 print(f"{client_id}: {message}")
-                relay_message_to_clients(message)
+                if message.startswith("valRange"):
+                    range_vals = message.split(' ')
+                    valRange = [float(range_vals[1]), float(range_vals[2])]
+                    broadcast_value_range(valRange)
+                else:
+                    relay_message_to_clients(message)
             else:
                 break
     finally:
@@ -35,6 +40,14 @@ def relay_message_to_clients(message):
     for client in clients:
         client.send(message)
 
+def broadcast_value_range(valRange):
+    valRange_message = json.dumps({
+        "action": "update_value_range",
+        "valueRange": valRange
+    })
+
+    relay_message_to_clients(valRange_message)
+
 def broadcast_client_list():
     """Broadcast the updated client list to all connected clients."""
     client_list_message = json.dumps({
@@ -42,5 +55,4 @@ def broadcast_client_list():
         "clients": client_ids
     })
 
-    for client in clients:
-        client.send(client_list_message)
+    relay_message_to_clients(client_list_message)

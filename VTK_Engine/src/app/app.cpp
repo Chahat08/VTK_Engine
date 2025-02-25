@@ -37,7 +37,18 @@ App::App(int sceneWidth, int sceneHeight,
 	m_volume->SetMapper(m_mapper);
 	m_volume->SetProperty(m_property);
 	m_volume->setVolumeParameters(m_reader);
+	m_volume->printSelf();
 	m_volume->setSlicePlane(angleToRotate);
+
+	//std::vector<FrontendData::ColorGradientStopPoint> colorStops;
+	//colorStops.push_back({ m_volume->intensityRange[0], "#FF0000"});
+	//colorStops.push_back({ m_volume->intensityRange[1], "#0000FF"});
+	//m_property->setColorPoints(colorStops);
+
+	//std::vector<FrontendData::OpacityControlPoint> opacityPoints;
+	//opacityPoints.push_back({ m_volume->intensityRange[0], 0.0 });
+	//opacityPoints.push_back({ m_volume->intensityRange[1], 1.0 });
+	//m_property->setOpacityPoints(opacityPoints);
 
 	//m_volumeSlice = new VolumeSlicer(m_reader, m_volume);
 	m_volumeOutline = new VolumeOutline(m_reader);
@@ -64,7 +75,7 @@ App::App(int sceneWidth, int sceneHeight,
 	m_interactor = new Interactor(m_renderer, m_mapper, m_property, m_volume, m_camera, m_volumeOutline, clientID, flexColumnNumber);
 	m_interactor->setRenderCallback([this]() {this->render(); });
 
-	m_client = new SocketClient(url, m_clientID, m_interactor);
+	m_client = new SocketClient(url, m_clientID, m_interactor, {m_volume->intensityRange[0], m_volume->intensityRange[1]});
 }
 
 void App::run() {

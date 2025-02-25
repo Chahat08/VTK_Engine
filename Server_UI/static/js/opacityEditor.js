@@ -1,6 +1,15 @@
 const width = 500;
 const height = 200;
 
+socket.onmessage = function (event) {
+    const data = JSON.parse(event.data);
+    if (data.action === "update_value_range") {
+        intensityRange[0] = data.valueRange[0];
+        intensityRange[1] = data.valueRange[1];
+        defaultIsoValue = (intensityRange[0] + intensityRange[1]) / 2;
+    }
+};
+
 const svg = d3.select("#opacityEditor")
     .attr("width", width)
     .attr("height", height)

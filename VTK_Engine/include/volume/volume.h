@@ -13,6 +13,7 @@ public:
 	void setVolumeParameters(VolumeReader* reader);
 	void setSlicePlane(double planeAngle);
 	void readVoxels(VolumeReader* reader);
+	void printSelf() const;
 
 	double intensityRange[2];
 	int* dimensions;

@@ -1,5 +1,5 @@
-const intensityRange = [0, 65280];
-const defaultIsoValue = (intensityRange[0] + intensityRange[1]) / 2;
+var intensityRange = [0, 65280];
+var defaultIsoValue = (intensityRange[0] + intensityRange[1]) / 2;
 
 window.controlPoints = [
     { id: 1, x: intensityRange[0], y: 0 },
