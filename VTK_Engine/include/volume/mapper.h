@@ -3,13 +3,13 @@
 
 #include <string>
 
-#include <vtkOpenGLGPUVolumeRayCastMapper.h>
+#include <vtkSmartVolumeMapper.h>
 #include "reader/reader.h"
 #include "interaction/frontendData.h"
 #include "volume/property.h"
 
 
-class VolumeMapper : public vtkOpenGLGPUVolumeRayCastMapper {
+class VolumeMapper : public vtkSmartVolumeMapper {
 public:
 	VolumeMapper();
 	~VolumeMapper();

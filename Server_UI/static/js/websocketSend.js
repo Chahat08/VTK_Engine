@@ -1,4 +1,4 @@
-const intensityRange = [0, 4095];
+const intensityRange = [0, 65280];
 const defaultIsoValue = (intensityRange[0] + intensityRange[1]) / 2;
 
 window.controlPoints = [

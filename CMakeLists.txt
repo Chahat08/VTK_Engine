@@ -20,6 +20,8 @@ find_package(VTK COMPONENTS
 	FiltersModeling
 	FiltersSources
 	IOImage
+	IOLegacy
+	ImagingColor
 	RenderingContextOpenGL2
 	RenderingCore
 	RenderingFreeType

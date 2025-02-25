@@ -14,6 +14,8 @@ VolumeProperty::VolumeProperty() {
 	this->SetScalarOpacity(m_scalarOpacity);
 	setColorPoints(FrontendData::defaultColorStops);
 	setOpacityPoints(FrontendData::defaultOpacityPoints);
+
+	//this->SetIndependentComponents(false);
 }
 
 VolumeProperty::~VolumeProperty() {

@@ -54,6 +54,12 @@ int main(int argc, char* argv[])
     if (argc > 18) {
         flexColumnNumber = std::stoi(argv[18]);
     }
+    std::string volumeFile("FullHead.mhd");
+    if (argc > 19) {
+        std::wstring wVolFile(argv[19]);
+        std::string volFile(wVolFile.begin(), wVolFile.end());
+        volumeFile = volFile;
+    }
 
 #else
 
@@ -77,6 +83,10 @@ int main(int argc, char* argv[])
     int flexColumnNumber = 0;
     if (argc > 18) {
         flexColumnNumber = std::stoi(argv[18]);
+    }
+    std::string volumeFile("FullHead.mhd");
+    if (argc > 19) {
+        volumeFile = argv[19];
     }
 
 #endif
@@ -105,7 +115,8 @@ int main(int argc, char* argv[])
         sceneWidth, sceneHeight, instanceWidth, instanceHeight, xpos, ypos, windowXPos, windowYPos, physicalHeight, physicalDistance,
         angleToRotate * columnNumber,
         clientID, url, isHeadNode, gpuIndex,
-        flexColumnNumber
+        flexColumnNumber,
+        volumeFile
     ).run();
 
 #ifdef _WIN32

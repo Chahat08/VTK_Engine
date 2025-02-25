@@ -21,8 +21,8 @@ std::vector<std::pair<double, double>> Volume::getVolumeBounds() {
 }
 
 void Volume::setVolumeParameters(VolumeReader* reader) {
-	vtkImageData* imageData = reader->getImageData();
 	reader->update();
+	vtkImageData* imageData = reader->getImageData();
 	imageData->GetScalarRange(intensityRange);
 	dimensions = imageData->GetDimensions();
 	spacing = imageData->GetSpacing();

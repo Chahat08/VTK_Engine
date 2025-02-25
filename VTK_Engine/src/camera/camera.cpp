@@ -16,8 +16,9 @@ vtkMatrix4x4* Camera::getInstanceProjectionMatrix() {
 	float aspectRatio = (float)m_sceneWidth / (float)m_sceneHeight;
 	float fov = 2 * atan(m_physicalHeight / (2 * -m_physicalDistance));
 
-	float near = std::max(m_physicalDistance - 1.0f, 0.1f);
-	float far = 1000.0f;
+	//float near = std::max(m_physicalDistance - 1.0f, 0.1f);
+	float near = 0.1f;
+	float far = 50000.0f;
 
 	float halfHeight = tan(fov / 2) * near;
 	float halfWidth = halfHeight * aspectRatio;
@@ -153,7 +154,7 @@ void Camera::resetCameraPosition() {
 		m_camera->SetPosition(
 			(m_volumeBounds[0].first + m_volumeBounds[0].second) / 2.0,
 			(m_volumeBounds[1].first + m_volumeBounds[1].second) / 2.0,
-			4 * m_volumeBounds[2].second
+			4*m_volumeBounds[2].second
 		);
 		setFocalPoint(
 			(m_volumeBounds[0].first + m_volumeBounds[0].second) / 2.0,
