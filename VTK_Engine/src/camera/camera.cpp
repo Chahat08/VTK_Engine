@@ -214,10 +214,10 @@ void Camera::arcballZoom(double zoomFactor) {
 	double* position = m_camera->GetPosition();
 	double* focalPoint = m_camera->GetFocalPoint();
 
-	double* cameraDirection = new double[3] {
-		position[0] - focalPoint[0],
-			position[1] - focalPoint[1],
-			position[2] - focalPoint[2]
+	double cameraDirection[] = {
+		focalPoint [0] - position[0],
+			focalPoint[1] - position[1],
+			focalPoint[2] - position[2]
 		};
 
 	vtkMath::Normalize(cameraDirection);
