@@ -279,14 +279,14 @@ void Camera::printSelf() {
 
 void Camera::modifyColumnAngle(float angle) {
 	m_angleToRotate = angle;
-	orientCamera();
+	//orientCamera();
 }
 
 void Camera::sliceModeCameraOrientation() {
 	double normal[3] = { 0.0, 0.0, 1.0 };
 	vtkSmartPointer<vtkTransform> vectorTransform =
 		vtkSmartPointer<vtkTransform>::New();
-	vectorTransform->RotateY(m_angleToRotate); 
+	vectorTransform->RotateY(m_angleToRotate);
 	vectorTransform->TransformVector(normal, normal);
 	vtkMath::Normalize(normal);
 
@@ -295,9 +295,12 @@ void Camera::sliceModeCameraOrientation() {
 	center[1] = (m_volumeBounds[1].first + m_volumeBounds[1].second) / 2.0;
 	center[2] = (m_volumeBounds[2].first + m_volumeBounds[2].second) / 2.0;
 
-	double distance = 200.0;
+	double transformedCenter[3];
+	vectorTransform->TransformPoint(center, transformedCenter);
 
-	m_camera->SetFocalPoint(center);
+	double distance = 1.0;
+
+	m_camera->SetFocalPoint(transformedCenter);
 	m_camera->SetPosition(
 		center[0] - normal[0] * distance,
 		center[1] - normal[1] * distance,
