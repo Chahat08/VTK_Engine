@@ -1,11 +1,5 @@
 const clientListContainer = document.getElementById("clientListContainer");
 const terminateAllButton = document.getElementById("terminateAllButton");
-socket.onmessage = function (event) {
-    const data = JSON.parse(event.data);
-    if (data.action === "update_client_list") {
-        updateClientListUI(data.clients);
-    }
-};
 
 terminateAllButton.addEventListener("click", () => {
     socket.send(JSON.stringify({ "terminate_all":true }));    

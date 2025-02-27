@@ -1,15 +1,6 @@
 const width = 500;
 const height = 200;
 
-socket.onmessage = function (event) {
-    const data = JSON.parse(event.data);
-    if (data.action === "update_value_range") {
-        intensityRange[0] = data.valueRange[0];
-        intensityRange[1] = data.valueRange[1];
-        defaultIsoValue = (intensityRange[0] + intensityRange[1]) / 2;
-    }
-};
-
 const svg = d3.select("#opacityEditor")
     .attr("width", width)
     .attr("height", height)
@@ -18,6 +9,28 @@ const svg = d3.select("#opacityEditor")
 
 const xScale = d3.scaleLinear().domain(intensityRange).range([0, width]);
 const yScale = d3.scaleLinear().domain([0, 1]).range([height, 0]);
+
+socket.onmessage = function (event) {
+    const data = JSON.parse(event.data);
+    if (data.action === "update_value_range") {
+        intensityRange[0] = data.valueRange[0];
+        intensityRange[1] = data.valueRange[1];
+        defaultIsoValue = (intensityRange[0] + intensityRange[1]) / 2;
+        xScale.domain(intensityRange);
+        window.controlPoints.forEach(point => {
+            if (point.id === 1) {
+                point.x = intensityRange[0];
+            } else if (point.id === 2) {
+                point.x = intensityRange[1];
+            }
+        });
+        updateControlPoints();
+        updateLine();
+    }
+    else if (data.action === "update_client_list") {
+        updateClientListUI(data.clients);
+    }
+};
 
 let controlPoints = window.controlPoints;
 
