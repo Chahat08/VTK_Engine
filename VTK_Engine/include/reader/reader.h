@@ -11,6 +11,7 @@
 #include <vtkImageCast.h>
 #include <vtkImageLuminance.h>
 #include <vtkImageAppendComponents.h>
+#include <vtkNrrdReader.h>
 
 class VolumeReader {
 public:
@@ -20,7 +21,8 @@ public:
 	enum FileType {
 		MetaImage,
 		TIFF,
-		StructuredPoints
+		StructuredPoints,
+		Nrrd
 	};
 
 	FileType fileType;
@@ -34,6 +36,7 @@ private:
 	vtkMetaImageReader* m_metaImageReader{ nullptr };
 	vtkTIFFReader* m_TIFFReader{ nullptr };
 	vtkImageData* m_TIFFMagImage{ nullptr };
+	vtkNrrdReader* m_NrrdReader{ nullptr };
 	vtkStructuredPointsReader* m_structuredPointsReader{ nullptr };
 
 	void checkFileType(std::string fileName);

@@ -40,16 +40,6 @@ App::App(int sceneWidth, int sceneHeight,
 	m_volume->printSelf();
 	m_volume->setSlicePlane(angleToRotate);
 
-	//std::vector<FrontendData::ColorGradientStopPoint> colorStops;
-	//colorStops.push_back({ m_volume->intensityRange[0], "#FF0000"});
-	//colorStops.push_back({ m_volume->intensityRange[1], "#0000FF"});
-	//m_property->setColorPoints(colorStops);
-
-	//std::vector<FrontendData::OpacityControlPoint> opacityPoints;
-	//opacityPoints.push_back({ m_volume->intensityRange[0], 0.0 });
-	//opacityPoints.push_back({ m_volume->intensityRange[1], 1.0 });
-	//m_property->setOpacityPoints(opacityPoints);
-
 	//m_volumeSlice = new VolumeSlicer(m_reader, m_volume);
 	m_volumeOutline = new VolumeOutline(m_reader);
 

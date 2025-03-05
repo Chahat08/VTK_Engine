@@ -21,6 +21,15 @@ void VolumeReader::readVolume(const char* filename) {
 
 		break;
 
+	case FileType::Nrrd:
+		m_NrrdReader = vtkNrrdReader::New();
+		m_NrrdReader->SetFileName(filename);
+		m_NrrdReader->SetFileDimensionality(3);
+		m_NrrdReader->Update();
+		std::cout << "NUM COM: " << m_NrrdReader->GetNumberOfScalarComponents() << std::endl;
+
+		break;
+
 	case FileType::TIFF:
 		m_TIFFReader = vtkTIFFReader::New();
 		m_TIFFReader->SetFileDimensionality(3);
@@ -63,6 +72,7 @@ void VolumeReader::readVolume(const char* filename) {
 		}
 		
 		break;
+
 	}
 }
 
@@ -75,6 +85,9 @@ void VolumeReader::checkFileType(std::string fileName) {
 
 	else if (std::string(fileName).ends_with(".vtk"))
 		fileType = FileType::StructuredPoints;
+
+	else if (std::string(fileName).ends_with(".nrrd"))
+		fileType = FileType::Nrrd;
 }
 
 vtkAlgorithmOutput* VolumeReader::getOutputPort() {
@@ -87,6 +100,9 @@ vtkAlgorithmOutput* VolumeReader::getOutputPort() {
 	if (m_structuredPointsReader)
 		return m_structuredPointsReader->GetOutputPort();
 
+	if (m_NrrdReader)
+		return m_NrrdReader->GetOutputPort();
+
 	return nullptr;
 }
 
@@ -96,6 +112,9 @@ vtkImageData* VolumeReader::getImageData() {
 
 	if (m_TIFFMagImage)
 		return m_TIFFMagImage;
+
+	if (m_NrrdReader)
+		return m_NrrdReader->GetOutput();
 
 	return nullptr;
 }
@@ -109,6 +128,9 @@ void VolumeReader::update() {
 
 	else if (m_structuredPointsReader)
 		m_structuredPointsReader->Update();
+
+	else if (m_NrrdReader)
+		m_NrrdReader->Update();
 }
 
 void VolumeReader::clearVolume() {
@@ -120,6 +142,9 @@ void VolumeReader::clearVolume() {
 
 	else if (m_structuredPointsReader)
 		m_structuredPointsReader->RemoveAllInputs();
+
+	else if (m_NrrdReader)
+		m_NrrdReader->RemoveAllInputs();
 }
 
 VolumeReader::~VolumeReader() {
@@ -131,4 +156,7 @@ VolumeReader::~VolumeReader() {
 
 	if (m_structuredPointsReader)
 		 m_structuredPointsReader->Delete();
+
+	if (m_NrrdReader)
+		m_NrrdReader->Delete();
 }
