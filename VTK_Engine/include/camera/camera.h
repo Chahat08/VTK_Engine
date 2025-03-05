@@ -21,6 +21,10 @@ public:
 	void setYaw(double yaw);
 	void setRoll(double roll);
 
+	double* getViewUp();
+	void getForward(double forward[]);
+	float getScreenAngle();
+
 	void setArcBallSpeed(float speed);
 	void setFreeCameraSpeed(float speed);
 	

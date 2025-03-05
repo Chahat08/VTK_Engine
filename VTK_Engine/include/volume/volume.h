@@ -11,7 +11,7 @@ public:
 
 	std::vector<std::pair<double, double>> getVolumeBounds();
 	void setVolumeParameters(VolumeReader* reader);
-	void setSlicePlane(double planeAngle);
+	void setSlicePlane(double planeAngle, double* normal, double* axis);
 	void readVoxels(VolumeReader* reader);
 	void printSelf() const;
 

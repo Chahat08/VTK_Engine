@@ -95,6 +95,25 @@ void Camera::setRoll(double roll) {
 	m_camera->Roll(roll);
 }
 
+double* Camera::getViewUp() {
+	return m_camera->GetViewUp();
+}
+
+float Camera::getScreenAngle() {
+	return m_angleToRotate;
+}
+
+void Camera::getForward(double forward[]) {
+	double* position = m_camera->GetPosition();
+	double* focalPoint = m_camera->GetFocalPoint();
+
+	forward[0] = focalPoint[0] - position[0];
+	forward[1] = focalPoint[1] - position[1];
+	forward[2] = focalPoint[2] - position[2];
+
+	vtkMath::Normalize(forward);
+}
+
 void Camera::setArcBallSpeed(float speed) {
 	m_arcBallSpeed = speed;
 }

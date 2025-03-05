@@ -44,7 +44,7 @@ void Volume::readVoxels(VolumeReader* reader) {
 	void* voxels = imageData->GetScalarPointer();
 }
 
-void Volume::setSlicePlane(double planeAngle) {
+void Volume::setSlicePlane(double planeAngle, double* normal, double* axis) {
 	vtkPlane* plane = vtkPlane::New();
 
 	std::vector<std::pair<double, double>> bounds = getVolumeBounds();
@@ -55,10 +55,11 @@ void Volume::setSlicePlane(double planeAngle) {
 	};
 	plane->SetOrigin(center);
 
-	double normal[3] = { 0.0,0.0,1.0 };
+	//double normal[3] = { 0.0,0.0,1.0 };
 	vtkTransform* transform = vtkTransform::New();
 	transform->Identity();
-	transform->RotateY(planeAngle);
+	transform->RotateWXYZ(planeAngle, axis[0], axis[1], axis[2]);
+	//transform->RotateY(planeAngle);
 	transform->TransformVector(normal, normal);
 	vtkMath::Normalize(normal);
 
