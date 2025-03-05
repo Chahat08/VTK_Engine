@@ -57,7 +57,7 @@ private:
 
 	float convertScale(float originalValue, float originalMin, float originalMax, float newMin, float newMax);
 	vtkMatrix4x4* getInstanceProjectionMatrix();
-	void orientCamera();
+	void orientCamera(float angle);
 };
 
 #endif

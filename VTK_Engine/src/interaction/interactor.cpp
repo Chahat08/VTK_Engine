@@ -217,7 +217,10 @@ void Interactor::blendModeUpdate(simdjson::ondemand::object& jsonData) const {
 	if (blendMode_error == simdjson::SUCCESS) {
 		m_mapper->setBlendMode(std::string(blendMode));
 		m_mapper->Modified();
-		//if (m_mapper->getBlendMode() == "Slice") m_camera->sliceModeCameraOrientation();
+		if (m_mapper->getBlendMode() == "Slice") {
+			m_camera->modifyColumnAngle(0.0);
+			m_camera->resetCameraPosition();
+		}
 		reRender();
 	}
 }
@@ -327,8 +330,10 @@ void Interactor::flexDisplayAngleUpdate(simdjson::ondemand::object& jsonData) co
 		int col = 0;
 		simdjson::error_code col_error = jsonData["col"].get(col);
 		if (col == m_columnNumber) {
-			m_volume->setSlicePlane(angle);
-			m_camera->modifyColumnAngle(angle);
+			if (m_mapper->getBlendMode() == "Slice") {
+				m_volume->setSlicePlane(angle);
+			}
+			else m_camera->modifyColumnAngle(angle);
 			//if (m_mapper->getBlendMode() == "Slice") m_camera->sliceModeCameraOrientation();
 			reRender();
 		}

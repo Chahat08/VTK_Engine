@@ -111,7 +111,7 @@ void Camera::setVolumeBounds(std::vector<std::pair<double, double>> bounds) {
 	m_volumeBounds = bounds;
 }
 
-void Camera::orientCamera() {
+void Camera::orientCamera(float angle) {
 	double* focalPoint = m_camera->GetFocalPoint();
 
 	double* position = m_camera->GetPosition();
@@ -121,9 +121,11 @@ void Camera::orientCamera() {
 			focalPoint[2] - position[2]
 		};
 
+	float angleToRotate = angle - m_angleToRotate;
+
 	vtkNew<vtkTransform> transform;
 	transform->PostMultiply();
-	transform->RotateY(m_angleToRotate);
+	transform->RotateY(angleToRotate);
 	transform->TransformVector(direction, direction);
 	vtkMath::Normalize(direction);
 
@@ -163,7 +165,7 @@ void Camera::resetCameraPosition() {
 		);
 		setViewUp(0, 1, 0);
 	}
-	orientCamera();
+	orientCamera(0);
 }
 
 void Camera::arcballMove(double deltaX, double deltaY) {
@@ -278,8 +280,8 @@ void Camera::printSelf() {
 }
 
 void Camera::modifyColumnAngle(float angle) {
+	orientCamera(angle);
 	m_angleToRotate = angle;
-	//orientCamera();
 }
 
 void Camera::sliceModeCameraOrientation() {
