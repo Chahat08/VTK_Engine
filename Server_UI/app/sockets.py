@@ -32,7 +32,6 @@ def websocket_handler(ws):
         while True:
             message = ws.receive()
             if message:
-                print(f"{client_id}: {message}")
                 if message.startswith("valRange"):
                     range_vals = message.split(' ')
                     valRange = [float(range_vals[1]), float(range_vals[2])]
