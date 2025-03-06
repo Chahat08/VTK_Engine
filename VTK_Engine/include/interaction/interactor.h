@@ -75,6 +75,7 @@ private:
 	// FlexiCAVE display angle change
 	int m_columnNumber = 1;
 	void flexDisplayAngleUpdate(simdjson::ondemand::object& jsonData) const;
+	void sliceOriginChangeUpdate(simdjson::ondemand::object& jsonData) const;
 };
 
 #endif

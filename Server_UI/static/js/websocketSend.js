@@ -118,6 +118,12 @@ blendModeDropdown.addEventListener("change", () => {
     } else {
         isosurfaceValuesContainer.style.display = "none";
     }
+
+    if (blendMode === 'Slice') {
+        sliceNavigationContainer.style.display = 'block';
+    } else {
+        sliceNavigationContainer.style.display = 'none';
+    }
 });
 
 function addIsosurfaceInput(value = defaultIsoValue) {
@@ -142,3 +148,11 @@ function sendIsosurfaceValues() {
         socket.send(JSON.stringify({ isosurfaceValues: isoValues }));
     }
 }
+
+document.getElementById('sliceUpButton').addEventListener('click', function () {
+    socket.send(JSON.stringify({ slice_origin_change: "out"}));
+});
+
+document.getElementById('sliceDownButton').addEventListener('click', function () {
+    socket.send(JSON.stringify({ slice_origin_change: "in"}));
+})

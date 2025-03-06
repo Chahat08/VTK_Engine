@@ -28,6 +28,13 @@ void Volume::setVolumeParameters(VolumeReader* reader) {
 	spacing = imageData->GetSpacing();
 	origin = imageData->GetOrigin();
 	extent = imageData->GetExtent();
+
+	std::vector<std::pair<double, double>> bounds = getVolumeBounds();
+	sliceOrigin = {
+		(bounds[0].first + bounds[0].second) / 2.0,
+		(bounds[1].first + bounds[1].second) / 2.0,
+		(bounds[2].first + bounds[2].second) / 2.0
+	};
 }
 
 void Volume::printSelf() const{
@@ -47,22 +54,30 @@ void Volume::readVoxels(VolumeReader* reader) {
 void Volume::setSlicePlane(double planeAngle, double* normal, double* axis) {
 	vtkPlane* plane = vtkPlane::New();
 
-	std::vector<std::pair<double, double>> bounds = getVolumeBounds();
-	double center[3] = {
-		(bounds[0].first + bounds[0].second) / 2.0,
-		(bounds[1].first + bounds[1].second) / 2.0,
-		(bounds[2].first + bounds[2].second) / 2.0
-	};
-	plane->SetOrigin(center);
+	//std::vector<std::pair<double, double>> bounds = getVolumeBounds();
+	//double center[3] = {
+	//	(bounds[0].first + bounds[0].second) / 2.0,
+	//	(bounds[1].first + bounds[1].second) / 2.0,
+	//	(bounds[2].first + bounds[2].second) / 2.0
+	//};
+	plane->SetOrigin(sliceOrigin.data());
 
-	//double normal[3] = { 0.0,0.0,1.0 };
+	// TODO: move the center forward or backward by an offset in the direction of normal.
+
 	vtkTransform* transform = vtkTransform::New();
 	transform->Identity();
 	transform->RotateWXYZ(planeAngle, axis[0], axis[1], axis[2]);
-	//transform->RotateY(planeAngle);
 	transform->TransformVector(normal, normal);
 	vtkMath::Normalize(normal);
 
 	plane->SetNormal(normal);
 	this->GetProperty()->SetSliceFunction(plane);
 }
+
+void Volume::moveSliceOriginInDirection(double offset, double* direction) {
+	std::vector<double> newSliceOrigin(3);
+	for (int i = 0; i < 3; ++i)
+		newSliceOrigin[i] = sliceOrigin[i] + offset * direction[i];
+	sliceOrigin = newSliceOrigin;
+}
+

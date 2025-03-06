@@ -43,6 +43,7 @@ namespace FrontendData {
 	static float defaultIsosurfaceValue = (4095.0 / 2.0);
 	static int defaultInteractionPanelWidth = 300;
 	static int defaultInteractionPanelHeight = 300;
+	static int defaultSliceOriginChangeOffset = 1.0f;
 
 	std::vector<float> getColor(const std::string& color);
 }

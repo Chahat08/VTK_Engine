@@ -670,3 +670,34 @@ h5 {
     background: #ddd;
     border-radius: 4px;
 }
+
+/* */
+
+.slice-navigation-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.slice-nav-button {
+    flex: 1;
+    height: 30px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .slice-nav-button:hover {
+        background-color: #0056b3;
+    }
+
+    .slice-nav-button:active {
+        background-color: #004085;
+    }

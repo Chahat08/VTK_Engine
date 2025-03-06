@@ -12,6 +12,7 @@ public:
 	std::vector<std::pair<double, double>> getVolumeBounds();
 	void setVolumeParameters(VolumeReader* reader);
 	void setSlicePlane(double planeAngle, double* normal, double* axis);
+	void moveSliceOriginInDirection(double offset, double* direction);
 	void readVoxels(VolumeReader* reader);
 	void printSelf() const;
 
@@ -20,6 +21,8 @@ public:
 	double* spacing;
 	double* origin;
 	int* extent;
+
+	std::vector<double> sliceOrigin;
 
 private:
 };

@@ -98,6 +98,9 @@ void Interactor::parseJson(const std::string& message) const {
 
 	else if (obj["flexAngle"].error() == simdjson::SUCCESS)
 		flexDisplayAngleUpdate(obj);
+
+	else if (obj["slice_origin_change"].error() == simdjson::SUCCESS)
+		sliceOriginChangeUpdate(obj);
 }
 
 void Interactor::handleServerMessage(const std::string& message) const {
@@ -285,6 +288,8 @@ void Interactor::cameraJoystickUpdates(simdjson::ondemand::object& jsonData) con
 	else {
 		std::string_view dir;
 		simdjson::error_code direction = jsonData["direction"].get(dir);
+		std::cout << "SOMEHOW HERE" << std::endl;
+
 
 		if (dir == "up")
 			m_camera->freeCameraMove(0, -1, 0);
@@ -343,4 +348,21 @@ void Interactor::flexDisplayAngleUpdate(simdjson::ondemand::object& jsonData) co
 			reRender();
 		}
 	}
+}
+
+void Interactor::sliceOriginChangeUpdate(simdjson::ondemand::object& jsonData) const {
+	std::string_view dir;
+	simdjson::error_code direction = jsonData["slice_origin_change"].get(dir);
+
+	double forward[3];
+	m_camera->getForward(forward);
+
+	if (dir == "in") 
+		m_volume->moveSliceOriginInDirection(FrontendData::defaultSliceOriginChangeOffset, forward);
+	else
+		m_volume->moveSliceOriginInDirection(-FrontendData::defaultSliceOriginChangeOffset, forward);
+
+	m_volume->setSlicePlane(m_camera->getScreenAngle(), forward, m_camera->getViewUp());
+
+	reRender();
 }
