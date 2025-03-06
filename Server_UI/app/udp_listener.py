@@ -27,12 +27,12 @@ def start_udp_listener(
             except struct.error:
                 continue
 
-            for i, val in enumerate(float_values):
-                payload = {
-                    "flexAngle": val,
-                    "col": COL_MAP.get(i, 0) 
-                }
-                relay_message_to_clients(json.dumps(payload))
+            # for i, val in enumerate(float_values):
+            #     payload = {
+            #         "flexAngle": val,
+            #         "col": COL_MAP.get(i, 0) 
+            #     }
+            #     relay_message_to_clients(json.dumps(payload))
 
     thread = threading.Thread(target=listen, daemon=True)
     thread.start()
