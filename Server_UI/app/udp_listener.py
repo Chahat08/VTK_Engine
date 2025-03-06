@@ -28,7 +28,7 @@ def start_udp_listener(
             except struct.error:
                 continue
 
-            for i in [6, 7, 8, 9]:
+            for i in [7, 7, 8, 8]: # NOTE:Assuming angles 6 is same as 7 and 8 is same as 9
                 radians_val = float_values[i]
                 degrees_val = radians_val * (180.0 / math.pi)  # rad->deg
 
