@@ -23,8 +23,6 @@ def start_udp_listener(
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.bind((udp_host, udp_port))
 
-        print(f"UDP listener started on {udp_host}:{udp_port}")
-
         while True:
             data, addr = sock.recvfrom(BUFFER_SIZE)
             if len(data) < BUFFER_SIZE:
