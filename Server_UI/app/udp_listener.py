@@ -7,7 +7,7 @@ import json
 import math
 from .sockets import relay_message_to_clients
 
-INDEX_COL_MAP = {6: 1, 7: 2, 8: 4, 9: 5}
+INDEX_COL_MAP = {1:0, 2:1, 4:2, 5:3}
 NUM_FLOATS = 10
 BUFFER_SIZE = NUM_FLOATS * 4  # 40 bytes, if each float is 4 bytes
 
@@ -28,15 +28,20 @@ def start_udp_listener(
             except struct.error:
                 continue
 
-            for i in [7, 7, 8, 8]: # NOTE:Assuming angles 6 is same as 7 and 8 is same as 9
-                radians_val = float_values[i]
-                degrees_val = radians_val * (180.0 / math.pi)  # rad->deg
+            # NOTE:Assuming angles 6 is same as 7 and 8 is same as 9 (for only radial cuts)
+            angle1=math.degrees(float_values[7])
+            angle2=math.degrees(float_values[7])
+            angle4=math.degrees(float_values[8])
+            angle5=math.degrees(float_values[8])
 
-                col = INDEX_COL_MAP[i]
+
+            flexAngles = [angle1, angle2, angle4, angle5]
+
+            for i in INDEX_COL_MAP.keys(): # NOTE:Assuming angles 6 is same as 7 and 8 is same as 9
 
                 payload = {
-                    "flexAngle": degrees_val,
-                    "col": col
+                    "flexAngle": flexAngles[INDEX_COL_MAP[i]],
+                    "col": i
                 }
                 relay_message_to_clients(json.dumps(payload))
 
