@@ -4,9 +4,10 @@ import socket
 import struct
 import threading
 import json
+import math
 from .sockets import relay_message_to_clients
 
-COL_MAP = {0: 1, 1: 2, 2: 4, 3: 5}
+INDEX_COL_MAP = {6: 1, 7: 2, 8: 4, 9: 5}
 NUM_FLOATS = 10
 BUFFER_SIZE = NUM_FLOATS * 4  # 40 bytes, if each float is 4 bytes
 
@@ -27,12 +28,17 @@ def start_udp_listener(
             except struct.error:
                 continue
 
-            # for i, val in enumerate(float_values):
-            #     payload = {
-            #         "flexAngle": val,
-            #         "col": COL_MAP.get(i, 0) 
-            #     }
-            #     relay_message_to_clients(json.dumps(payload))
+            for i in [6, 7, 8, 9]:
+                radians_val = float_values[i]
+                degrees_val = radians_val * (180.0 / math.pi)  # rad->deg
+
+                col = INDEX_COL_MAP[i]
+
+                payload = {
+                    "flexAngle": degrees_val,
+                    "col": col
+                }
+                relay_message_to_clients(json.dumps(payload))
 
     thread = threading.Thread(target=listen, daemon=True)
     thread.start()
