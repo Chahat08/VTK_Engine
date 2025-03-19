@@ -51,38 +51,10 @@ void Volume::readVoxels(VolumeReader* reader) {
 	void* voxels = imageData->GetScalarPointer();
 }
 
-//void Volume::setSlicePlane(double planeAngle, double* normal, double* axis) {
-//	vtkPlane* plane = vtkPlane::New();
-//
-//	plane->SetOrigin(sliceOrigin.data());
-//
-//	vtkTransform* transform = vtkTransform::New();
-//	transform->Identity();
-//	transform->RotateWXYZ(planeAngle, axis[0], axis[1], axis[2]);
-//	transform->TransformVector(normal, normal);
-//	vtkMath::Normalize(normal);
-//
-//	plane->SetNormal(normal);
-//	this->GetProperty()->SetSliceFunction(plane);
-//}
-
-void Volume::setSlicePlane(double planeAngle) {
+void Volume::setSlicePlane(double planeAngle, double* normal, double* axis) {
 	vtkPlane* plane = vtkPlane::New();
 
-	std::vector<std::pair<double, double>> bounds = getVolumeBounds();
-	double center[3] = {
-		(bounds[0].first + bounds[0].second) / 2.0,
-		(bounds[1].first + bounds[1].second) / 2.0,
-		(bounds[2].first + bounds[2].second) / 2.0
-	};
-	plane->SetOrigin(center);
-
-	double normal[3] = { 0.0,0.0,1.0 };
-	vtkTransform* transform = vtkTransform::New();
-	transform->Identity();
-	transform->RotateY(planeAngle);
-	transform->TransformVector(normal, normal);
-	vtkMath::Normalize(normal);
+	plane->SetOrigin(sliceOrigin.data());
 
 	plane->SetNormal(normal);
 	this->GetProperty()->SetSliceFunction(plane);

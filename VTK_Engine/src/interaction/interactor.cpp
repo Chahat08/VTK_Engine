@@ -256,7 +256,7 @@ void Interactor::cameraPositionUpdate(simdjson::ondemand::object& jsonData) cons
 		m_camera->arcballMove(deltaX, deltaY);
 		double forward[3];
 		m_camera->getForward(forward);
-		//m_volume->setSlicePlane(m_camera->getScreenAngle(), forward, m_camera->getViewUp());
+		m_volume->setSlicePlane(m_camera->getScreenAngle(), forward, m_camera->getViewUp());
 		reRender();
 	}
 	m_camera->printSelf();
@@ -339,10 +339,10 @@ void Interactor::flexDisplayAngleUpdate(simdjson::ondemand::object& jsonData) co
 		simdjson::error_code col_error = jsonData["col"].get(col);
 		if (col == m_columnNumber) {
 			if (m_mapper->getBlendMode() == "Slice") {
+				m_camera->sliceModeCameraOrientation(m_volume->sliceOrigin, angle);
 				double forward[3];
 				m_camera->getForward(forward);
-				m_volume->setSlicePlane(angle);// , forward, m_camera->getViewUp());
-				m_camera->sliceModeCameraOrientation(m_volume->sliceOrigin, angle);
+				m_volume->setSlicePlane(angle , forward, m_camera->getViewUp());
 			}
 			else m_camera->modifyColumnAngle(angle);
 			//if (m_mapper->getBlendMode() == "Slice") m_camera->sliceModeCameraOrientation();
