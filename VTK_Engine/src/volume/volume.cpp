@@ -54,27 +54,14 @@ void Volume::readVoxels(VolumeReader* reader) {
 void Volume::setSlicePlane(double planeAngle, double* normal, double* axis) {
 	vtkPlane* plane = vtkPlane::New();
 
-	//std::vector<std::pair<double, double>> bounds = getVolumeBounds();
-	//double center[3] = {
-	//	(bounds[0].first + bounds[0].second) / 2.0,
-	//	(bounds[1].first + bounds[1].second) / 2.0,
-	//	(bounds[2].first + bounds[2].second) / 2.0
-	//};
 	plane->SetOrigin(sliceOrigin.data());
-
-	// TODO: move the center forward or backward by an offset in the direction of normal.
-
-	vtkTransform* transform = vtkTransform::New();
-	transform->Identity();
-	transform->RotateWXYZ(planeAngle, axis[0], axis[1], axis[2]);
-	transform->TransformVector(normal, normal);
-	vtkMath::Normalize(normal);
 
 	plane->SetNormal(normal);
 	this->GetProperty()->SetSliceFunction(plane);
 }
 
 void Volume::moveSliceOriginInDirection(double offset, double* direction) {
+	// default slice origin is the center of the volume but it can change during the course of the run
 	std::vector<double> newSliceOrigin(3);
 	for (int i = 0; i < 3; ++i)
 		newSliceOrigin[i] = sliceOrigin[i] + offset * direction[i];
