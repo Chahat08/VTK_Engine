@@ -51,22 +51,36 @@ void Volume::readVoxels(VolumeReader* reader) {
 	void* voxels = imageData->GetScalarPointer();
 }
 
-void Volume::setSlicePlane(double planeAngle, double* normal, double* axis) {
+//void Volume::setSlicePlane(double planeAngle, double* normal, double* axis) {
+//	vtkPlane* plane = vtkPlane::New();
+//
+//	plane->SetOrigin(sliceOrigin.data());
+//
+//	vtkTransform* transform = vtkTransform::New();
+//	transform->Identity();
+//	transform->RotateWXYZ(planeAngle, axis[0], axis[1], axis[2]);
+//	transform->TransformVector(normal, normal);
+//	vtkMath::Normalize(normal);
+//
+//	plane->SetNormal(normal);
+//	this->GetProperty()->SetSliceFunction(plane);
+//}
+
+void Volume::setSlicePlane(double planeAngle) {
 	vtkPlane* plane = vtkPlane::New();
 
-	//std::vector<std::pair<double, double>> bounds = getVolumeBounds();
-	//double center[3] = {
-	//	(bounds[0].first + bounds[0].second) / 2.0,
-	//	(bounds[1].first + bounds[1].second) / 2.0,
-	//	(bounds[2].first + bounds[2].second) / 2.0
-	//};
-	plane->SetOrigin(sliceOrigin.data());
+	std::vector<std::pair<double, double>> bounds = getVolumeBounds();
+	double center[3] = {
+		(bounds[0].first + bounds[0].second) / 2.0,
+		(bounds[1].first + bounds[1].second) / 2.0,
+		(bounds[2].first + bounds[2].second) / 2.0
+	};
+	plane->SetOrigin(center);
 
-	// TODO: move the center forward or backward by an offset in the direction of normal.
-
+	double normal[3] = { 0.0,0.0,1.0 };
 	vtkTransform* transform = vtkTransform::New();
 	transform->Identity();
-	transform->RotateWXYZ(planeAngle, axis[0], axis[1], axis[2]);
+	transform->RotateY(planeAngle);
 	transform->TransformVector(normal, normal);
 	vtkMath::Normalize(normal);
 
@@ -75,6 +89,7 @@ void Volume::setSlicePlane(double planeAngle, double* normal, double* axis) {
 }
 
 void Volume::moveSliceOriginInDirection(double offset, double* direction) {
+	// default slice origin is the center of the volume but it can change during the course of the run
 	std::vector<double> newSliceOrigin(3);
 	for (int i = 0; i < 3; ++i)
 		newSliceOrigin[i] = sliceOrigin[i] + offset * direction[i];

@@ -39,7 +39,7 @@ App::App(int sceneWidth, int sceneHeight,
 	m_volume->setVolumeParameters(m_reader);
 	m_volume->printSelf();
 	double axis[] = { 0,1,0 }; double normal[] = { 0,0,1 };
-	m_volume->setSlicePlane(angleToRotate, normal, axis);
+	m_volume->setSlicePlane(angleToRotate);// , normal, axis);
 
 	//m_volumeSlice = new VolumeSlicer(m_reader, m_volume);
 	m_volumeOutline = new VolumeOutline(m_reader);

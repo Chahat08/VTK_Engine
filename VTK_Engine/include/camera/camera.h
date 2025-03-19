@@ -32,7 +32,7 @@ public:
 	void resetCameraPosition();  
 
 	void modifyColumnAngle(float angle);
-	void sliceModeCameraOrientation();
+	void sliceModeCameraOrientation(std::vector<double> sliceOrigin, float angle);
 
 	// arcball camera 
 	void arcballMove(double deltaX, double deltaY);
