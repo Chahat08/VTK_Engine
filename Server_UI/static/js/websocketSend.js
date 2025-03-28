@@ -150,9 +150,11 @@ function sendIsosurfaceValues() {
 }
 
 document.getElementById('sliceUpButton').addEventListener('click', function () {
-    socket.send(JSON.stringify({ slice_origin_change: "out"}));
+    const colOption = document.querySelector('input[name="colOption"]:checked').value;
+    socket.send(JSON.stringify({ slice_origin_change: "out", col: colOption }));
 });
 
 document.getElementById('sliceDownButton').addEventListener('click', function () {
-    socket.send(JSON.stringify({ slice_origin_change: "in"}));
-})
+    const colOption = document.querySelector('input[name="colOption"]:checked').value;
+    socket.send(JSON.stringify({ slice_origin_change: "in", col: colOption }));
+});

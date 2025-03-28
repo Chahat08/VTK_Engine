@@ -13,7 +13,7 @@ Interactor::Interactor(vtkRenderer* renderer, VolumeMapper* mapper, VolumeProper
 }
 
 Interactor::~Interactor() {
-	
+
 }
 
 void Interactor::setRenderCallback(const std::function<void()>& callback) {
@@ -92,8 +92,8 @@ void Interactor::parseJson(const std::string& message) const {
 
 	else if (obj["terminate_all"].error() == simdjson::SUCCESS)
 		terminate();
-	
-	else if(obj["terminate_client"].error()==simdjson::SUCCESS)
+
+	else if (obj["terminate_client"].error() == simdjson::SUCCESS)
 		terminateAppUpdate(obj);
 
 	else if (obj["flexAngle"].error() == simdjson::SUCCESS)
@@ -309,7 +309,7 @@ void Interactor::cameraArcballSpeedUpdate(simdjson::ondemand::object& jsonData) 
 	float speed = 0.0;
 	simdjson::error_code speed_error = jsonData["arcballSpeed"].get(speed);
 
-	if (speed_error == simdjson::SUCCESS) 
+	if (speed_error == simdjson::SUCCESS)
 		m_camera->setArcBallSpeed(speed);
 }
 
@@ -317,7 +317,7 @@ void Interactor::cameraFreeCameraSpeedUpdate(simdjson::ondemand::object& jsonDat
 	float speed = 0.0;
 	simdjson::error_code speed_error = jsonData["freeCameraSpeed"].get(speed);
 
-	if (speed_error == simdjson::SUCCESS) 
+	if (speed_error == simdjson::SUCCESS)
 		m_camera->setFreeCameraSpeed(speed);
 }
 
@@ -326,7 +326,7 @@ void Interactor::terminateAppUpdate(simdjson::ondemand::object& jsonData) const 
 	simdjson::error_code terminate_error = jsonData["terminate_client"].get(client);
 
 	if (terminate_error == simdjson::SUCCESS)
-		if(client==m_clientID)
+		if (client == m_clientID)
 			terminate();
 }
 
@@ -342,7 +342,7 @@ void Interactor::flexDisplayAngleUpdate(simdjson::ondemand::object& jsonData) co
 				m_camera->sliceModeCameraOrientation(m_volume->sliceOrigin, angle);
 				double forward[3];
 				m_camera->getForward(forward);
-				m_volume->setSlicePlane(angle , forward, m_camera->getViewUp());
+				m_volume->setSlicePlane(angle, forward, m_camera->getViewUp());
 			}
 			else m_camera->modifyColumnAngle(angle);
 			//if (m_mapper->getBlendMode() == "Slice") m_camera->sliceModeCameraOrientation();
@@ -355,15 +355,20 @@ void Interactor::sliceOriginChangeUpdate(simdjson::ondemand::object& jsonData) c
 	std::string_view dir;
 	simdjson::error_code direction = jsonData["slice_origin_change"].get(dir);
 
-	double forward[3];
-	m_camera->getForward(forward);
+	std::string_view col;
+	simdjson::error_code column = jsonData["col"].get(col);
 
-	if (dir == "in") 
-		m_volume->moveSliceOriginInDirection(FrontendData::defaultSliceOriginChangeOffset, forward);
-	else
-		m_volume->moveSliceOriginInDirection(-FrontendData::defaultSliceOriginChangeOffset, forward);
+	if (col == std::to_string(m_columnNumber)) { // TODO: Fix this later!! HARDCODING FOR MULTI HINGE
+		double forward[3];
+		m_camera->getForward(forward);
 
-	//m_volume->setSlicePlane(m_camera->getScreenAngle(), forward, m_camera->getViewUp());
+		if (dir == "in")
+			m_volume->moveSliceOriginInDirection(FrontendData::defaultSliceOriginChangeOffset, forward);
+		else
+			m_volume->moveSliceOriginInDirection(-FrontendData::defaultSliceOriginChangeOffset, forward);
 
-	reRender();
+		m_volume->setSlicePlane(m_camera->getScreenAngle(), forward, m_camera->getViewUp());
+
+		reRender();
+	}
 }
